@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gps2_isr_trafsim</title>
+  <meta name="keywords" content="gps2_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html gps2 -->
+<h1>gps2_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [  ] = gps2_isr_trafsim( n ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Generate GPS position based on a random error with variable amplitude
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/move_isr_trafsim.html" class="code" title="function [] = move_isr_trafsim()">move_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_1(x,y)</a></li><li><a href="#_sub2" class="code">function [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_2(x,y)</a></li><li><a href="#_sub3" class="code">function [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_3(x,y)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Generate GPS position based on a random error with variable amplitude</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [  ] = gps2_isr_trafsim( n )</a>
+0046 <span class="keyword">global</span> c s
+0047 
+0048 c.car(n).gps_update=1;                      <span class="comment">% Used in data fusion</span>
+0049 
+0050 <span class="comment">% To store receivers positions</span>
+0051 rec_pos=zeros(3,2);
+0052 
+0053 <span class="comment">% Separate the input arguments</span>
+0054 x=c.car(n).pos.x;   y=c.car(n).pos.y;   t=c.car(n).pos.t;   time=s.time;
+0055 type=c.car(n).gps_type;    nrecep=c.car(n).gps_nrec;
+0056 
+0057 <span class="comment">% Space reservation to store coordinates given by GPS</span>
+0058 out=zeros(nrecep,2);
+0059 
+0060 <span class="comment">% Number of receivers</span>
+0061 <span class="keyword">if</span>(nrecep==1)
+0062     <span class="comment">% One receiver -&gt; Position of reicever is car mass center</span>
+0063     rec_pos(1,1)=x;  rec_pos(1,2)=y;
+0064     
+0065 <span class="keyword">elseif</span>(nrecep==2)
+0066     <span class="comment">% Two receivers -&gt; Read from struct the relative positions of receivers and calculates the global position of the</span>
+0067     rel_pos1=gps_data.rel1;
+0068     rel_pos2=gps_data.rel2;
+0069     
+0070     <span class="comment">% Calculates the position of receivers in the world</span>
+0071     [rec_pos(1,1), rec_pos(1,2)]=cal_global_pos(x,y,t,rel_pos1);
+0072     [rec_pos(2,1), rec_pos(2,2)]=cal_global_pos(x,y,t,rel_pos2);
+0073     
+0074     
+0075 <span class="keyword">elseif</span>(nrecep==3)
+0076     <span class="comment">% Tree receivers -&gt; Read from struct the relative positions of receivers and calculates the global position of the</span>
+0077     rel_pos1=gps_data.rel1;
+0078     rel_pos2=gps_data.rel2;
+0079     rel_pos3=gps_data.rel3;
+0080     
+0081     <span class="comment">% Calculates the position of receivers in the world</span>
+0082     [rec_pos(1,1), rec_pos(1,2)]=cal_global_pos(x,y,t,rel_pos1);
+0083     [rec_pos(2,1), rec_pos(2,2)]=cal_global_pos(x,y,t,rel_pos2);
+0084     [rec_pos(3,1), rec_pos(3,2)]=cal_global_pos(x,y,t,rel_pos3);
+0085 <span class="keyword">end</span>
+0086 
+0087 <span class="comment">% Call the GPS for each receptor</span>
+0088 <span class="keyword">for</span> i=1:nrecep
+0089     rx=rec_pos(i,1);
+0090     ry=rec_pos(i,2);
+0091     <span class="keyword">if</span>(type==1)
+0092         [out(i,1),out(i,2),out(i,3),~,~,~]=<a href="#_sub1" class="code" title="subfunction [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_1(x,y)">gps_1</a>(rx,ry);
+0093     <span class="keyword">elseif</span>(type==2)
+0094         [out(i,1),out(i,2),out(i,3),~,~,~]=<a href="#_sub2" class="code" title="subfunction [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_2(x,y)">gps_2</a>(rx,ry);
+0095     <span class="keyword">elseif</span>(type==3)
+0096         [out(i,1),out(i,2),out(i,3),~,~,~]=<a href="#_sub3" class="code" title="subfunction [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_3(x,y)">gps_3</a>(rx,ry);
+0097     <span class="keyword">end</span>
+0098 <span class="keyword">end</span>
+0099 
+0100 <span class="comment">% Store position estimated position</span>
+0101 c.car(n).gps=[out(i,1) out(i,2) out(i,3)];
+0102 
+0103 <span class="comment">% Increment counters</span>
+0104 <span class="keyword">if</span>(c.car(n).gps_time==c.car(n).gps_time_prev &amp;&amp; c.car(n).gps_type==3)
+0105     c.car(n).gps_time_count=c.car(n).gps_time_count+1;
+0106 <span class="keyword">elseif</span>(c.car(n).gps_type==3)
+0107     c.car(n).gps_time_prev=c.car(n).gps_time;
+0108     c.car(n).gps_time_count=0;
+0109 <span class="keyword">end</span>
+0110 c.car(n).gps_data(end+1,:)=[out(i,1) out(i,2)];
+0111 <span class="keyword">end</span>
+0112 
+0113 <a name="_sub1" href="#_subfunctions" class="code">function [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_1(x,y)</a>
+0114 
+0115 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0116     signal=1;
+0117 <span class="keyword">else</span>
+0118     signal=-1;
+0119 <span class="keyword">end</span>
+0120 err=3+signal*rand(1)*2.5;
+0121 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0122     signal=1;
+0123 <span class="keyword">else</span>
+0124     signal=-1;
+0125 <span class="keyword">end</span>
+0126 errx=signal*sqrt((err^2)/2);
+0127 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0128     signal=1;
+0129 <span class="keyword">else</span>
+0130     signal=-1;
+0131 <span class="keyword">end</span>
+0132 erry=signal*sqrt((err^2)/2);
+0133 
+0134 gpsx=x+errx;
+0135 gpsy=y+erry;
+0136 hdop=0; sat_pos=0; sat_num=0; usrxyz=0;
+0137 
+0138 <span class="keyword">end</span>
+0139 
+0140 <a name="_sub2" href="#_subfunctions" class="code">function [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_2(x,y)</a>
+0141 
+0142 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0143     signal=1;
+0144 <span class="keyword">else</span>
+0145     signal=-1;
+0146 <span class="keyword">end</span>
+0147 err=2.5+signal*rand(1)*2;
+0148 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0149     signal=1;
+0150 <span class="keyword">else</span>
+0151     signal=-1;
+0152 <span class="keyword">end</span>
+0153 errx=signal*sqrt((err^2)/2);
+0154 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0155     signal=1;
+0156 <span class="keyword">else</span>
+0157     signal=-1;
+0158 <span class="keyword">end</span>
+0159 erry=signal*sqrt((err^2)/2);
+0160 
+0161 gpsx=x+errx;
+0162 gpsy=y+erry;
+0163 hdop=0; sat_pos=0; sat_num=0; usrxyz=0;
+0164 
+0165 <span class="keyword">end</span>
+0166 
+0167 <a name="_sub3" href="#_subfunctions" class="code">function [gpsx,gpsy,hdop,sat_pos,sat_num,usrxyz] = gps_3(x,y)</a>
+0168 
+0169 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0170     signal=1;
+0171 <span class="keyword">else</span>
+0172     signal=-1;
+0173 <span class="keyword">end</span>
+0174 err=0.02+signal*rand(1)*0.015;
+0175 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0176     signal=1;
+0177 <span class="keyword">else</span>
+0178     signal=-1;
+0179 <span class="keyword">end</span>
+0180 errx=signal*sqrt((err^2)/2);
+0181 <span class="keyword">if</span>(rand(1)&gt;0.5)
+0182     signal=1;
+0183 <span class="keyword">else</span>
+0184     signal=-1;
+0185 <span class="keyword">end</span>
+0186 erry=signal*sqrt((err^2)/2);
+0187 
+0188 gpsx=x+errx;
+0189 gpsy=y+erry;
+0190 hdop=0; sat_pos=0; sat_num=0; usrxyz=0;
+0191 
+0192 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

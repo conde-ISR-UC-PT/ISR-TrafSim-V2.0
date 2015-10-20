@@ -1,0 +1,434 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of launch_car_isr_trafsim</title>
+  <meta name="keywords" content="launch_car_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>launch_car_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [id,n] = launch_car_isr_trafsim(r,~) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Launch car in selected road
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/check/check_road_after_cross_isr_trafsim.html" class="code" title="function [nextroad] = check_road_after_cross_isr_trafsim(traj)">check_road_after_cross_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/check/check_road_after_roundabout_isr_trafsim.html" class="code" title="function [nextroad] = check_road_after_roundabout_isr_trafsim(traj)">check_road_after_roundabout_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/check/check_road_before_cross_isr_trafsim.html" class="code" title="function [nextroad] = check_road_before_cross_isr_trafsim(n)">check_road_before_cross_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/datacar_isr_trafsim.html" class="code" title="function [out] = isr_tfs_datacar_isr_trafsim(arg,n)">datacar_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="car_type_isr_trafsim.html" class="code" title="function [ parameters ] = car_type_isr_trafsim( type )">car_type_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li><li><a href="view_cross_cels_isr_trafsim.html" class="code" title="function [crosscels] = view_cross_cels_isr_trafsim(n)">view_cross_cels_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="launch_isr_trafsim.html" class="code" title="function [] = launch_isr_trafsim(arg)">launch_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [light] = view_light(n,~)</a></li><li><a href="#_sub2" class="code">function [pos] = launch_pos(r,~)</a></li><li><a href="#_sub3" class="code">function [dest] = check_destination(r)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Launch car in selected road</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [id,n] = launch_car_isr_trafsim(r,~)</a>
+0046 <span class="keyword">global</span> s c gps_data
+0047 
+0048 n=<a href="../../ISR-TrafSim.v2.0/datacar_isr_trafsim.html" class="code" title="function [out] = isr_tfs_datacar_isr_trafsim(arg,n)">datacar_isr_trafsim</a>(<span class="string">'addc'</span>);
+0049 
+0050 <span class="comment">% Verifies and updates the destination tables</span>
+0051 dest=<a href="#_sub3" class="code" title="subfunction [dest] = check_destination(r)">check_destination</a>(r);
+0052 <span class="comment">%dest=23;</span>
+0053 
+0054 <span class="comment">% Car and driver setup</span>
+0055 id=c.car(n).id;
+0056 c.car(n).cmdacc=1;                                      <span class="comment">% Trottle</span>
+0057 c.car(n).road=r;                                        <span class="comment">% Current road</span>
+0058 c.car(n).roadori=r;                                     <span class="comment">% Origin</span>
+0059 c.car(n).roaddes=dest;                                  <span class="comment">% Destination</span>
+0060 c.car(n).auto=0;                                        <span class="comment">% Car id not a autonomous vehicle</span>
+0061 c.car(n).type=round(rand(1)+1);                         <span class="comment">% Type (1-car, 2-Truck)</span>
+0062 c.car(n).setp=1;                                        <span class="comment">% Current setpoint</span>
+0063 c.car(n).dri.type=round(rand(1)*2+1);                   <span class="comment">% Driver type</span>
+0064 <span class="comment">%deltaspeed=(s.nspeed-(2*s.nspeed)*rand(1))/3.6;         % Noise speed that will be added to the maximum speed in m/s</span>
+0065 
+0066 <span class="keyword">if</span>(s.cars_same)
+0067     c.car(n).dri.type=2;
+0068     c.car(n).type=1;
+0069 <span class="keyword">end</span>
+0070 deltaspeed=0;
+0071 
+0072 <span class="keyword">if</span>(c.car(n).dri.type==1)
+0073     c.car(n).dri.color=s.cd1;                       <span class="comment">% Color of car</span>
+0074     c.car(n).dri.velmax=s.velmax1+deltaspeed;       <span class="comment">% Max. speed</span>
+0075 <span class="keyword">elseif</span>(c.car(n).dri.type==2)
+0076     c.car(n).dri.color=s.cd2;
+0077     c.car(n).dri.velmax=s.velmax2+deltaspeed;
+0078 <span class="keyword">elseif</span>(c.car(n).dri.type==3)
+0079     c.car(n).dri.color=s.cd3;
+0080     c.car(n).dri.velmax=s.velmax3+deltaspeed;
+0081 <span class="keyword">end</span>
+0082 
+0083 <span class="comment">% Initialize car measures</span>
+0084 parameters=<a href="car_type_isr_trafsim.html" class="code" title="function [ parameters ] = car_type_isr_trafsim( type )">car_type_isr_trafsim</a>(c.car(n).type);
+0085 para=fieldnames(parameters); npara=size(para,1);
+0086 ccarn=c.car(n);
+0087 <span class="keyword">for</span> i=1:npara
+0088     name=para(i);                           <span class="comment">% Name of field</span>
+0089     value=getfield(parameters,char(name));  <span class="comment">% Value returned by car_type function</span>
+0090     c.car(n).(char(name))=value;            <span class="comment">% Assign value to structure</span>
+0091     <span class="comment">%c.car(n).Wsbw=c.car(n).length-0.8;  % Space between wheels</span>
+0092 <span class="keyword">end</span>
+0093 
+0094 <span class="comment">% Init car dynamic properties</span>
+0095 <span class="comment">%steering_ratio = 2.8;           % Number of steering turns (Cremalheira, assist./2,8)</span>
+0096 minimum_circle_diameter = 11;   <span class="comment">% Diameter of turnning (m)     11</span>
+0097 max_stering=asin(c.car(n).length/(minimum_circle_diameter/2-c.car(n).width/2));     <span class="comment">% Maximun steering</span>
+0098 c.car(n).dynmaxacc=[5 -10];                     <span class="comment">% [maxVelAcc   (m/s)    maxVelBrk (m/s) ]</span>
+0099 c.car(n).dynmaxste=[180*pi/180 max_stering];    <span class="comment">% [VelMaxSteer (rad/s)  MaxSteer (rad/s)]</span>
+0100 c.car(n).max_stering_lock2lock=2*max_stering;
+0101 c.car(n).NStWteeth=4096;                        <span class="comment">% Steering theet's</span>
+0102 c.car(n).NWteeth=200;
+0103 c.car(n).WheelD=s.wheel_diam;                   <span class="comment">% Wheel diameter</span>
+0104 c.car(n).WheelR=s.wheel_radius;                 <span class="comment">% Wheel radius</span>
+0105 c.car(n).WRadii_RR = c.car(n).WheelR;
+0106 c.car(n).WRadii_RL = c.car(n).WheelR;
+0107 c.car(n).WRadii_FR = c.car(n).WheelR;
+0108 c.car(n).WRadii_FL = c.car(n).WheelR;
+0109 
+0110 <span class="comment">% Cars without communication V2I</span>
+0111 current_rate=s.cars_rate_no_V2I(2)/s.curNcars;
+0112 c.car(n).commu=1;
+0113 <span class="keyword">if</span>(current_rate&lt;s.cars_rate_no_V2I(1))
+0114     c.car(n).commu=0;
+0115     c.car(n).dri.color=[0 0 1];
+0116     s.cars_rate_no_V2I(2)=s.cars_rate_no_V2I(2)+1;
+0117 <span class="keyword">end</span>
+0118 
+0119 <span class="comment">% Car current speed (m/s)</span>
+0120 vel=c.car(n).dri.velmax;
+0121 c.car(n).dri.velcur=vel;
+0122 c.car(n).dyn(1)=vel;
+0123 
+0124 <span class="comment">% Car launch position</span>
+0125 pos=<a href="#_sub2" class="code" title="subfunction [pos] = launch_pos(r,~)">launch_pos</a>(r,n);
+0126 c.car(n).pos.x=pos(1);
+0127 c.car(n).pos.y=pos(2);
+0128 c.car(n).pos.t=pos(3);
+0129 
+0130 <span class="comment">% Security distance to the front car</span>
+0131 c.car(n).time2stop=6+rand(1)*3;
+0132 c.car(n).dist2stop=7+rand(1)*3;
+0133 c.car(n).dist2light=2+rand(1)*2;
+0134 
+0135 <span class="comment">% Initial INS position</span>
+0136 <span class="keyword">if</span>(s.ins&gt;0)
+0137     c.car(n).ins=[c.car(n).pos.x c.car(n).pos.y c.car(n).pos.t];
+0138 <span class="keyword">end</span>
+0139 
+0140 <span class="comment">% Initial Odometry position</span>
+0141 <span class="keyword">if</span>(s.odo&gt;0)
+0142     c.car(n).odo=[c.car(n).pos.x c.car(n).pos.y c.car(n).pos.t];
+0143 <span class="keyword">end</span>
+0144 
+0145 <span class="comment">% Initial FUS position</span>
+0146 <span class="keyword">if</span>(s.fus&gt;0)
+0147     c.car(n).fus=[c.car(n).pos.x c.car(n).pos.y c.car(n).pos.t];
+0148 <span class="keyword">end</span>
+0149 
+0150 <span class="comment">% Initial FUS parameters</span>
+0151 <span class="keyword">if</span>(s.fus3&gt;0)
+0152     fusion3_isr_trafsim(<span class="string">'init_parameters'</span>,n);
+0153 <span class="keyword">end</span>
+0154 <span class="comment">% Init GPS parameters</span>
+0155 <span class="keyword">if</span>(s.gps&gt;0 &amp;&amp; s.gps_type==1)
+0156     c.car(n).gps_type=gps_data.type;
+0157     c.car(n).gps_native=gps_data.type;
+0158     c.car(n).gps_f1=s.frqgps;
+0159     c.car(n).gps_f2=s.frqrtkgps;
+0160     c.car(n).gps_nrec=gps_data.nreceptors;
+0161     c.car(n).gps_rtk=1;
+0162 <span class="keyword">elseif</span>(s.gps&gt;0 &amp;&amp; s.gps_type==2)
+0163     c.car(n).gps_type=3;
+0164     c.car(n).gps_native=3;
+0165     c.car(n).gps_f1=s.frqgps;
+0166     c.car(n).gps_f2=s.frqrtkgps;
+0167     c.car(n).gps_nrec=1;
+0168     c.car(n).gps_rtk=1;
+0169 <span class="keyword">end</span>
+0170 
+0171 <span class="comment">% Init magnets detection parameters</span>
+0172 c.car(n).mag_rule=s.mag;
+0173 
+0174 <span class="comment">% For initialize noise vectors for fusion4 (INOV-CT)</span>
+0175 <span class="keyword">if</span>(s.fus4)
+0176     fusion4_isr_trafsim(<span class="string">'init_parameters'</span>,n);
+0177     fusion4_isr_trafsim(<span class="string">'init_noise'</span>,n);
+0178 <span class="keyword">end</span>
+0179 
+0180 <span class="comment">% Generate trajectory setpoints</span>
+0181 [c.car(n).traj c.car(n).path c.car(n).trajn]=gen_traj_isr_trafsim(c.car(n).roadori,c.car(n).roaddes);
+0182 
+0183 <span class="comment">% View road after exit roundabout</span>
+0184 c.car(n).rar=<a href="../../ISR-TrafSim.v2.0/check/check_road_after_roundabout_isr_trafsim.html" class="code" title="function [nextroad] = check_road_after_roundabout_isr_trafsim(traj)">check_road_after_roundabout_isr_trafsim</a>(c.car(n).traj);
+0185 
+0186 <span class="comment">% View road after exit cross</span>
+0187 c.car(n).rac=<a href="../../ISR-TrafSim.v2.0/check/check_road_after_cross_isr_trafsim.html" class="code" title="function [nextroad] = check_road_after_cross_isr_trafsim(traj)">check_road_after_cross_isr_trafsim</a>(c.car(n).traj);
+0188 
+0189 <span class="keyword">if</span>(~isempty(c.car(n).rac))
+0190     c.car(n).rbc=<a href="../../ISR-TrafSim.v2.0/check/check_road_before_cross_isr_trafsim.html" class="code" title="function [nextroad] = check_road_before_cross_isr_trafsim(n)">check_road_before_cross_isr_trafsim</a>(n);
+0191     c.car(n).lightdirection=<a href="#_sub1" class="code" title="subfunction [light] = view_light(n,~)">view_light</a>(n);
+0192 <span class="keyword">end</span>
+0193 
+0194 <span class="comment">% View cross cels intercepted by the trajectory</span>
+0195 c.car(n).crosscels=<a href="view_cross_cels_isr_trafsim.html" class="code" title="function [crosscels] = view_cross_cels_isr_trafsim(n)">view_cross_cels_isr_trafsim</a>(n);
+0196 
+0197 <span class="comment">% Add car to OTA_commu list</span>
+0198 <span class="keyword">if</span>(s.otacommu==1 &amp;&amp; s.otacommuemulation==1)
+0199     <a href="../../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>(<span class="string">'add_node'</span>,id);
+0200 <span class="keyword">end</span>
+0201 
+0202 <span class="comment">% To simulate previous movement</span>
+0203 <span class="keyword">if</span>(s.run_before==1)
+0204     d=-5;
+0205     pt=c.car(n).pos.t;
+0206     px=c.car(n).pos.x+d*cos(pt);
+0207     py=c.car(n).pos.y+d*sin(pt);
+0208     c.car(n).ins=[px py pt];
+0209     <span class="keyword">for</span> j=d:s.step_time:-s.step_time
+0210         nx=px+s.step_time*cos(c.car(n).pos.t);
+0211         ny=py+s.step_time*sin(c.car(n).pos.t);
+0212         nt=pt;
+0213         <span class="comment">% Get position by GPS</span>
+0214         <span class="keyword">if</span>(s.gps&gt;0)
+0215             c.car(n).gps_update=1;                      <span class="comment">% Used in data fusion</span>
+0216             c.car(n).gps=gps_isr_trafsim(n);
+0217         <span class="keyword">end</span>
+0218         <span class="comment">% Get position by INS</span>
+0219         <span class="keyword">if</span>(s.ins&gt;0)
+0220             c.car(n).ins=ins_isr_trafsim( [px  py  pt nx  ny  nt 1 1 c.car(n).ins n]);
+0221         <span class="keyword">end</span>
+0222         <span class="comment">% Fusion</span>
+0223         <span class="keyword">if</span>(s.fus&gt;0)
+0224             c.car(n).fus=fusion_isr_trafsim(n);
+0225         <span class="keyword">end</span>
+0226         px=nx; py=ny;
+0227     <span class="keyword">end</span>
+0228 <span class="keyword">end</span>
+0229 
+0230 <span class="keyword">end</span>
+0231 
+0232 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0233 <span class="comment">% Define wich changing direction light the driver will turn on in the cross</span>
+0234 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0235 <a name="_sub1" href="#_subfunctions" class="code">function [light] = view_light(n,~)</a>
+0236 <span class="keyword">global</span> c s
+0237 incel= s.lighttable(:,1)==c.car(n).rbc;
+0238 outcel= s.lighttable(1,:)==c.car(n).rac;
+0239 light=s.lighttable(incel,outcel);
+0240 <span class="keyword">end</span>
+0241 
+0242 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0243 <span class="comment">% Return point of origin as the road to launch</span>
+0244 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0245 <a name="_sub2" href="#_subfunctions" class="code">function [pos] = launch_pos(r,~)</a>
+0246 <span class="keyword">global</span> s
+0247 <span class="comment">%d=10;   % Distance from first setpoint</span>
+0248 <span class="keyword">if</span>(r==1)
+0249     pos(1)=s.ri(r,1);
+0250     pos(2)=s.ri(r,2);
+0251     pos(3)=0;
+0252 <span class="keyword">elseif</span>(r==2)
+0253     pos(1)=s.ri(r,1);
+0254     pos(2)=s.ri(r,2);
+0255     pos(3)=0;
+0256 <span class="keyword">elseif</span>(r==3)
+0257     pos(1)=s.ri(r,1);
+0258     pos(2)=s.ri(r,2);
+0259     pos(3)=pi/2;
+0260 <span class="keyword">elseif</span>(r==4)
+0261     pos(1)=s.ri(r,1);
+0262     pos(2)=s.ri(r,2);
+0263     pos(3)=pi/2;
+0264 <span class="keyword">elseif</span>(r==5)
+0265     pos(1)=s.ri(r,1);
+0266     pos(2)=s.ri(r,2);
+0267     pos(3)=pi/2;
+0268 <span class="keyword">elseif</span>(r==6)
+0269     pos(1)=s.ri(r,1);
+0270     pos(2)=s.ri(r,2);
+0271     pos(3)=pi/2;
+0272 <span class="keyword">elseif</span>(r==7)
+0273     pos(1)=s.ri(r,1);
+0274     pos(2)=s.ri(r,2);
+0275     pos(3)=pi;
+0276 <span class="keyword">elseif</span>(r==8)
+0277     pos(1)=s.ri(r,1);
+0278     pos(2)=s.ri(r,2);
+0279     pos(3)=pi;
+0280 <span class="keyword">elseif</span>(r==9)
+0281     pos(1)=s.ri(r,1);
+0282     pos(2)=s.ri(r,2);
+0283     pos(3)=-pi/2;
+0284 <span class="keyword">elseif</span>(r==10)
+0285     pos(1)=s.ri(r,1);
+0286     pos(2)=s.ri(r,2);
+0287     pos(3)=-pi/2;
+0288 <span class="keyword">elseif</span>(r==11)
+0289     pos(1)=s.ri(r,1);
+0290     pos(2)=s.ri(r,2);
+0291     pos(3)=-pi/2;
+0292 <span class="keyword">elseif</span>(r==12)
+0293     pos(1)=s.ri(r,1);
+0294     pos(2)=s.ri(r,2);
+0295     pos(3)=-pi/2;
+0296 <span class="keyword">elseif</span>(r==15)
+0297     pos(1)=s.ri(r,1);
+0298     pos(2)=s.ri(r,2);
+0299     pos(3)=0;
+0300 <span class="keyword">elseif</span>(r==16)
+0301     pos(1)=s.ri(r,1);
+0302     pos(2)=s.ri(r,2);
+0303     pos(3)=0;
+0304 <span class="keyword">end</span>
+0305 <span class="keyword">end</span>
+0306 
+0307 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0308 <span class="comment">% Check launch tables and update them</span>
+0309 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0310 <a name="_sub3" href="#_subfunctions" class="code">function [dest] = check_destination(r)</a>
+0311 <span class="keyword">global</span> s
+0312 
+0313 <span class="comment">% Make table</span>
+0314 c=0; aux=-1; dest=0;
+0315 <span class="keyword">for</span> i=1:s.rn
+0316     <span class="keyword">if</span>(s.rp(r,i)~=-1)
+0317         c=c+1;
+0318         aux(1,c)=s.rp(r,i);          <span class="comment">% Probability</span>
+0319         aux(2,c)=i;                  <span class="comment">% Road</span>
+0320         aux(3,c)=s.rcp(r,i,1);       <span class="comment">% Current probability</span>
+0321         aux(4,c)=s.rcp(r,i,2);       <span class="comment">% Cars in</span>
+0322     <span class="keyword">end</span>
+0323 <span class="keyword">end</span>
+0324 
+0325 <span class="comment">% Check destination</span>
+0326 [~, roads]=size(aux);
+0327 tab=randsample(1:roads,roads);
+0328 <span class="keyword">for</span> i=1:roads
+0329     j=tab(i);
+0330     <span class="keyword">if</span>( <a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(aux(3,j),0.0001) &lt;= <a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(aux(1,j),0.0001))
+0331         dest=aux(2,j);
+0332         <span class="keyword">break</span>
+0333     <span class="keyword">end</span>
+0334 <span class="keyword">end</span>
+0335 
+0336 <span class="comment">% Updates table road current probability (s.rcp)</span>
+0337 s.rcp(r,dest,2)=s.rcp(r,dest,2)+1;
+0338 tot=sum( s.rcp(r,:,2) );
+0339 <span class="keyword">for</span> i=1:roads
+0340     s.rcp(r,aux(2,i),1)=s.rcp(r,aux(2,i),2)/tot;
+0341 <span class="keyword">end</span>
+0342 
+0343 <span class="keyword">end</span>
+0344</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of datacar_isr_trafsim</title>
+  <meta name="keywords" content="datacar_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html ISR-TrafSim.v2.0 -->
+<h1>datacar_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [out] = isr_tfs_datacar_isr_trafsim(arg,n) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Manage the structure that contains the data for each vehicle
+
+-USE----------------------------------------------------------------------
+
+ -&gt; Input(s)
+   » 'arg'   -   Option
+       'init'  -   Initialization of the structure
+       'addc'  -   Add vehicle to the structure
+       'delc'  -   Delete vehicle from the structure
+   » n       - ID of vehicle deleted from the structure
+
+ -&gt; Output(s)
+   » Updated structure
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../ISR-TrafSim.v2.0/func/delete_task_isr_trafsim.html" class="code" title="function [] = delete_task_isr_trafsim()">delete_task_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/launch_car_isr_trafsim.html" class="code" title="function [id,n] = launch_car_isr_trafsim(r,~)">launch_car_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [out] = init()</a></li><li><a href="#_sub2" class="code">function [out] = car_init(cur)</a></li><li><a href="#_sub3" class="code">function [out] = datains()</a></li><li><a href="#_sub4" class="code">function [out] = driver()</a></li><li><a href="#_sub5" class="code">function [out] = pos()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Manage the structure that contains the data for each vehicle</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% -&gt; Input(s)</span>
+0031 <span class="comment">%   » 'arg'   -   Option</span>
+0032 <span class="comment">%       'init'  -   Initialization of the structure</span>
+0033 <span class="comment">%       'addc'  -   Add vehicle to the structure</span>
+0034 <span class="comment">%       'delc'  -   Delete vehicle from the structure</span>
+0035 <span class="comment">%   » n       - ID of vehicle deleted from the structure</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% -&gt; Output(s)</span>
+0038 <span class="comment">%   » Updated structure</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0041 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0042 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0043 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0044 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0045 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0048 <span class="comment">%   Urbano Nunes*</span>
+0049 <span class="comment">%   Luis Conde Bento**</span>
+0050 <span class="comment">%   Ricardo Parafita*</span>
+0051 <span class="comment">%   Sergio Santos*</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0054 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0055 <span class="comment">%--------------------------------------------------------------------------</span>
+0056 
+0057 <a name="_sub0" href="#_subfunctions" class="code">function [out] = isr_tfs_datacar_isr_trafsim(arg,n)</a>
+0058 <span class="keyword">global</span> c
+0059 <span class="keyword">if</span>(strcmp(arg,<span class="string">'init'</span>))
+0060     out=<a href="#_sub1" class="code" title="subfunction [out] = init()">init</a>();
+0061 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'addc'</span>))
+0062     <span class="comment">%curid=c.lastid+1;</span>
+0063     curid=100; flag=0;
+0064     <span class="keyword">while</span>(flag==0)
+0065         <span class="keyword">if</span>(isempty(find(c.listactive==curid, 1)))
+0066             flag=1;
+0067         <span class="keyword">else</span>
+0068             curid=curid+1;
+0069         <span class="keyword">end</span>
+0070     <span class="keyword">end</span>
+0071     c.lastid=curid;
+0072     curcar=<a href="#_sub2" class="code" title="subfunction [out] = car_init(cur)">car_init</a>(curid);
+0073     c.listactive=[c.listactive curid];
+0074     c.car=[c.car curcar];
+0075     c.car(length(c.listactive)).id=curid;
+0076     out=length(c.listactive);
+0077 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'delc'</span>) )
+0078     <a href="#_sub5" class="code" title="subfunction [out] = pos()">pos</a>=find(c.listactive==n);
+0079     <span class="comment">%id=c.car(pos).id;</span>
+0080     c.car(<a href="#_sub5" class="code" title="subfunction [out] = pos()">pos</a>)=[];
+0081     c.listactive(<a href="#_sub5" class="code" title="subfunction [out] = pos()">pos</a>)=[];
+0082 <span class="keyword">end</span>
+0083 
+0084 <span class="keyword">end</span>
+0085 
+0086 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0087 <span class="comment">% Initializes all the variables necessary for the simulator</span>
+0088 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0089 <a name="_sub1" href="#_subfunctions" class="code">function [out] = init()</a>
+0090 
+0091 out=struct<span class="keyword">...</span>
+0092     (<span class="keyword">...</span>
+0093     <span class="string">'car'</span>,[],<span class="keyword">...</span>
+0094     <span class="string">'lastid'</span>,1,<span class="keyword">...</span><span class="comment">          % Last id launch</span>
+0095     <span class="string">'listactive'</span>,[] <span class="keyword">...</span><span class="comment">     % List of active cars</span>
+0096     );
+0097 
+0098 <span class="keyword">end</span>
+0099 
+0100 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0101 <span class="comment">% Initializes all the variables necessary for the car</span>
+0102 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0103 <a name="_sub2" href="#_subfunctions" class="code">function [out] = car_init(cur)</a>
+0104 
+0105 out=struct<span class="keyword">...</span>
+0106     (<span class="keyword">...</span>
+0107     <span class="string">'id'</span>,cur,<span class="keyword">...</span><span class="comment">                % ID of car</span>
+0108     <span class="string">'type'</span>,0,<span class="keyword">...</span><span class="comment">                % 1-Car 2-Truck</span>
+0109     <span class="string">'auto'</span>,0,<span class="keyword">...</span><span class="comment">                % 1 if car is a autonomous vehicle</span>
+0110     <span class="string">'inRound'</span>,0,<span class="keyword">...</span><span class="comment">               % 1 - If the car is inside the Roundabout</span>
+0111     <span class="string">'inCross'</span>,1,<span class="keyword">...</span><span class="comment">               % 1 - If the car is inside the CrossRoad</span>
+0112     <span class="string">'road'</span>,0,<span class="keyword">...</span><span class="comment">                % Current road</span>
+0113     <span class="string">'roadprev'</span>,0,<span class="keyword">...</span><span class="comment">            % Previous road</span>
+0114     <span class="string">'roadori'</span>,0,<span class="keyword">...</span><span class="comment">             % Road of origin</span>
+0115     <span class="string">'roaddes'</span>,0,<span class="keyword">...</span><span class="comment">             % Road of destination</span>
+0116     <span class="string">'path'</span>,0,<span class="keyword">...</span><span class="comment">                % Path that the car will follow</span>
+0117     <span class="string">'prevsetp'</span>,0,<span class="keyword">...</span><span class="comment">            % Previous destination setpoint</span>
+0118     <span class="string">'setp'</span>,0,<span class="keyword">...</span><span class="comment">                % Current destination setpoint</span>
+0119     <span class="string">'time'</span>,0,<span class="keyword">...</span><span class="comment">                % Time of car in simulation</span>
+0120     <span class="string">'traj'</span>,0,<span class="keyword">...</span><span class="comment">                % Trajectory setpoints                      (point)[x;y;road;dist;ang]</span>
+0121     <span class="string">'trajn'</span>,0,<span class="keyword">...</span><span class="comment">               % Number of trajectory setpoints</span>
+0122     <span class="string">'cause'</span>,0,<span class="keyword">...</span><span class="comment">               % ID of car that cause the stop</span>
+0123     <span class="string">'cmdacc'</span>,0,<span class="keyword">...</span><span class="comment">              % Acelarator comand [-1 1]</span>
+0124     <span class="string">'cmdste'</span>,0,<span class="keyword">...</span><span class="comment">              % Steer comand [-1 1]</span>
+0125     <span class="string">'steerval'</span>,0,<span class="keyword">...</span><span class="comment">            % Steer value [Rad]</span>
+0126     <span class="string">'dyn'</span>,[0 0],<span class="keyword">...</span><span class="comment">             % Current dynamic [LinearVel AngularVel]</span>
+0127     <span class="string">'prvdyn'</span>,[0 0],<span class="keyword">...</span><span class="comment">          % Previous dynamic</span>
+0128     <span class="string">'timeinsim'</span>,0,<span class="keyword">...</span><span class="comment">           % Time in simulator</span>
+0129     <span class="string">'pwf'</span>,0,<span class="keyword">...</span><span class="comment">                 % Pulses emited by encoder of front wheel</span>
+0130     <span class="string">'pwr'</span>,0,<span class="keyword">...</span><span class="comment">                 % Pulses emited by encoder of rear wheel</span>
+0131     <span class="string">'Pwf'</span>,0,<span class="keyword">...</span><span class="comment">                 % Total of pulses emited by encoder of front wheel</span>
+0132     <span class="string">'Pwr'</span>,0,<span class="keyword">...</span><span class="comment">                 % Total of pulses emited by encoder of rear wheel</span>
+0133     <span class="keyword">...</span><span class="comment"> % Car properties</span>
+0134     <span class="string">'commu'</span>,0,<span class="keyword">...</span><span class="comment">                     % 1 if car can have communications</span>
+0135     <span class="string">'mag_rule'</span>,[],<span class="keyword">...</span><span class="comment">               % 1 if car can detect magnets</span>
+0136     <span class="string">'width'</span>,0,<span class="keyword">...</span><span class="comment">                   % Width of car</span>
+0137     <span class="string">'length'</span>,0,<span class="keyword">...</span><span class="comment">                  % Length of car</span>
+0138     <span class="string">'mass'</span>,0,<span class="keyword">...</span><span class="comment">                    % Mass [kg]</span>
+0139     <span class="string">'r_dyn'</span>,0,<span class="keyword">...</span><span class="comment">                   % Wheel radius [m]</span>
+0140     <span class="string">'c_d'</span>,0,<span class="keyword">...</span><span class="comment">                     % Aerodynamic Drag Coefficient</span>
+0141     <span class="string">'c_r'</span>,0,<span class="keyword">...</span><span class="comment">                     % Rolling Resistance Coefficient</span>
+0142     <span class="string">'A'</span>,0,<span class="keyword">...</span><span class="comment">                       % Frontal Area [m^2]</span>
+0143     <span class="string">'Wsbw'</span>,0,<span class="keyword">...</span><span class="comment">                    % Space between wheels</span>
+0144     <span class="string">'NStWteeth'</span>,0,<span class="keyword">...</span><span class="comment">               % Steering teeth's</span>
+0145     <span class="string">'NWteeth'</span>,0,<span class="keyword">...</span><span class="comment">                 %</span>
+0146     <span class="string">'WheelD'</span>,0,<span class="keyword">...</span><span class="comment">                  % Wheel diameter</span>
+0147     <span class="string">'WheelR'</span>,0,<span class="keyword">...</span><span class="comment">                  % Wheel radius</span>
+0148     <span class="string">'WRadii_RR'</span>,0,<span class="keyword">...</span><span class="comment">               % Rear right wheel</span>
+0149     <span class="string">'WRadii_RL'</span>,0,<span class="keyword">...</span><span class="comment">               % Rear left wheel</span>
+0150     <span class="string">'WRadii_FR'</span>,0,<span class="keyword">...</span><span class="comment">               % Front right wheel</span>
+0151     <span class="string">'WRadii_FL'</span>,0,<span class="keyword">...</span><span class="comment">               % Front left wheel</span>
+0152     <span class="string">'max_stering_lock2lock'</span>,0,<span class="keyword">...</span>
+0153     <span class="keyword">...</span><span class="comment">     % Driver</span>
+0154     <span class="string">'dri'</span>,<a href="#_sub4" class="code" title="subfunction [out] = driver()">driver</a>(),<span class="keyword">...</span><span class="comment">          % Driver information</span>
+0155     <span class="string">'dri_ignore_trf_round'</span>,0,<span class="keyword">...</span><span class="comment">% Driver ignore traffic rules when inside of roundabout</span>
+0156     <span class="string">'dri_ignore_trf_cross'</span>,0,<span class="keyword">...</span><span class="comment">% Driver ignore traffic rules when inside of roundabout</span>
+0157     <span class="keyword">...</span><span class="comment">     % Car position</span>
+0158     <span class="string">'pos'</span>,<a href="#_sub5" class="code" title="subfunction [out] = pos()">pos</a>(),<span class="keyword">...</span><span class="comment">             % Current position</span>
+0159     <span class="string">'posprv'</span>,<a href="#_sub5" class="code" title="subfunction [out] = pos()">pos</a>(),<span class="keyword">...</span><span class="comment">          % Previous position</span>
+0160     <span class="string">'cornX'</span>,0,<span class="keyword">...</span><span class="comment">               % Corners X positions</span>
+0161     <span class="string">'cornY'</span>,0,<span class="keyword">...</span><span class="comment">               % Corners Y positions</span>
+0162     <span class="keyword">...</span><span class="comment">     % Dynamic Proprieties</span>
+0163     <span class="string">'dynmaxacc'</span>,[0 0],<span class="keyword">...</span><span class="comment">       % [maxVelAcc/s maxVelBrk/s]</span>
+0164     <span class="string">'dynmaxste'</span>,[0 0],<span class="keyword">...</span><span class="comment">       % [MaxSteer xºRad/s xºRad]</span>
+0165     <span class="keyword">...</span><span class="comment">     % Security distance to the front car</span>
+0166     <span class="string">'time2stop'</span>,0,<span class="keyword">...</span><span class="comment">           % Treshold on collision time</span>
+0167     <span class="string">'dist2stop'</span>,0,<span class="keyword">...</span><span class="comment">           % Minimum distance to stop</span>
+0168     <span class="string">'dist2light'</span>,0,<span class="keyword">...</span><span class="comment">          % distance to trafic light</span>
+0169     <span class="string">'rand1'</span>,rand(1),<span class="keyword">...</span><span class="comment">         % rand(1)</span>
+0170     <span class="keyword">...</span><span class="comment">     % Handlers</span>
+0171     <span class="string">'hcar'</span>,-1,<span class="keyword">...</span><span class="comment">               % Handler to the car</span>
+0172     <span class="string">'hinfo'</span>,-1,<span class="keyword">...</span><span class="comment">              % Handler to info (plot with the car)</span>
+0173     <span class="string">'hgpspos'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to GPS ghost</span>
+0174     <span class="string">'hinspos'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to INS ghost</span>
+0175     <span class="string">'hodopos'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to Odometry ghost</span>
+0176     <span class="string">'hfuspos'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to ghost given by Kalman filter</span>
+0177     <span class="string">'hfus2pos'</span>,-1,<span class="keyword">...</span><span class="comment">           % Handler to ghost given by Kalman filter</span>
+0178     <span class="string">'hfus3pos'</span>,-1,<span class="keyword">...</span><span class="comment">           % Handler to ghost given by Kalman filter</span>
+0179     <span class="string">'hfus4pos'</span>,-1,<span class="keyword">...</span><span class="comment">           % Handler to ghost given by Kalman filter</span>
+0180     <span class="string">'hsetp'</span>,-1,<span class="keyword">...</span><span class="comment">              % Handler to plot the current setpoint</span>
+0181     <span class="string">'hsidelight'</span>,-1,<span class="keyword">...</span><span class="comment">         % Handler to the light of changing direction</span>
+0182     <span class="string">'hcarsec'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to security vectors</span>
+0183     <span class="string">'hcarsecl'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to security vectors (lateral)</span>
+0184     <span class="keyword">...</span><span class="comment">     % Localization methods</span>
+0185     <span class="string">'gps'</span>,zeros(3,2)*NaN,<span class="keyword">...</span><span class="comment">              % To store GPS positions (1-3 receivers)       EX: [x1 y1 ; x2 y2; x3 y3]</span>
+0186     <span class="string">'ins'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">              % (x,y,t) position given by INS</span>
+0187     <span class="string">'mag'</span>,zeros(1,2)*NaN,<span class="keyword">...</span><span class="comment">              % (x,y) position given by Magnets</span>
+0188     <span class="string">'fus'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">              % (x,y,t) position given by Sensorial Fusion</span>
+0189     <span class="string">'odo'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">              % (x,y) position given by Odometry</span>
+0190     <span class="string">'fus2'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">             % (x,y,t) position given by Sensorial fusion</span>
+0191     <span class="string">'fus3'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">             % (x,y,t) position given by Sensorial fusion</span>
+0192     <span class="string">'fus4'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">             % (x,y,t) position given by Sensorial fusion</span>
+0193     <span class="string">'fus4prev'</span>,zeros(1,3)*NaN,<span class="keyword">...</span><span class="comment">         % (x,y,t) position given by Sensorial fusion</span>
+0194     <span class="keyword">...</span><span class="comment">     % Data (Position errors and other stuff)</span>
+0195     <span class="string">'data'</span>,[],<span class="keyword">...</span>
+0196     <span class="keyword">...</span><span class="comment">     % GPS/RTK-GPS</span>
+0197     <span class="string">'gps_type'</span>,NaN,<span class="keyword">...</span><span class="comment">      % Type of gps used</span>
+0198     <span class="string">'gps_native'</span>,NaN,<span class="keyword">...</span><span class="comment">    % Current gps used</span>
+0199     <span class="string">'gps_rtk'</span>,NaN,<span class="keyword">...</span><span class="comment">       % 1 if car can have RTK-GPS</span>
+0200     <span class="string">'gps_time'</span>,0,<span class="keyword">...</span><span class="comment">        % Time of gps information received</span>
+0201     <span class="string">'gps_time_prev'</span>,0,<span class="keyword">...</span><span class="comment">   % Previous time of gps information received</span>
+0202     <span class="string">'gps_time_count'</span>,0,<span class="keyword">...</span><span class="comment">  % Number of times that gps uses  the same information provide by roundabout</span>
+0203     <span class="string">'gps_f1'</span>,NaN,<span class="keyword">...</span><span class="comment">        % Frequency of native GPS system</span>
+0204     <span class="string">'gps_f2'</span>,NaN,<span class="keyword">...</span><span class="comment">        % Frequency of RTK-GPS system</span>
+0205     <span class="string">'gps_nrec'</span>,NaN,<span class="keyword">...</span><span class="comment">      % Number of receivers</span>
+0206     <span class="string">'gps_data'</span>,[],<span class="keyword">...</span><span class="comment">       % GPS position over the time</span>
+0207     <span class="string">'gps_usrxyz'</span>,[],<span class="keyword">...</span><span class="comment">     % To store receivers position in XYZ referencial</span>
+0208     <span class="string">'gps_sat_pos'</span>,[],<span class="keyword">...</span><span class="comment">    % To store satelites position</span>
+0209     <span class="string">'gps_sat_num'</span>,[],<span class="keyword">...</span><span class="comment">    % To store satelites ID number</span>
+0210     <span class="keyword">...</span><span class="comment">     % Fusion 1 (INS + GPS)</span>
+0211     <span class="string">'ins_count'</span>,0,<span class="keyword">...</span>
+0212     <span class="string">'fusion_init'</span>,0,<span class="keyword">...</span>
+0213     <span class="string">'X_pre'</span>,0,<span class="keyword">...</span>
+0214     <span class="string">'X_est'</span>,0,<span class="keyword">...</span>
+0215     <span class="string">'K'</span>,0,<span class="keyword">...</span>
+0216     <span class="string">'P_pre_KF'</span>,0,<span class="keyword">...</span>
+0217     <span class="string">'P_est_KF'</span>,0,<span class="keyword">...</span>
+0218     <span class="string">'G'</span>,0,<span class="keyword">...</span>
+0219     <span class="string">'W'</span>,0,<span class="keyword">...</span>
+0220     <span class="string">'R'</span>,0,<span class="keyword">...</span>
+0221     <span class="string">'gps_update'</span>,0,<span class="keyword">...</span>
+0222     <span class="keyword">...</span><span class="comment">     % Fusion 2 (Laser + GPS)</span>
+0223     <span class="string">'Pk_las'</span>,diag([1e0 1e0 1e-1]),<span class="keyword">...</span>
+0224     <span class="string">'fus2_pos'</span>,[],<span class="keyword">...</span>
+0225     <span class="string">'fus2_las_xpos'</span>,[],<span class="keyword">...</span>
+0226     <span class="string">'fus2_las_ypos'</span>,[],<span class="keyword">...</span>
+0227     <span class="string">'fus2_las_tpos'</span>,[],<span class="keyword">...</span>
+0228     <span class="string">'fus2_las_ipos'</span>,[],<span class="keyword">...</span>
+0229     <span class="string">'fus2_mag_xpos'</span>,[],<span class="keyword">...</span>
+0230     <span class="string">'fus2_mag_ypos'</span>,[],<span class="keyword">...</span>
+0231     <span class="string">'fus2_mag_tpos'</span>,[],<span class="keyword">...</span>
+0232     <span class="string">'fus2_mag_ipos'</span>,[],<span class="keyword">...</span>
+0233     <span class="keyword">...</span><span class="comment">     % Fusion 3 (GPS + INS + KF)</span>
+0234     <span class="string">'fus3_init'</span>,0,<span class="keyword">...</span>
+0235     <span class="string">'fus3_init_KF'</span>,0,<span class="keyword">...</span>
+0236     <span class="string">'init_vel_e_err'</span>,0,<span class="keyword">...</span>
+0237     <span class="string">'init_vel_n_err'</span>,0,<span class="keyword">...</span>
+0238     <span class="string">'init_x_tilt'</span>,0,<span class="keyword">...</span>
+0239     <span class="string">'init_y_tilt'</span>,0,<span class="keyword">...</span>
+0240     <span class="string">'init_z_mis'</span>,0,<span class="keyword">...</span>
+0241     <span class="string">'dvparam'</span>,0,<span class="keyword">...</span>
+0242     <span class="string">'dthparam'</span>,0,<span class="keyword">...</span>
+0243     <span class="keyword">...</span><span class="comment">         -&gt; Preallocate arrays for speed</span>
+0244     <span class="string">'f3_deltheta'</span>,[],<span class="keyword">...</span>
+0245     <span class="string">'f3_dvtot'</span>,[],<span class="keyword">...</span>
+0246     <span class="string">'est_lat'</span>,[],<span class="keyword">...</span>
+0247     <span class="string">'est_lon'</span>,[],<span class="keyword">...</span>
+0248     <span class="string">'est_alpha'</span>,[],<span class="keyword">...</span>
+0249     <span class="string">'est_height'</span>,[],<span class="keyword">...</span>
+0250     <span class="string">'est_roll'</span>,[],<span class="keyword">...</span>
+0251     <span class="string">'est_pitch'</span>,[],<span class="keyword">...</span>
+0252     <span class="string">'est_yaw'</span>,[],<span class="keyword">...</span>
+0253     <span class="string">'height1'</span>,[],<span class="keyword">...</span>
+0254     <span class="string">'height2'</span>,[],<span class="keyword">...</span>
+0255     <span class="string">'vx1'</span>,[],<span class="keyword">...</span>
+0256     <span class="string">'vx2'</span>,[],<span class="keyword">...</span>
+0257     <span class="string">'vy1'</span>,[],<span class="keyword">...</span>
+0258     <span class="string">'vy2'</span>,[],<span class="keyword">...</span>
+0259     <span class="string">'vel_L'</span>,[],<span class="keyword">...</span>
+0260     <span class="string">'vel2'</span>,[],<span class="keyword">...</span>
+0261     <span class="string">'vel1'</span>,[],<span class="keyword">...</span>
+0262     <span class="string">'lat1'</span>,[],<span class="keyword">...</span>
+0263     <span class="string">'lat2'</span>,[],<span class="keyword">...</span>
+0264     <span class="string">'DCMnb'</span>,[],<span class="keyword">...</span>
+0265     <span class="string">'est_DCMbn'</span>,[],<span class="keyword">...</span>
+0266     <span class="string">'tmp'</span>,[],<span class="keyword">...</span>
+0267     <span class="string">'est_DCMel'</span>,[],<span class="keyword">...</span>
+0268     <span class="string">'omega2_el_L'</span>,[],<span class="keyword">...</span>
+0269     <span class="string">'omega1_el_L'</span>,[],<span class="keyword">...</span>
+0270     <span class="string">'deltav_b'</span>,[],<span class="keyword">...</span>
+0271     <span class="string">'deltheta'</span>,[],<span class="keyword">...</span>
+0272     <span class="string">'est_roll_'</span>,[],<span class="keyword">...</span>
+0273     <span class="string">'est_pitch_'</span>,[],<span class="keyword">...</span>
+0274     <span class="string">'est_yaw_'</span>,[],<span class="keyword">...</span>
+0275     <span class="string">'est_alpha_'</span>,[],<span class="keyword">...</span>
+0276     <span class="string">'est_height_'</span>,[],<span class="keyword">...</span>
+0277     <span class="string">'est_height1_'</span>,[],<span class="keyword">...</span>
+0278     <span class="string">'est_height2_'</span>,[],<span class="keyword">...</span>
+0279     <span class="string">'height1_'</span>,[],<span class="keyword">...</span>
+0280     <span class="string">'height2_'</span>,[],<span class="keyword">...</span>
+0281     <span class="string">'est_lat_'</span>,[],<span class="keyword">...</span>
+0282     <span class="string">'est_lon_'</span>,[],<span class="keyword">...</span>
+0283     <span class="string">'vx1_'</span>,[],<span class="keyword">...</span>
+0284     <span class="string">'vy1_'</span>,[],<span class="keyword">...</span>
+0285     <span class="string">'vx2_'</span>,[],<span class="keyword">...</span>
+0286     <span class="string">'vy2_'</span>,[],<span class="keyword">...</span>
+0287     <span class="string">'vel_l_'</span>,[],<span class="keyword">...</span>
+0288     <span class="string">'vel1_'</span>,[],<span class="keyword">...</span>
+0289     <span class="string">'vel2_'</span>,[],<span class="keyword">...</span>
+0290     <span class="string">'lat2_'</span>,[],<span class="keyword">...</span>
+0291     <span class="string">'lat1_'</span>,[],<span class="keyword">...</span>
+0292     <span class="string">'est_DCMbn_'</span>,[],<span class="keyword">...</span>
+0293     <span class="string">'est_DCMel_'</span>,[],<span class="keyword">...</span>
+0294     <span class="string">'omega2_el_L_'</span>,[],<span class="keyword">...</span>
+0295     <span class="string">'omega1_el_L_'</span>,[],<span class="keyword">...</span>
+0296     <span class="string">'H'</span>,[],<span class="keyword">...</span>
+0297     <span class="string">'P_pre'</span>,[],<span class="keyword">...</span>
+0298     <span class="string">'est_lat_KF'</span>,[],<span class="keyword">...</span>
+0299     <span class="string">'est_lon_KF'</span>,[],<span class="keyword">...</span>
+0300     <span class="string">'est_height_KF'</span>,[],<span class="keyword">...</span>
+0301     <span class="string">'est_alpha_KF'</span>,[],<span class="keyword">...</span>
+0302     <span class="string">'est_vel_l_KF'</span>,[],<span class="keyword">...</span>
+0303     <span class="string">'est_roll_KF'</span>,[],<span class="keyword">...</span>
+0304     <span class="string">'est_pitch_KF'</span>,[],<span class="keyword">...</span>
+0305     <span class="string">'est_yaw_KF'</span>,[],<span class="keyword">...</span>
+0306     <span class="string">'omega_ie_E_'</span>,[],<span class="keyword">...</span>
+0307     <span class="string">'accum_accel_bias'</span>,[],<span class="keyword">...</span>
+0308     <span class="string">'accum_gyro_bias'</span>,[],<span class="keyword">...</span>
+0309     <span class="keyword">...</span><span class="comment">         -&gt; To plot (fusion 3)</span>
+0310     <span class="string">'state_est'</span>,zeros(18,1),<span class="keyword">...</span>
+0311     <span class="string">'x_rms_KF'</span>,0,<span class="keyword">...</span>
+0312     <span class="string">'y_rms_KF'</span>,0,<span class="keyword">...</span>
+0313     <span class="string">'z_rms_KF'</span>,0,<span class="keyword">...</span>
+0314     <span class="string">'x_v_rms_KF'</span>,0,<span class="keyword">...</span>
+0315     <span class="string">'y_v_rms_KF'</span>,0,<span class="keyword">...</span>
+0316     <span class="string">'z_v_rms_KF'</span>,0,<span class="keyword">...</span>
+0317     <span class="string">'x_psi_rms_KF'</span>,0,<span class="keyword">...</span>
+0318     <span class="string">'y_psi_rms_KF'</span>,0,<span class="keyword">...</span>
+0319     <span class="string">'z_psi_rms_KF'</span>,0,<span class="keyword">...</span>
+0320     <span class="string">'x_accel_rms_KF'</span>,0,<span class="keyword">...</span>
+0321     <span class="string">'y_accel_rms_KF'</span>,0,<span class="keyword">...</span>
+0322     <span class="string">'z_accel_rms_KF'</span>,0,<span class="keyword">...</span>
+0323     <span class="string">'x_gyro_rms_KF'</span>,0,<span class="keyword">...</span>
+0324     <span class="string">'y_gyro_rms_KF'</span>,0,<span class="keyword">...</span>
+0325     <span class="string">'z_gyro_rms_KF'</span>,0,<span class="keyword">...</span>
+0326     <span class="string">'accum_accel_x'</span>,0,<span class="keyword">...</span>
+0327     <span class="string">'accum_accel_y'</span>,0,<span class="keyword">...</span>
+0328     <span class="string">'accum_accel_z'</span>,0,<span class="keyword">...</span>
+0329     <span class="string">'accum_gyro_x'</span>,0,<span class="keyword">...</span>
+0330     <span class="string">'accum_gyro_y'</span>,0,<span class="keyword">...</span>
+0331     <span class="string">'accum_gyro_z'</span>,0,<span class="keyword">...</span>
+0332     <span class="keyword">...</span><span class="comment">     % INOV-CT (fusion4)</span>
+0333     <span class="keyword">...</span><span class="comment">         -&gt; Slip details</span>
+0334     <span class="string">'slip_state'</span>,-1,<span class="keyword">...</span><span class="comment">         % -1 no slip, 1 detect, 0 already slip</span>
+0335     <span class="string">'slip_state_list'</span>,[],<span class="keyword">...</span><span class="comment">    % List of oil places already listed</span>
+0336     <span class="string">'slip_state_type'</span>,[],<span class="keyword">...</span><span class="comment">    % List of type of slip (1-RL;2-RR;3-FL;4-FR;5-RL/RR;6-FL;FR)</span>
+0337     <span class="string">'init_odoKF'</span>,1,<span class="keyword">...</span><span class="comment">          %</span>
+0338     <span class="string">'init_ekf'</span>,1,<span class="keyword">...</span><span class="comment">            %</span>
+0339     <span class="string">'mag_detect'</span>,NaN,<span class="keyword">...</span><span class="comment">        % Magnet detected</span>
+0340     <span class="string">'mag_field'</span>,NaN,<span class="keyword">...</span><span class="comment">         % Magnetic field detected on z component</span>
+0341     <span class="string">'det_mag_fus4'</span>,0,<span class="keyword">...</span><span class="comment">        % Magnet detected in fus4</span>
+0342     <span class="keyword">...</span><span class="comment">         -&gt; Noise variance</span>
+0343     <span class="string">'variance_WRadii_RR_noise'</span>,0,<span class="keyword">...</span>
+0344     <span class="string">'variance_WRadii_RL_noise'</span>,0,<span class="keyword">...</span>
+0345     <span class="string">'variance_WRadii_FR_noise'</span>,0,<span class="keyword">...</span>
+0346     <span class="string">'variance_WRadii_FL_noise'</span>,0,<span class="keyword">...</span>
+0347     <span class="string">'variance_RR_enc_noise'</span>,0,<span class="keyword">...</span>
+0348     <span class="string">'variance_RL_enc_noise'</span>,0,<span class="keyword">...</span>
+0349     <span class="string">'variance_FR_enc_noise'</span>,0,<span class="keyword">...</span>
+0350     <span class="string">'variance_FL_enc_noise'</span>,0,<span class="keyword">...</span>
+0351     <span class="string">'L_noise_variance'</span>,0,<span class="keyword">...</span>
+0352     <span class="string">'W_noise_variance'</span>,0,<span class="keyword">...</span>
+0353     <span class="string">'variance_phiF_noise'</span>,0,<span class="keyword">...</span>
+0354     <span class="string">'variance_phiFL_enc_noise'</span>,0,<span class="keyword">...</span>
+0355     <span class="string">'variance_phiFR_enc_noise'</span>,0,<span class="keyword">...</span>
+0356     <span class="string">'mag_xpos_variance'</span>,0,<span class="keyword">...</span>
+0357     <span class="string">'mag_ypos_variance'</span>,0,<span class="keyword">...</span>
+0358     <span class="string">'mag_dist_variance'</span>,0,<span class="keyword">...</span>
+0359     <span class="string">'mag_angle_variance'</span>,0,<span class="keyword">...</span>
+0360     <span class="string">'Q_odo'</span>,0,<span class="keyword">...</span>
+0361     <span class="string">'Pk_odo'</span>,0,<span class="keyword">...</span>
+0362     <span class="string">'Pk_INOV'</span>,0,<span class="keyword">...</span>
+0363     <span class="string">'Pk_CT'</span>,0,<span class="keyword">...</span>
+0364     <span class="string">'R1_odo'</span>,0,<span class="keyword">...</span>
+0365     <span class="string">'R2_odo'</span>,0,<span class="keyword">...</span>
+0366     <span class="string">'R3_odo'</span>,0,<span class="keyword">...</span>
+0367     <span class="string">'R4_odo'</span>,0,<span class="keyword">...</span>
+0368     <span class="string">'R5_odo'</span>,0,<span class="keyword">...</span>
+0369     <span class="string">'R_mag'</span>,0,<span class="keyword">...</span>
+0370     <span class="string">'Q_mag'</span>,0,<span class="keyword">...</span>
+0371     <span class="string">'Pk_mag'</span>,0,<span class="keyword">...</span>
+0372     <span class="string">'Pk_mag_aux'</span>,0,<span class="keyword">...</span>
+0373     <span class="string">'T_mag'</span>,0,<span class="keyword">...</span>
+0374     <span class="string">'ekf_odo_threshold'</span>,0,<span class="keyword">...</span>
+0375     <span class="string">'ekf_mag_threshold'</span>,0,<span class="keyword">...</span>
+0376     <span class="string">'CT_threshold'</span>,0,<span class="keyword">...</span>
+0377     <span class="string">'ramdom_walk_variance'</span>,0,<span class="keyword">...</span>
+0378     <span class="string">'deltaS_odoKF'</span>,0,<span class="keyword">...</span>
+0379     <span class="string">'deltaW_odoKF'</span>,0,<span class="keyword">...</span>
+0380     <span class="string">'deltaS_odoKF_INOV'</span>,0,<span class="keyword">...</span>
+0381     <span class="string">'deltaW_odoKF_INOV'</span>,0,<span class="keyword">...</span>
+0382     <span class="string">'deltaS_odoKF_CT'</span>,0,<span class="keyword">...</span>
+0383     <span class="string">'deltaW_odoKF_CT'</span>,0,<span class="keyword">...</span>
+0384     <span class="string">'xPos_odoNOISE'</span>,0,<span class="keyword">...</span>
+0385     <span class="string">'yPos_odoNOISE'</span>,0,<span class="keyword">...</span>
+0386     <span class="string">'theta_odoNOISE'</span>,0,<span class="keyword">...</span>
+0387     <span class="string">'xPos_ct'</span>,0,<span class="keyword">...</span>
+0388     <span class="string">'yPos_ct'</span>,0,<span class="keyword">...</span>
+0389     <span class="string">'theta_ct'</span>,0,<span class="keyword">...</span>
+0390     <span class="string">'xPos_odoKF'</span>,0,<span class="keyword">...</span>
+0391     <span class="string">'yPos_odoKF'</span>,0,<span class="keyword">...</span>
+0392     <span class="string">'theta_odoKF'</span>,0,<span class="keyword">...</span>
+0393     <span class="string">'xPos_MAG'</span>,0,<span class="keyword">...</span>
+0394     <span class="string">'yPos_MAG'</span>,0,<span class="keyword">...</span>
+0395     <span class="string">'theta_MAG'</span>,0,<span class="keyword">...</span>
+0396     <span class="keyword">...</span><span class="comment">'xPos_MAG_aux1',0,...</span>
+0397     <span class="keyword">...</span><span class="comment">'yPos_MAG_aux1',0,...</span>
+0398     <span class="keyword">...</span><span class="comment">'xPos_MAG_aux2',0,...</span>
+0399     <span class="keyword">...</span><span class="comment">'yPos_MAG_aux2',0,...</span>
+0400     <span class="keyword">...</span><span class="comment">'xPos_MAG_aux3',0,...</span>
+0401     <span class="keyword">...</span><span class="comment">'yPos_MAG_aux3',0,...</span>
+0402     <span class="string">'xPos_MAG_aux4'</span>,[],<span class="keyword">...</span>
+0403     <span class="string">'yPos_MAG_aux4'</span>,[],<span class="keyword">...</span>
+0404     <span class="string">'timePos_MAG_aux4'</span>,[],<span class="keyword">...</span>
+0405     <span class="string">'xPos_odoKF_CT'</span>,[],<span class="keyword">...</span>
+0406     <span class="string">'yPos_odoKF_CT'</span>,[],<span class="keyword">...</span>
+0407     <span class="string">'theta_odoKF_CT'</span>,[],<span class="keyword">...</span>
+0408     <span class="keyword">...</span><span class="comment">     -&gt; Noise vectors</span>
+0409     <span class="string">'WRadii_RR_noise'</span>,[],<span class="keyword">...</span>
+0410     <span class="string">'WRadii_RL_noise'</span>,[],<span class="keyword">...</span>
+0411     <span class="string">'WRadii_FR_noise'</span>,[],<span class="keyword">...</span>
+0412     <span class="string">'WRadii_FL_noise'</span>,[],<span class="keyword">...</span>
+0413     <span class="string">'RR_enc_noise'</span>,[],<span class="keyword">...</span>
+0414     <span class="string">'RL_enc_noise'</span>,[],<span class="keyword">...</span>
+0415     <span class="string">'FR_enc_noise'</span>,[],<span class="keyword">...</span>
+0416     <span class="string">'FL_enc_noise'</span>,[],<span class="keyword">...</span>
+0417     <span class="string">'L_noise'</span>,[],<span class="keyword">...</span>
+0418     <span class="string">'W_noise'</span>,[],<span class="keyword">...</span>
+0419     <span class="string">'phiF_noise'</span>,[],<span class="keyword">...</span>
+0420     <span class="string">'phiFL_enc_noise'</span>,[],<span class="keyword">...</span>
+0421     <span class="string">'phiFR_enc_noise'</span>,[],<span class="keyword">...</span>
+0422     <span class="string">'ramdom_walk'</span>,[],<span class="keyword">...</span>
+0423     <span class="string">'mag_xpos_noise'</span>,[],<span class="keyword">...</span>
+0424     <span class="string">'mag_ypos_noise'</span>,[],<span class="keyword">...</span>
+0425     <span class="string">'mag_dist_noise'</span>,[],<span class="keyword">...</span>
+0426     <span class="string">'mag_angle_noise'</span>,[],<span class="keyword">...</span>
+0427     <span class="keyword">...</span><span class="comment">     -&gt; Noise vectors state</span>
+0428     <span class="string">'nv_setp'</span>,1,<span class="keyword">...</span>
+0429     <span class="string">'nv_time'</span>,0,<span class="keyword">...</span>
+0430     <span class="keyword">...</span><span class="comment">     % INS data</span>
+0431     <span class="string">'dins'</span>,<a href="#_sub3" class="code" title="subfunction [out] = datains()">datains</a>(),<span class="keyword">...</span><span class="comment">            % To save ins data</span>
+0432     <span class="string">'pdins'</span>,<a href="#_sub3" class="code" title="subfunction [out] = datains()">datains</a>(),<span class="keyword">...</span><span class="comment">           % To save previous ins data</span>
+0433     <span class="keyword">...</span><span class="comment">     % Laser distances</span>
+0434     <span class="string">'laserdist'</span>,0,<span class="keyword">...</span><span class="comment">               % Distances returned by the laser</span>
+0435     <span class="keyword">...</span><span class="comment">     % Errors</span>
+0436     <span class="string">'traj_err'</span>,[],<span class="keyword">...</span><span class="comment">                   1 - Lateral error of mass center</span>
+0437     <span class="keyword">...</span><span class="comment">                                 2 - Angular error of mass center (between car orientation and the tangent to the curve)</span>
+0438     <span class="keyword">...</span><span class="comment">                                 3 - Lateral error of point seen ahead</span>
+0439     <span class="keyword">...</span><span class="comment">                                 4 - Angular error of point seen ahead (between car orientation and the tangent to the curve)]</span>
+0440     <span class="string">'mag_error'</span>,[NaN NaN],<span class="keyword">...</span><span class="comment">             % Last error in permanent magnets localization method</span>
+0441     <span class="keyword">...</span><span class="comment">     % Occupation Map</span>
+0442     <span class="string">'list'</span>,[],<span class="keyword">...</span><span class="comment">                   % List of cars in the neighborhood (driver's vision)</span>
+0443     <span class="string">'commulistcar'</span>,[],<span class="keyword">...</span><span class="comment">           % List of cars in the neighborhood (communication)</span>
+0444     <span class="keyword">...</span><span class="comment">     % velocity profile data</span>
+0445     <span class="string">'vel_prof'</span>,[],<span class="keyword">...</span><span class="comment">               % Velocity profile defined by the management system of the roundabout  ([time;traj_point;vel])</span>
+0446     <span class="string">'vp'</span>,1,<span class="keyword">...</span><span class="comment">                      % Current stage of velocity profile that car is follow</span>
+0447     <span class="string">'vpn'</span>,1,<span class="keyword">...</span><span class="comment">                     % Number of stages of profile velocity</span>
+0448     <span class="string">'vel_prof2'</span>,[],<span class="keyword">...</span><span class="comment">               % Velocity profile defined by the management system of the crossroads  ([time;traj_point;vel])</span>
+0449     <span class="string">'vp2'</span>,1,<span class="keyword">...</span><span class="comment">                      % Current stage of velocity profile (cross) that car is follow</span>
+0450     <span class="string">'vpn2'</span>,1,<span class="keyword">...</span><span class="comment">                     % Number of stages of profile velocity (cross)</span>
+0451     <span class="keyword">...</span><span class="comment">     % Traffic gestion data</span>
+0452     <span class="string">'rar'</span>,[],<span class="keyword">...</span><span class="comment">                    % Road after roundabout</span>
+0453     <span class="string">'rac'</span>,[],<span class="keyword">...</span><span class="comment">                    % Road after cross</span>
+0454     <span class="string">'rbc'</span>,[],<span class="keyword">...</span><span class="comment">                    % Road before cross</span>
+0455     <span class="string">'lightdirection'</span>,[],<span class="keyword">...</span><span class="comment">         % Direction light turned on in the cross</span>
+0456     <span class="string">'crosscels'</span>,[],<span class="keyword">...</span><span class="comment">              % Cross cels intercepted by the trajectory</span>
+0457     <span class="string">'nostop'</span>,[],<span class="keyword">...</span><span class="comment">                 % Stops ignored</span>
+0458     <span class="keyword">...</span><span class="comment">     % OTA communication</span>
+0459     <span class="string">'commu_gps_info'</span>,-1,<span class="keyword">...</span><span class="comment">          % 1 if car receives GPS information</span>
+0460     <span class="string">'commu_vel_prof'</span>,-1,<span class="keyword">...</span><span class="comment">          % 1 if car receives velocity profile from roundabout</span>
+0461     <span class="string">'commu_vel_prof2'</span>,-1,<span class="keyword">...</span><span class="comment">         % 1 if car receives velocity profile from crossroads</span>
+0462     <span class="keyword">...</span><span class="comment">     % Data to plot estimation errors</span>
+0463     <span class="string">'deltaS_Real'</span>,[],<span class="keyword">...</span>
+0464     <span class="string">'deltaW_Real'</span>,[],<span class="keyword">...</span>
+0465     <span class="string">'deltaS_Noise'</span>,[],<span class="keyword">...</span>
+0466     <span class="string">'deltaW_Noise'</span>,[],<span class="keyword">...</span>
+0467     <span class="string">'deltaS_KF_CT'</span>,[],<span class="keyword">...</span>
+0468     <span class="string">'deltaW_KF_CT'</span>,[],<span class="keyword">...</span>
+0469     <span class="keyword">...</span><span class="comment">%'deltaS_KF',[],...</span>
+0470     <span class="keyword">...</span><span class="comment">%'deltaW_KF',[],...</span>
+0471     <span class="keyword">...</span><span class="comment">%'deltaS_KF_INOV',[],...</span>
+0472     <span class="keyword">...</span><span class="comment">%'deltaW_KF_INOV',[],...</span>
+0473     <span class="string">'posReal'</span>,[],<span class="keyword">...</span><span class="comment">            % Real position</span>
+0474     <span class="string">'posNoise'</span>,[],<span class="keyword">...</span><span class="comment">           % Position with error</span>
+0475     <span class="string">'posCt'</span>,[],<span class="keyword">...</span><span class="comment">              % Position estimated with KF (CT)</span>
+0476     <span class="string">'posMag'</span>,[],<span class="keyword">...</span>
+0477     <span class="string">'TRUEpos'</span>,[],<span class="keyword">...</span>
+0478     <span class="keyword">...</span><span class="comment">     % Auxiliary variables (used occasionally and for debug)</span>
+0479     <span class="string">'aux2'</span>,0,<span class="keyword">...</span>
+0480     <span class="string">'aux'</span>,[] <span class="keyword">...</span>
+0481     );
+0482 
+0483 <span class="keyword">end</span>
+0484 
+0485 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0486 <span class="comment">% datains() - Information of INS (and fusion)</span>
+0487 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0488 <a name="_sub3" href="#_subfunctions" class="code">function [out] = datains()</a>
+0489 
+0490 out=struct<span class="keyword">...</span>
+0491     (<span class="keyword">...</span>
+0492     <span class="string">'est_roll'</span>,0,<span class="keyword">...</span>
+0493     <span class="string">'est_pitch'</span>,0,<span class="keyword">...</span>
+0494     <span class="string">'est_yaw'</span>,0,<span class="keyword">...</span>
+0495     <span class="string">'est_lat'</span>,0,<span class="keyword">...</span>
+0496     <span class="string">'est_lon'</span>,0,<span class="keyword">...</span>
+0497     <span class="string">'est_height'</span>,0,<span class="keyword">...</span>
+0498     <span class="string">'est_alpha'</span>,0,<span class="keyword">...</span>
+0499     <span class="string">'del_Vl'</span>,0,<span class="keyword">...</span>
+0500     <span class="string">'omega_el_L'</span>,0,<span class="keyword">...</span>
+0501     <span class="string">'omega_ie_L'</span>,0,<span class="keyword">...</span>
+0502     <span class="string">'est_DCMbn'</span>,0,<span class="keyword">...</span>
+0503     <span class="string">'est_DCMel'</span>,0,<span class="keyword">...</span>
+0504     <span class="string">'g_extr'</span>,0,<span class="keyword">...</span>
+0505     <span class="string">'est_laterr'</span>,0,<span class="keyword">...</span>
+0506     <span class="string">'est_longerr'</span>,0,<span class="keyword">...</span>
+0507     <span class="string">'lat_prof'</span>,0,<span class="keyword">...</span>
+0508     <span class="string">'lon_prof'</span>,0,<span class="keyword">...</span>
+0509     <span class="string">'height_prof'</span>,0,<span class="keyword">...</span>
+0510     <span class="string">'vel_l'</span>,zeros(2,3) <span class="keyword">...</span>
+0511     );
+0512 
+0513 <span class="keyword">end</span>
+0514 
+0515 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0516 <span class="comment">% driver() - Information of driver</span>
+0517 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0518 <a name="_sub4" href="#_subfunctions" class="code">function [out] = driver()</a>
+0519 
+0520 out=struct<span class="keyword">...</span>
+0521     (<span class="keyword">...</span>
+0522     <span class="string">'type'</span>,NaN,<span class="keyword">...</span><span class="comment">      % Type of driver</span>
+0523     <span class="string">'color'</span>,[0 0 0],<span class="keyword">...</span><span class="comment"> % Color of car</span>
+0524     <span class="string">'velmax'</span>,NaN,<span class="keyword">...</span><span class="comment">    % Maximum speed</span>
+0525     <span class="string">'velcur'</span>,NaN <span class="keyword">...</span><span class="comment">    % Current speed</span>
+0526     );
+0527 
+0528 <span class="keyword">end</span>
+0529 
+0530 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0531 <span class="comment">% wpos() - Position in the simulator (x,y,t)</span>
+0532 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0533 <a name="_sub5" href="#_subfunctions" class="code">function [out] = pos()</a>
+0534 
+0535 out=struct<span class="keyword">...</span>
+0536     (<span class="keyword">...</span>
+0537     <span class="string">'x'</span>,NaN,<span class="keyword">...</span>
+0538     <span class="string">'y'</span>,NaN,<span class="keyword">...</span>
+0539     <span class="string">'t'</span>,NaN <span class="keyword">...</span>
+0540     );
+0541 
+0542 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

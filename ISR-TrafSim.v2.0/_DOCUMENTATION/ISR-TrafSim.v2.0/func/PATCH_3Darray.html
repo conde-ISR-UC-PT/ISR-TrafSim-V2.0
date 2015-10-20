@@ -1,0 +1,597 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PATCH_3Darray</title>
+  <meta name="keywords" content="PATCH_3Darray">
+  <meta name="description" content="PATCH_3Darray  Plot a 3D array using patch to create a quadrangular surface mesh">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>PATCH_3Darray
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PATCH_3Darray  Plot a 3D array using patch to create a quadrangular surface mesh</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = PATCH_3Darray(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PATCH_3Darray  Plot a 3D array using patch to create a quadrangular surface mesh
+==========================================================================
+ FILENAME:          PATCH_3Darray.m
+ AUTHOR:            Adam H. Aitkenhead
+ INSTITUTION:       The Christie NHS Foundation Trust
+ CONTACT:           adam.aitkenhead@physics.cr.man.ac.uk
+ DATE:              17th August 2010
+ PURPOSE:           Plot a 3D array using patch to create a quadrangular
+                    surface mesh
+
+ USAGE:             [hpat] = PATCH_3Darray(gridINPUT)
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,cmap)
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ)
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap)
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,'col')
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,'sym')
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap,'col')
+           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap,'sym')
+           ..or..   [hpat,hcbar] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap,'sym')
+
+ INPUT PARAMETERS:
+   gridINPUT        - 3D array of size (P,Q,R)
+                      If not using the flags 'col' or 'sym', then
+                      gridINPUT should be a logical array.  If using the
+                      flags 'col' or 'sym', then gridINPUT should be a
+                      numeric array where voxels which are not to be
+                      displayed contain the value NaN.
+   gridX (optional) - A 1xP array  - List of the X axis coordinates.
+   gridY (optional) - A 1xQ array  - List of the Y axis coordinates.
+   gridZ (optional) - A 1xR array  - List of the Z axis coordinates.
+   gridZ (optional) - A 1xR array  - List of the Z axis coordinates.
+   cmap  (optional) - A Nx3 array  - The colormap definition.  When
+                      plotting using the 'col' or 'sym' flag, cmap must be
+                      an Nx3 array, eg jet(32).  When plotting a logical
+                      array, cmap must be an RGB triplet, eg [0.5,0.5,0].
+
+ ADDITIONAL INPUT FLAGS:
+   'col'  (optional) - When this flag is present, the colour of each
+                       facet corresponds to the value of the voxel.  In
+                       the input array gridINPUT, voxels which are not to
+                       be displayed should have a value of NaN.
+   'sym'  (optional) - Similar to the flag 'col', except that the
+                       colorbar is symmetric about zero.
+   'barN' (optional) - Display a colorbar on North of plot.
+   'barE' (optional) - Display a colorbar on East of plot.
+   'barS' (optional) - Display a colorbar on South of plot.
+   'barW' (optional) - Display a colorbar on West of plot.
+
+ OUTPUT PARAMETERS:
+   hpat  (optional)  - Handle to the patch object.
+   hcbar (optional)  - Handle to the colorbar.
+==========================================================================</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/graphic/view_3D_map_isr_trafsim.html" class="code" title="function [ ] = view_3D_map_isr_trafsim( arg )">view_3D_map_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = PATCH_3Darray(varargin)</a>
+0002 <span class="comment">% PATCH_3Darray  Plot a 3D array using patch to create a quadrangular surface mesh</span>
+0003 <span class="comment">%==========================================================================</span>
+0004 <span class="comment">% FILENAME:          PATCH_3Darray.m</span>
+0005 <span class="comment">% AUTHOR:            Adam H. Aitkenhead</span>
+0006 <span class="comment">% INSTITUTION:       The Christie NHS Foundation Trust</span>
+0007 <span class="comment">% CONTACT:           adam.aitkenhead@physics.cr.man.ac.uk</span>
+0008 <span class="comment">% DATE:              17th August 2010</span>
+0009 <span class="comment">% PURPOSE:           Plot a 3D array using patch to create a quadrangular</span>
+0010 <span class="comment">%                    surface mesh</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% USAGE:             [hpat] = PATCH_3Darray(gridINPUT)</span>
+0013 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,cmap)</span>
+0014 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ)</span>
+0015 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap)</span>
+0016 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,'col')</span>
+0017 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,'sym')</span>
+0018 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap,'col')</span>
+0019 <span class="comment">%           ..or..   [hpat] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap,'sym')</span>
+0020 <span class="comment">%           ..or..   [hpat,hcbar] = PATCH_3Darray(gridINPUT,gridX,gridY,gridZ,cmap,'sym')</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% INPUT PARAMETERS:</span>
+0023 <span class="comment">%   gridINPUT        - 3D array of size (P,Q,R)</span>
+0024 <span class="comment">%                      If not using the flags 'col' or 'sym', then</span>
+0025 <span class="comment">%                      gridINPUT should be a logical array.  If using the</span>
+0026 <span class="comment">%                      flags 'col' or 'sym', then gridINPUT should be a</span>
+0027 <span class="comment">%                      numeric array where voxels which are not to be</span>
+0028 <span class="comment">%                      displayed contain the value NaN.</span>
+0029 <span class="comment">%   gridX (optional) - A 1xP array  - List of the X axis coordinates.</span>
+0030 <span class="comment">%   gridY (optional) - A 1xQ array  - List of the Y axis coordinates.</span>
+0031 <span class="comment">%   gridZ (optional) - A 1xR array  - List of the Z axis coordinates.</span>
+0032 <span class="comment">%   gridZ (optional) - A 1xR array  - List of the Z axis coordinates.</span>
+0033 <span class="comment">%   cmap  (optional) - A Nx3 array  - The colormap definition.  When</span>
+0034 <span class="comment">%                      plotting using the 'col' or 'sym' flag, cmap must be</span>
+0035 <span class="comment">%                      an Nx3 array, eg jet(32).  When plotting a logical</span>
+0036 <span class="comment">%                      array, cmap must be an RGB triplet, eg [0.5,0.5,0].</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% ADDITIONAL INPUT FLAGS:</span>
+0039 <span class="comment">%   'col'  (optional) - When this flag is present, the colour of each</span>
+0040 <span class="comment">%                       facet corresponds to the value of the voxel.  In</span>
+0041 <span class="comment">%                       the input array gridINPUT, voxels which are not to</span>
+0042 <span class="comment">%                       be displayed should have a value of NaN.</span>
+0043 <span class="comment">%   'sym'  (optional) - Similar to the flag 'col', except that the</span>
+0044 <span class="comment">%                       colorbar is symmetric about zero.</span>
+0045 <span class="comment">%   'barN' (optional) - Display a colorbar on North of plot.</span>
+0046 <span class="comment">%   'barE' (optional) - Display a colorbar on East of plot.</span>
+0047 <span class="comment">%   'barS' (optional) - Display a colorbar on South of plot.</span>
+0048 <span class="comment">%   'barW' (optional) - Display a colorbar on West of plot.</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% OUTPUT PARAMETERS:</span>
+0051 <span class="comment">%   hpat  (optional)  - Handle to the patch object.</span>
+0052 <span class="comment">%   hcbar (optional)  - Handle to the colorbar.</span>
+0053 <span class="comment">%==========================================================================</span>
+0054 
+0055 <span class="comment">%==========================================================================</span>
+0056 <span class="comment">% VERSION  USER  CHANGES</span>
+0057 <span class="comment">% -------  ----  -------</span>
+0058 <span class="comment">% 100817   AHA   Original version</span>
+0059 <span class="comment">% 101126   AHA   Better handling of objects which are only 1 pixel wide.</span>
+0060 <span class="comment">% 110310   AHA   Can now produce plots where the colour of each facet</span>
+0061 <span class="comment">%                corresponds to the value of the voxel.</span>
+0062 <span class="comment">% 110311   AHA   The user can now specify the colour map for the display of</span>
+0063 <span class="comment">%                a 3D numeric array.</span>
+0064 <span class="comment">% 110316   AHA   Set the facet edges to be a darker version of the face</span>
+0065 <span class="comment">%                colour.</span>
+0066 <span class="comment">% 110324   AHA   Bugfix:  Ensure the facet values lie within [1:cres]</span>
+0067 <span class="comment">%                rather than [0:cres].  Otherwise the 3D object will have a</span>
+0068 <span class="comment">%                hole, since any 0-value facets will not be plotted.</span>
+0069 <span class="comment">% 110401   AHA   Minor speed up by reducing number of calls to ind2sub.</span>
+0070 <span class="comment">% 110407   AHA   Added control of the colorbar position.</span>
+0071 <span class="comment">%==========================================================================</span>
+0072 
+0073 
+0074 <span class="comment">%======================================================</span>
+0075 <span class="comment">% CHECK THE INPUTS</span>
+0076 <span class="comment">%======================================================</span>
+0077 
+0078 checkchar = false(nargin,1);
+0079 checknl   = false(nargin,1);
+0080 <span class="keyword">for</span> loopC = 1:nargin
+0081     checkchar(loopC) = ischar(varargin{loopC});
+0082     checknl(loopC)   = isnumeric(varargin{loopC}) + islogical(varargin{loopC});
+0083 <span class="keyword">end</span>
+0084 
+0085 <span class="comment">%Check for numeric or logical inputs</span>
+0086 <span class="keyword">if</span> sum(checknl)==1
+0087     checknlIND = find(checknl==1);
+0088     gridINPUT  = varargin{checknlIND};
+0089     gridSIZE   = size(gridINPUT);
+0090     gridX      = [1:gridSIZE(1)];
+0091     gridY      = [1:gridSIZE(2)];
+0092     gridZ      = [1:gridSIZE(3)];
+0093 <span class="keyword">elseif</span> sum(checknl)==2
+0094     checknlIND = find(checknl==1);
+0095     gridINPUT  = varargin{checknlIND(1)};
+0096     gridSIZE   = size(gridINPUT);
+0097     gridX      = [1:gridSIZE(1)];
+0098     gridY      = [1:gridSIZE(2)];
+0099     gridZ      = [1:gridSIZE(3)];
+0100     cmap       = varargin{checknlIND(2)};
+0101 <span class="keyword">elseif</span> sum(checknl)==4
+0102     checknlIND = find(checknl==1);
+0103     gridINPUT  = varargin{checknlIND(1)};
+0104     gridSIZE   = size(gridINPUT);
+0105     gridX      = varargin{checknlIND(2)};
+0106     gridY      = varargin{checknlIND(3)};
+0107     gridZ      = varargin{checknlIND(4)};
+0108 <span class="keyword">elseif</span> sum(checknl)==5
+0109     checknlIND = find(checknl==1);
+0110     gridINPUT  = varargin{checknlIND(1)};
+0111     gridSIZE   = size(gridINPUT);
+0112     gridX      = varargin{checknlIND(2)};
+0113     gridY      = varargin{checknlIND(3)};
+0114     gridZ      = varargin{checknlIND(4)};
+0115     cmap       = varargin{checknlIND(5)};
+0116 <span class="keyword">else</span>
+0117     error(<span class="string">'Incorrect number of numeric/logical inputs.'</span>)
+0118 <span class="keyword">end</span>
+0119 
+0120 <span class="comment">%Set defaults for colormap and colorbar options</span>
+0121 symYN = 0;
+0122 colYN = 0;
+0123 cbar  = 0;
+0124 
+0125 <span class="comment">%Check for character inputs</span>
+0126 <span class="keyword">if</span> sum(checkchar)&gt;=1
+0127     checkcharIND = find(checkchar==1);
+0128     <span class="keyword">for</span> loopCH = 1:sum(checkchar)
+0129         <span class="keyword">if</span> strncmpi(<span class="string">'sym'</span>,varargin{checkcharIND(loopCH)},3)==1
+0130             symYN    = 1;
+0131             colYN = 1;
+0132         <span class="keyword">elseif</span> strncmpi(<span class="string">'col'</span>,varargin{checkcharIND(loopCH)},3)==1
+0133             colYN = 1;
+0134         <span class="keyword">elseif</span> strcmpi(<span class="string">'barno'</span>,varargin{checkcharIND(loopCH)})==1
+0135             cbar = 0;
+0136         <span class="keyword">elseif</span> strcmpi(<span class="string">'barN'</span>,varargin{checkcharIND(loopCH)})==1
+0137             cbar = 1;
+0138         <span class="keyword">elseif</span> strcmpi(<span class="string">'barE'</span>,varargin{checkcharIND(loopCH)})==1
+0139             cbar = 2;
+0140         <span class="keyword">elseif</span> strcmpi(<span class="string">'barS'</span>,varargin{checkcharIND(loopCH)})==1
+0141             cbar = 3;
+0142         <span class="keyword">elseif</span> strcmpi(<span class="string">'barW'</span>,varargin{checkcharIND(loopCH)})==1
+0143             cbar = 4;
+0144         <span class="keyword">end</span>
+0145     <span class="keyword">end</span>
+0146 <span class="keyword">end</span>
+0147 
+0148 <span class="comment">%Check that the colormap is a 1x3 array if a logical array is to be plotted</span>
+0149 <span class="keyword">if</span> colYN==0 &amp;&amp; exist(<span class="string">'cmap'</span>,<span class="string">'var'</span>)==1 &amp;&amp; numel(cmap)~=3
+0150     error(<span class="string">'When displaying a logical array, the colour map must be a 1x3 RGB triplet.'</span>)
+0151 <span class="keyword">end</span>
+0152 
+0153 <span class="comment">%Check the size of the grid</span>
+0154 <span class="keyword">if</span> size(gridX,1)&gt;size(gridX,2)
+0155     gridX = gridX';
+0156 <span class="keyword">end</span>
+0157 <span class="keyword">if</span> size(gridY,1)&gt;size(gridY,2)
+0158     gridY = gridY';
+0159 <span class="keyword">end</span>
+0160 <span class="keyword">if</span> size(gridZ,1)&gt;size(gridZ,2)
+0161     gridZ = gridZ';
+0162 <span class="keyword">end</span>
+0163 
+0164 <span class="keyword">if</span> ~isequal(gridSIZE,[numel(gridX),numel(gridY),numel(gridZ)])
+0165     numel(gridX)
+0166     numel(gridY)
+0167     numel(gridZ)
+0168     error(<span class="string">'The dimensions of gridINPUT do not match the dimensions of gridX, gridY, gridZ.'</span>)
+0169 <span class="keyword">end</span>
+0170 
+0171 
+0172 <span class="comment">%======================================================</span>
+0173 <span class="comment">% OBTAIN A LOGICAL ARRAY FROM gridINPUT</span>
+0174 <span class="comment">%======================================================</span>
+0175 
+0176 <span class="keyword">if</span> colYN == 1;
+0177     gridINPUTlogical = ~isnan(gridINPUT);
+0178 <span class="keyword">elseif</span> colYN == 0;
+0179     gridINPUTlogical = gridINPUT;
+0180     nanvoxels = isnan(gridINPUT);
+0181     nancount  = sum(nanvoxels(:));
+0182     <span class="keyword">if</span> nancount&gt;0
+0183         gridINPUTlogical(~nanvoxels) = 1;
+0184         gridINPUTlogical(nanvoxels)  = 0;
+0185     <span class="keyword">end</span>
+0186     gridINPUTlogical = logical(gridINPUTlogical);
+0187 <span class="keyword">end</span>
+0188 
+0189 
+0190 <span class="comment">%======================================================</span>
+0191 <span class="comment">% REMOVE ANY OUTER UNUSED AREAS FROM gridINPUT</span>
+0192 <span class="comment">%======================================================</span>
+0193 
+0194 objectIND                 = find(gridINPUTlogical);
+0195 [objectX,objectY,objectZ] = ind2sub(gridSIZE,objectIND);
+0196 
+0197 <span class="keyword">if</span> objectX(1)~=objectX(end)
+0198     gridINPUT        = gridINPUT(min(objectX):max(objectX),:,:);
+0199     gridINPUTlogical = gridINPUTlogical(min(objectX):max(objectX),:,:);
+0200     gridX            = gridX(min(objectX):max(objectX));
+0201 <span class="keyword">end</span>
+0202 <span class="keyword">if</span> objectY(1)~=objectY(end)
+0203     gridINPUT        = gridINPUT(:,min(objectY):max(objectY),:);
+0204     gridINPUTlogical = gridINPUTlogical(:,min(objectY):max(objectY),:);
+0205     gridY            = gridY(min(objectY):max(objectY));
+0206 <span class="keyword">end</span>
+0207 <span class="keyword">if</span> objectZ(1)~=objectZ(end)
+0208     gridINPUT        = gridINPUT(:,:,min(objectZ):max(objectZ));
+0209     gridINPUTlogical = gridINPUTlogical(:,:,min(objectZ):max(objectZ));
+0210     gridZ            = gridZ(min(objectZ):max(objectZ));
+0211 <span class="keyword">end</span>
+0212 
+0213 gridSIZE = size(gridINPUT);
+0214 
+0215 
+0216 <span class="comment">%======================================================</span>
+0217 <span class="comment">% DEFINE THE LOWER AND UPPER LIMITS OF EACH VOXEL</span>
+0218 <span class="comment">%======================================================</span>
+0219 
+0220 <span class="keyword">if</span> gridSIZE(1)==1
+0221     gridXlower = gridX;
+0222     gridXupper = gridX;
+0223 <span class="keyword">else</span>
+0224     gridXsteps = gridX(2:end)-gridX(1:end-1);
+0225     gridXlower = gridX-[gridXsteps(1),gridXsteps]/2;
+0226     gridXupper = gridX+[gridXsteps,gridXsteps(end)]/2;
+0227 <span class="keyword">end</span>
+0228 
+0229 <span class="keyword">if</span> gridSIZE(2)==1
+0230     gridYlower = gridY;
+0231     gridYupper = gridY;
+0232 <span class="keyword">else</span>
+0233     gridYsteps = gridY(2:end)-gridY(1:end-1);
+0234     gridYlower = gridY-[gridYsteps(1),gridYsteps]/2;
+0235     gridYupper = gridY+[gridYsteps,gridYsteps(end)]/2;
+0236 <span class="keyword">end</span>
+0237 
+0238 <span class="keyword">if</span> gridSIZE(3)==1
+0239     gridZlower = gridZ;
+0240     gridZupper = gridZ;
+0241 <span class="keyword">else</span>
+0242     gridZsteps = gridZ(2:end)-gridZ(1:end-1);
+0243     gridZlower = gridZ-[gridZsteps(1),gridZsteps]/2;
+0244     gridZupper = gridZ+[gridZsteps,gridZsteps(end)]/2;
+0245 <span class="keyword">end</span>
+0246 
+0247 <span class="comment">%======================================================</span>
+0248 <span class="comment">% FOR EACH VOXEL, IDENTIFY WHETHER ITS 6 NEIGHBOURS ARE WITHIN THE OBJECT.</span>
+0249 <span class="comment">% IF ANY NEIGHBOUR IS OUTSIDE THE OBJECT, DRAW FACETS BETWEEN THE VOXEL AND</span>
+0250 <span class="comment">% THAT NEIGHBOUR.</span>
+0251 <span class="comment">%======================================================</span>
+0252 
+0253 gridINPUTshifted = false(gridSIZE);
+0254 <span class="keyword">if</span> gridSIZE(1)&gt;2
+0255     gridINPUTwithborder = cat(1,false(1,gridSIZE(2),gridSIZE(3)),gridINPUTlogical,false(1,gridSIZE(2),gridSIZE(3)));         <span class="comment">%Add border</span>
+0256     gridINPUTshifted    = cat(1,false(1,gridSIZE(2),gridSIZE(3)),gridINPUTshifted,false(1,gridSIZE(2),gridSIZE(3)));      <span class="comment">%Add border</span>
+0257     gridINPUTshifted    = gridINPUTshifted + circshift(gridINPUTwithborder,[-1,0,0]) + circshift(gridINPUTwithborder,[1,0,0]);
+0258     gridINPUTshifted    = gridINPUTshifted(2:end-1,:,:);  <span class="comment">%Remove border</span>
+0259 <span class="keyword">end</span>
+0260 <span class="keyword">if</span> gridSIZE(2)&gt;2
+0261     gridINPUTwithborder = cat(2,false(gridSIZE(1),1,gridSIZE(3)),gridINPUTlogical,false(gridSIZE(1),1,gridSIZE(3)));         <span class="comment">%Add border</span>
+0262     gridINPUTshifted    = cat(2,false(gridSIZE(1),1,gridSIZE(3)),gridINPUTshifted,false(gridSIZE(1),1,gridSIZE(3)));      <span class="comment">%Add border</span>
+0263     gridINPUTshifted    = gridINPUTshifted + circshift(gridINPUTwithborder,[0,-1,0]) + circshift(gridINPUTwithborder,[0,1,0]);
+0264     gridINPUTshifted    = gridINPUTshifted(:,2:end-1,:);  <span class="comment">%Remove border</span>
+0265 <span class="keyword">end</span>
+0266 <span class="keyword">if</span> gridSIZE(3)&gt;2
+0267     gridINPUTwithborder = cat(3,false(gridSIZE(1),gridSIZE(2),1),gridINPUTlogical,false(gridSIZE(1),gridSIZE(2),1));         <span class="comment">%Add border</span>
+0268     gridINPUTshifted    = cat(3,false(gridSIZE(1),gridSIZE(2),1),gridINPUTshifted,false(gridSIZE(1),gridSIZE(2),1));      <span class="comment">%Add border</span>
+0269     gridINPUTshifted    = gridINPUTshifted + circshift(gridINPUTwithborder,[0,0,-1]) + circshift(gridINPUTwithborder,[0,0,1]);
+0270     gridINPUTshifted    = gridINPUTshifted(:,:,2:end-1);  <span class="comment">%Remove border</span>
+0271 <span class="keyword">end</span>
+0272 
+0273 <span class="comment">%Identify the voxels which are at the boundary of the object:</span>
+0274 edgevoxellogical = gridINPUTlogical &amp; gridINPUTshifted&lt;6;
+0275 edgevoxelindices = find(edgevoxellogical)';
+0276 edgevoxelcount   = numel(edgevoxelindices);
+0277 
+0278 <span class="comment">%Calculate the number of facets there will be in the final quadrangular mesh:</span>
+0279 facetcount = (edgevoxelcount*6 - sum(gridINPUTshifted(edgevoxelindices)) );
+0280 
+0281 <span class="comment">%Create an array to record...</span>
+0282 <span class="comment">%Cols 1-6: Whether each edge voxel's 6 neighbours are inside or outside the object.</span>
+0283 neighbourlist = false(edgevoxelcount,6);
+0284 
+0285 <span class="comment">%Initialise arrays to store the quadrangular mesh data:</span>
+0286 facetsALL  = zeros(facetcount,3,4);
+0287 normalsALL = zeros(facetcount,3);
+0288 valuesALL  = zeros(facetcount,1);
+0289 
+0290 <span class="comment">%Create a counter to keep track of how many facets have been written as the</span>
+0291 <span class="comment">%following 'for' loop progresses:</span>
+0292 facetcountsofar = 0;
+0293 
+0294 [subXALL,subYALL,subZALL] = ind2sub(gridSIZE,edgevoxelindices);
+0295 
+0296 <span class="keyword">for</span> loopP = 1:edgevoxelcount
+0297     
+0298     subX = subXALL(loopP);
+0299     subY = subYALL(loopP);
+0300     subZ = subZALL(loopP);
+0301     
+0302     <span class="keyword">if</span> subX==1
+0303         neighbourlist(loopP,1) = 0;
+0304     <span class="keyword">else</span>
+0305         neighbourlist(loopP,1) = gridINPUTlogical(subX-1,subY,subZ);
+0306     <span class="keyword">end</span>
+0307     <span class="keyword">if</span> subY==1
+0308         neighbourlist(loopP,2) = 0;
+0309     <span class="keyword">else</span>
+0310         neighbourlist(loopP,2) = gridINPUTlogical(subX,subY-1,subZ);
+0311     <span class="keyword">end</span>
+0312     <span class="keyword">if</span> subZ==gridSIZE(3)
+0313         neighbourlist(loopP,3) = 0;
+0314     <span class="keyword">else</span>
+0315         neighbourlist(loopP,3) = gridINPUTlogical(subX,subY,subZ+1);
+0316     <span class="keyword">end</span>
+0317     <span class="keyword">if</span> subY==gridSIZE(2)
+0318         neighbourlist(loopP,4) = 0;
+0319     <span class="keyword">else</span>
+0320         neighbourlist(loopP,4) = gridINPUTlogical(subX,subY+1,subZ);
+0321     <span class="keyword">end</span>
+0322     <span class="keyword">if</span> subZ==1
+0323         neighbourlist(loopP,5) = 0;
+0324     <span class="keyword">else</span>
+0325         neighbourlist(loopP,5) = gridINPUTlogical(subX,subY,subZ-1);
+0326     <span class="keyword">end</span>
+0327     <span class="keyword">if</span> subX==gridSIZE(1)
+0328         neighbourlist(loopP,6) = 0;
+0329     <span class="keyword">else</span>
+0330         neighbourlist(loopP,6) = gridINPUTlogical(subX+1,subY,subZ);
+0331     <span class="keyword">end</span>
+0332     
+0333     facetCOtemp         = zeros(6-sum(neighbourlist(loopP,:)),3,4);
+0334     normalCOtemp        = zeros(6-sum(neighbourlist(loopP,:)),3);
+0335     facetcountthisvoxel = 0;
+0336     
+0337     <span class="keyword">if</span> neighbourlist(loopP,1)==0   <span class="comment">%Neighbouring voxel in the -x direction</span>
+0338         facetcountthisvoxel                    = facetcountthisvoxel+1;
+0339         facetcountsofar                        = facetcountsofar+1;
+0340         facetCOtemp(facetcountthisvoxel,1:3,1) = [ gridXlower(subX),gridYlower(subY),gridZlower(subZ) ];
+0341         facetCOtemp(facetcountthisvoxel,1:3,2) = [ gridXlower(subX),gridYlower(subY),gridZupper(subZ) ];
+0342         facetCOtemp(facetcountthisvoxel,1:3,3) = [ gridXlower(subX),gridYupper(subY),gridZupper(subZ) ];
+0343         facetCOtemp(facetcountthisvoxel,1:3,4) = [ gridXlower(subX),gridYupper(subY),gridZlower(subZ) ];
+0344         normalCOtemp(facetcountthisvoxel,1:3)  = [-1,0,0];
+0345     <span class="keyword">end</span>
+0346     <span class="keyword">if</span> neighbourlist(loopP,2)==0   <span class="comment">%Neighbouring voxel in the -y direction</span>
+0347         facetcountthisvoxel                    = facetcountthisvoxel+1;
+0348         facetcountsofar                        = facetcountsofar+1;
+0349         facetCOtemp(facetcountthisvoxel,1:3,1) = [ gridXlower(subX),gridYlower(subY),gridZlower(subZ) ];
+0350         facetCOtemp(facetcountthisvoxel,1:3,2) = [ gridXupper(subX),gridYlower(subY),gridZlower(subZ) ];
+0351         facetCOtemp(facetcountthisvoxel,1:3,3) = [ gridXupper(subX),gridYlower(subY),gridZupper(subZ) ];
+0352         facetCOtemp(facetcountthisvoxel,1:3,4) = [ gridXlower(subX),gridYlower(subY),gridZupper(subZ) ];
+0353         normalCOtemp(facetcountthisvoxel,1:3)  = [0,-1,0];
+0354     <span class="keyword">end</span>
+0355     <span class="keyword">if</span> neighbourlist(loopP,3)==0   <span class="comment">%Neighbouring voxel in the +z direction</span>
+0356         facetcountthisvoxel                    = facetcountthisvoxel+1;
+0357         facetcountsofar                        = facetcountsofar+1;
+0358         facetCOtemp(facetcountthisvoxel,1:3,1) = [ gridXupper(subX),gridYlower(subY),gridZupper(subZ) ];
+0359         facetCOtemp(facetcountthisvoxel,1:3,2) = [ gridXupper(subX),gridYupper(subY),gridZupper(subZ) ];
+0360         facetCOtemp(facetcountthisvoxel,1:3,3) = [ gridXlower(subX),gridYupper(subY),gridZupper(subZ) ];
+0361         facetCOtemp(facetcountthisvoxel,1:3,4) = [ gridXlower(subX),gridYlower(subY),gridZupper(subZ) ];
+0362         normalCOtemp(facetcountthisvoxel,1:3)  = [0,0,1];
+0363     <span class="keyword">end</span>
+0364     <span class="keyword">if</span> neighbourlist(loopP,4)==0   <span class="comment">%Neighbouring voxel in the +y direction</span>
+0365         facetcountthisvoxel                    = facetcountthisvoxel+1;
+0366         facetcountsofar                        = facetcountsofar+1;
+0367         facetCOtemp(facetcountthisvoxel,1:3,1) = [ gridXupper(subX),gridYupper(subY),gridZlower(subZ) ];
+0368         facetCOtemp(facetcountthisvoxel,1:3,2) = [ gridXlower(subX),gridYupper(subY),gridZlower(subZ) ];
+0369         facetCOtemp(facetcountthisvoxel,1:3,3) = [ gridXlower(subX),gridYupper(subY),gridZupper(subZ) ];
+0370         facetCOtemp(facetcountthisvoxel,1:3,4) = [ gridXupper(subX),gridYupper(subY),gridZupper(subZ) ];
+0371         normalCOtemp(facetcountthisvoxel,1:3)  = [0,1,0];
+0372     <span class="keyword">end</span>
+0373     <span class="keyword">if</span> neighbourlist(loopP,5)==0   <span class="comment">%Neighbouring voxel in the -z direction</span>
+0374         facetcountthisvoxel                    = facetcountthisvoxel+1;
+0375         facetcountsofar                        = facetcountsofar+1;
+0376         facetCOtemp(facetcountthisvoxel,1:3,1) = [ gridXlower(subX),gridYlower(subY),gridZlower(subZ) ];
+0377         facetCOtemp(facetcountthisvoxel,1:3,2) = [ gridXlower(subX),gridYupper(subY),gridZlower(subZ) ];
+0378         facetCOtemp(facetcountthisvoxel,1:3,3) = [ gridXupper(subX),gridYupper(subY),gridZlower(subZ) ];
+0379         facetCOtemp(facetcountthisvoxel,1:3,4) = [ gridXupper(subX),gridYlower(subY),gridZlower(subZ) ];
+0380         normalCOtemp(facetcountthisvoxel,1:3)  = [0,-1,0];
+0381     <span class="keyword">end</span>
+0382     <span class="keyword">if</span> neighbourlist(loopP,6)==0   <span class="comment">%Neighbouring voxel in the +x direction</span>
+0383         facetcountthisvoxel                    = facetcountthisvoxel+1;
+0384         facetcountsofar                        = facetcountsofar+1;
+0385         facetCOtemp(facetcountthisvoxel,1:3,1) = [ gridXupper(subX),gridYupper(subY),gridZlower(subZ) ];
+0386         facetCOtemp(facetcountthisvoxel,1:3,2) = [ gridXupper(subX),gridYupper(subY),gridZupper(subZ) ];
+0387         facetCOtemp(facetcountthisvoxel,1:3,3) = [ gridXupper(subX),gridYlower(subY),gridZupper(subZ) ];
+0388         facetCOtemp(facetcountthisvoxel,1:3,4) = [ gridXupper(subX),gridYlower(subY),gridZlower(subZ) ];
+0389         normalCOtemp(facetcountthisvoxel,1:3)  = [1,0,0];
+0390     <span class="keyword">end</span>
+0391     
+0392     facetsALL(facetcountsofar-facetcountthisvoxel+1:facetcountsofar,:,:) = facetCOtemp;
+0393     normalsALL(facetcountsofar-facetcountthisvoxel+1:facetcountsofar,:)  = normalCOtemp;
+0394     valuesALL(facetcountsofar-facetcountthisvoxel+1:facetcountsofar)     = gridINPUT(edgevoxelindices(loopP));
+0395     
+0396 <span class="keyword">end</span>
+0397 
+0398 <span class="comment">%======================================================</span>
+0399 <span class="comment">% PLOT THE QUADRANGULAR SURFACE MESH</span>
+0400 <span class="comment">%======================================================</span>
+0401 
+0402 <span class="keyword">if</span> colYN==1
+0403     
+0404     <span class="comment">%Define the colormap and resolution</span>
+0405     <span class="keyword">if</span> exist(<span class="string">'cmap'</span>,<span class="string">'var'</span>)
+0406         cres = size(cmap,1);
+0407     <span class="keyword">else</span>
+0408         cres = 16;
+0409         cmap = jet(cres);
+0410     <span class="keyword">end</span>
+0411     
+0412     <span class="keyword">if</span> symYN==1
+0413         <span class="comment">%Ensure that the colorbar is symmetric about zero</span>
+0414         valueMINMAX = max(abs([min(valuesALL(:)),max(valuesALL(:))]));
+0415         valuesTEMP  = valuesALL + valueMINMAX;
+0416         valuesTEMP  = 1 + round( (cres-1)*valuesTEMP./(2*valueMINMAX) );    <span class="comment">% The '1 + ...' ensures that the values are within [1:16] rather than [0:16]</span>
+0417         crange      = [-valueMINMAX,valueMINMAX];
+0418     <span class="keyword">elseif</span> symYN==0
+0419         <span class="comment">%The colorbar does not need to be symmetric about zero</span>
+0420         valuesTEMP  = valuesALL - min(valuesALL(:));
+0421         valuesTEMP  = 1 + round( (cres-1)*valuesTEMP./max(valuesTEMP(:)) );    <span class="comment">% The '1 + ...' ensures that the values are within [1:16] rather than [0:16]</span>
+0422         crange      = [min(valuesALL(:)),max(valuesALL(:))];
+0423     <span class="keyword">end</span>
+0424     
+0425     <span class="keyword">if</span> crange(1) ~= crange(end)
+0426         <span class="comment">%If the facets have a range of colours</span>
+0427         hpat = cell(1,cres);
+0428         <span class="keyword">for</span> loopJ = 1:cres
+0429             xco         = squeeze( facetsALL(valuesTEMP==loopJ,1,:) )';
+0430             yco         = squeeze( facetsALL(valuesTEMP==loopJ,2,:) )';
+0431             zco         = squeeze( facetsALL(valuesTEMP==loopJ,3,:) )';
+0432             hpat{loopJ} = patch(xco,yco,zco,cmap(loopJ,:));
+0433             <span class="comment">%set(hpat{loopJ},'EdgeColor',cmap(loopJ,:)/2);</span>
+0434             set(hpat{loopJ},<span class="string">'EdgeColor'</span>,cmap(loopJ,:)/1.2);
+0435         <span class="keyword">end</span>
+0436         set(gca, <span class="string">'CLim'</span>, crange);
+0437         <span class="keyword">if</span> cbar==1
+0438             hcbar = colorbar(<span class="string">'NorthOutside'</span>,<span class="string">'YLim'</span>,crange);
+0439         <span class="keyword">elseif</span> cbar==2
+0440             hcbar = colorbar(<span class="string">'EastOutside'</span>,<span class="string">'YLim'</span>,crange);
+0441         <span class="keyword">elseif</span> cbar==3
+0442             hcbar = colorbar(<span class="string">'SouthOutside'</span>,<span class="string">'YLim'</span>,crange);
+0443         <span class="keyword">elseif</span> cbar==4
+0444             hcbar = colorbar(<span class="string">'WestOutside'</span>,<span class="string">'YLim'</span>,crange);
+0445         <span class="keyword">end</span>
+0446         colormap(cmap);
+0447     <span class="keyword">else</span>
+0448         <span class="comment">%If the facets are all the same colour</span>
+0449         xco  = squeeze( facetsALL(:,1,:) )';
+0450         yco  = squeeze( facetsALL(:,2,:) )';
+0451         zco  = squeeze( facetsALL(:,3,:) )';
+0452         hpat = patch(xco,yco,zco,cmap(round(end/2),:));
+0453         set(hpat,<span class="string">'EdgeColor'</span>,cmap(round(end/2),:)/2);
+0454         set(gca,<span class="string">'CLim'</span>,crange+[-1,1]);
+0455         <span class="keyword">if</span> cbar==1
+0456             hcbar = colorbar(<span class="string">'NorthOutside'</span>,<span class="string">'YLim'</span>,crange+[-1,1]);
+0457         <span class="keyword">elseif</span> cbar==2
+0458             hcbar = colorbar(<span class="string">'EastOutside'</span>,<span class="string">'YLim'</span>,crange+[-1,1]);
+0459         <span class="keyword">elseif</span> cbar==3
+0460             hcbar = colorbar(<span class="string">'SouthOutside'</span>,<span class="string">'YLim'</span>,crange+[-1,1]);
+0461         <span class="keyword">elseif</span> cbar==4
+0462             hcbar = colorbar(<span class="string">'WestOutside'</span>,<span class="string">'YLim'</span>,crange+[-1,1]);
+0463         <span class="keyword">end</span>
+0464         colormap(cmap);
+0465     <span class="keyword">end</span>
+0466     
+0467 <span class="keyword">elseif</span> colYN==0
+0468     
+0469     <span class="comment">%Define the colormap and resolution</span>
+0470     <span class="keyword">if</span> exist(<span class="string">'cmap'</span>,<span class="string">'var'</span>)==1
+0471         cmap = cmap(:)';  <span class="comment">%Ensure colourmap is a 1x3 RGB triplet</span>
+0472     <span class="keyword">else</span>
+0473         cmap = [0,0,1];
+0474     <span class="keyword">end</span>
+0475     
+0476     <span class="comment">%Plot a simple logical array where all facets are the same colour</span>
+0477     xco  = squeeze( facetsALL(:,1,:) )';
+0478     yco  = squeeze( facetsALL(:,2,:) )';
+0479     zco  = squeeze( facetsALL(:,3,:) )';
+0480     hpat = patch(xco,yco,zco,cmap);
+0481     set(hpat,<span class="string">'EdgeColor'</span>,cmap/2);
+0482     
+0483 <span class="keyword">end</span>
+0484 axis equal tight;
+0485 
+0486 
+0487 <span class="comment">%======================================================</span>
+0488 <span class="comment">% SET THE OUTPUT PARAMETERS</span>
+0489 <span class="comment">%======================================================</span>
+0490 
+0491 <span class="keyword">if</span> nargout&gt;=1
+0492     varargout(1) = {hpat};
+0493 <span class="keyword">end</span>
+0494 <span class="keyword">if</span> nargout==2
+0495     <span class="keyword">if</span> exist(<span class="string">'hcbar'</span>,<span class="string">'var'</span>)==1
+0496         varargout(2) = {hcbar};
+0497     <span class="keyword">else</span>
+0498         varargout(2) = {[]};
+0499     <span class="keyword">end</span>
+0500 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

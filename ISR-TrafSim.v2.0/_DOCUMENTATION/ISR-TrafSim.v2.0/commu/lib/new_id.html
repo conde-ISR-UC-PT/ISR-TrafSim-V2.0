@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of new_id</title>
+  <meta name="keywords" content="new_id">
+  <meta name="description" content="return a new id for node i">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>new_id
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>return a new id for node i</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [newid] = new_id(i); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> return a new id for node i</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="script_recv_mac.html" class="code" title="">script_recv_mac</a>	script_recv_mac;</li><li><a href="script_recv_net.html" class="code" title="">script_recv_net</a>	script_recv_net</li><li><a href="script_send_mac.html" class="code" title="">script_send_mac</a>	script_send_mac;</li><li><a href="script_send_net2.html" class="code" title="">script_send_net2</a>	script_send_net2;</li><li><a href="script_timeout_rreq.html" class="code" title="">script_timeout_rreq</a>	script_timeout_rreq</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [newid] = new_id(i);</a>
+0002 <span class="comment">% return a new id for node i</span>
+0003 
+0004 <span class="keyword">global</span> Nnodes packet_id;
+0005 
+0006 newid = 0;
+0007 <span class="keyword">if</span> i&lt;=0 | i&gt;Nnodes, <span class="keyword">return</span>; <span class="keyword">end</span>
+0008 packet_id(i) = packet_id(i) + 1;
+0009 newid = packet_id(i);
+0010 
+0011 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

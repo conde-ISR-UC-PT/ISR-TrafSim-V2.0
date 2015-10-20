@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_recv_net</title>
+  <meta name="keywords" content="script_recv_net">
+  <meta name="description" content="script_recv_net">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_recv_net
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_recv_net</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">script_recv_net</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>	return a new id for node i</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%script_recv_net</span>
+0002 t = event.instant;
+0003 i = event.net.src;
+0004 j = event.node;
+0005 <span class="keyword">if</span> bdebug, disp([<span class="string">'time '</span> num2str(t) <span class="string">' recv_net @ node '</span> num2str(j)]); <span class="keyword">end</span>
+0006 <span class="comment">% take care of TTL at network layer</span>
+0007 event.pkt.ttl = event.pkt.ttl - 1;
+0008 <span class="keyword">if</span> event.pkt.ttl &lt; 0
+0009     <span class="keyword">if</span> bdebug, disp([<span class="string">'recv_net: TTL from node '</span> num2str(i) <span class="string">' to '</span> num2str(j) <span class="string">' is negative, drop the packet'</span>]); <span class="keyword">end</span>
+0010     <span class="keyword">return</span>;
+0011 <span class="keyword">end</span>
+0012 <span class="keyword">if</span> j == i | j == event.pkt.tx
+0013     <span class="comment">% I myself sent this packet, no action</span>
+0014     <span class="keyword">return</span>;
+0015 <span class="keyword">end</span>
+0016 <span class="comment">% if cdebug, disp(['time ' num2str(t) 'node ' num2str(event.pkt.tx) ' -&gt; node ' num2str(j) ' with type ' event.net.type]); end</span>
+0017 <span class="keyword">switch</span> event.net.type
+0018     <span class="keyword">case</span> <span class="string">'rreq'</span>
+0019         rreq_in(j) = rreq_in(j) + 1;
+0020         <span class="keyword">if</span> strcmp(event.app.type, <span class="string">'crosslayer_searching'</span>)
+0021             rreq_in_crosslayer(j) = rreq_in_crosslayer(j) + 1;
+0022         <span class="keyword">end</span>
+0023         <span class="keyword">if</span> sum(ismember(event.net.route, j))
+0024             <span class="comment">% I am already in the found route</span>
+0025             <span class="keyword">return</span>;
+0026         <span class="keyword">end</span>
+0027         event.net.route = [event.net.route j];
+0028         <span class="keyword">if</span> j == event.net.dst
+0029             <span class="comment">% I am the destination of this RREQ: send RREP back</span>
+0030             <span class="comment">% check if I have already replied to the same RREQ</span>
+0031             <span class="comment">% if ~isempty(rrep_table) &amp; sum(ismember(rrep_table, [i event.net.id], 'rows'))</span>
+0032             <span class="comment">% we currently use: rrep_table.id, rrep_table.metric, rrep_table.route</span>
+0033             send_rrep = -1;
+0034             <span class="keyword">if</span> isempty(rrep_table(j).list)
+0035                 k = 1;
+0036                 send_rrep = 1;
+0037             <span class="keyword">else</span>
+0038                 <span class="comment">% rrep_table is not empty</span>
+0039                 <span class="keyword">for</span> k=1:length(rrep_table(j).list)
+0040                     <span class="keyword">if</span> rrep_table(j).list(k).route(1)==i
+0041                         <span class="comment">% find a early saved RREQ from the same src</span>
+0042                         <span class="comment">% assume this is the only saved RREQ from the same src</span>
+0043                         <span class="keyword">if</span> rrep_table(j).list(k).id &lt; event.net.id
+0044                             <span class="comment">% I replied to an older RREQ: take the new one and reply</span>
+0045                             send_rrep = 1;
+0046                         <span class="keyword">elseif</span> rrep_table(j).list(k).id == event.net.id
+0047                             <span class="comment">% I replied to the same RREQ: should I reply to again?</span>
+0048                             <span class="keyword">if</span> event.net.metric &lt; rrep_table(j).list(k).metric
+0049                                 <span class="comment">% metric: the samller the better</span>
+0050                                 <span class="comment">% This is a better route, take it and reply</span>
+0051                                 send_rrep = 1;
+0052                             <span class="keyword">else</span>
+0053                                 <span class="comment">% not a better route: ignore</span>
+0054                                 send_rrep = 0;
+0055                             <span class="keyword">end</span>
+0056                         <span class="keyword">else</span>
+0057                             <span class="comment">% I replied to a newer RREQ: ignore</span>
+0058                             send_rrep = 0;
+0059                         <span class="keyword">end</span>
+0060                         <span class="keyword">break</span>;
+0061                     <span class="keyword">end</span>
+0062                 <span class="keyword">end</span>
+0063             <span class="keyword">end</span>
+0064             <span class="keyword">if</span> send_rrep ~= 0
+0065                 rrep_out(j) = rrep_out(j) + 1;
+0066                 <span class="keyword">if</span> strcmp(event.app.type, <span class="string">'crosslayer_searching'</span>)
+0067                     rrep_out_crosslayer(j) = rrep_out_crosslayer(j) + 1;
+0068                 <span class="keyword">end</span>
+0069                 <span class="keyword">if</span> send_rrep &lt; 0
+0070                     <span class="comment">% no early saved RREQ from this src: add one</span>
+0071                     k = length(rrep_table(j).list) + 1; <span class="comment">% same as: k = k + 1;</span>
+0072                 <span class="keyword">end</span>
+0073                 rrep_table(j).list(k).id = event.net.id;
+0074                 rrep_table(j).list(k).metric = event.net.metric;
+0075                 rrep_table(j).list(k).route = event.net.route;
+0076                 newevent = event;
+0077                 newevent.instant = t;
+0078                 newevent.type = <span class="string">'send_mac'</span>;
+0079                 newevent.net.type = <span class="string">'rrep'</span>;
+0080                 newevent.net.src = j;
+0081                 newevent.net.dst = i;
+0082                 newevent.pkt.tx = j;
+0083                 newevent.pkt.rv = newevent.net.route(length(newevent.net.route)-1); <span class="comment">% next hop</span>
+0084                 newevent.pkt.type=<span class="string">'data'</span>;
+0085                 newevent.pkt.size=size_rrep;
+0086                 newevent.pkt.rate=default_rate;
+0087                 newevent.pkt.ttl = default_ttl;   <span class="comment">% unicast question: what value for this TTL?</span>
+0088                 newevent.pkt.power=default_power;
+0089                 newevent.pkt.id=0;  <span class="comment">% will be updated in 'send_phy'</span>
+0090                 newevent.pkt.navcommu=0; <span class="comment">% will be updated in lower layer</span>
+0091                 NewEvents = [NewEvents; newevent]; clear newevent;
+0092                 <span class="keyword">if</span> cdebug, disp([<span class="string">'node '</span> num2str(j) <span class="string">' will send an RREP with route '</span> num2str(event.net.route) <span class="string">' at time '</span> num2str(t)]); <span class="keyword">end</span>
+0093             <span class="keyword">end</span>
+0094             <span class="keyword">return</span>;
+0095         <span class="keyword">end</span>
+0096         <span class="comment">% I am not the destination of this RREQ: just re-broadcast it</span>
+0097         <span class="comment">% maybe one of my previous RREPs contains the route to the</span>
+0098         <span class="comment">% requesting source node, but do not worry for now</span>
+0099         <span class="keyword">if</span> event.pkt.ttl &lt; 0
+0100             <span class="comment">% already checked above, no use</span>
+0101             <span class="comment">% cannot go further: drop it</span>
+0102         <span class="keyword">else</span>
+0103             <span class="keyword">if</span> event.net.id &gt; bcast_table(j, event.net.src)
+0104                 <span class="comment">% forward this RREQ only if I have not forwarded the</span>
+0105                 <span class="comment">% same broadcast RREQ from the same source before</span>
+0106                 rreq_forward(j) = rreq_forward(j) + 1;
+0107                 <span class="keyword">if</span> strcmp(event.app.type, <span class="string">'crosslayer_searching'</span>)
+0108                     rreq_forward_crosslayer(j) = rreq_forward_crosslayer(j) + 1;
+0109                 <span class="keyword">end</span>
+0110                 bcast_table(j, event.net.src) = event.net.id;
+0111                 newevent = event;
+0112                 newevent.instant = t + rand*slot_time;  <span class="comment">% question: random delay before rebroadcasting</span>
+0113                 newevent.type = <span class="string">'send_mac'</span>;
+0114                 newevent.node = j;
+0115                 newevent.pkt.tx=j;
+0116                 newevent.pkt.rv=0;
+0117                 NewEvents = [NewEvents; newevent]; clear newevent;
+0118             <span class="keyword">end</span>
+0119         <span class="keyword">end</span>
+0120     <span class="keyword">case</span> <span class="string">'rrep'</span>
+0121         <span class="comment">% if cdebug, disp(['time ' num2str(t) ' node ' num2str(j) ' receives a RREP with route: ' num2str(event.net.route)]); end</span>
+0122         rrep_in(j) = rrep_in(j) + 1;
+0123         <span class="keyword">if</span> strcmp(event.app.type, <span class="string">'crosslayer_searching'</span>)
+0124             rrep_in_crosslayer(j) = rrep_in_crosslayer(j) + 1;
+0125         <span class="keyword">end</span>
+0126         <span class="keyword">if</span> isempty(event.net.route)
+0127             warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' is receiving a RREP without any route entry'</span>]);
+0128             <span class="keyword">return</span>;
+0129         <span class="keyword">end</span>
+0130         temp = find(event.net.route == j);
+0131         <span class="keyword">if</span> length(temp) &gt; 1
+0132             warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' appears more than once in a RREP'</span>]);
+0133             <span class="keyword">return</span>;
+0134         <span class="keyword">end</span>
+0135         <span class="keyword">if</span> length(temp) &lt;= 0
+0136             warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' does not appear in a RREP it receives'</span>]);
+0137             <span class="keyword">return</span>;
+0138         <span class="keyword">end</span>
+0139         <span class="keyword">if</span> temp == 1
+0140             <span class="comment">% I am the requesting node so this RREP is what I am waiting for</span>
+0141             <span class="keyword">if</span> cdebug, disp([<span class="string">'time '</span> num2str(t) <span class="string">' node '</span> num2str(j) <span class="string">' receives a RREP with route: '</span> num2str(event.net.route)]); <span class="keyword">end</span>
+0142             temp2 = find(net_pending(j).id == event.net.id);
+0143             <span class="keyword">if</span> isempty(temp2)
+0144                 <span class="comment">% no RREQ waiting for this RREP;</span>
+0145                 <span class="comment">% probably this is an RREP for an earlier timeout RREQ, but I have already received an RREP for the latest RREQ.</span>
+0146                 <span class="keyword">if</span> ddebug, disp([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' receives an RREP without a corresponding pending RREQ'</span>]); <span class="keyword">end</span>
+0147                 <span class="keyword">return</span>;
+0148             <span class="keyword">end</span>
+0149             <span class="keyword">if</span> length(temp2) &gt; 1
+0150                 error([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' receives an RREP with more than one pending RREQ'</span>]);
+0151             <span class="keyword">end</span>
+0152             <span class="comment">% Removes the pending RREQ</span>
+0153             net_pending(j).id(temp2) = [];
+0154             net_pending(j).retransmit(temp2) = [];
+0155             <span class="keyword">if</span> strcmp(event.app.type, <span class="string">'crosslayer_searching'</span>)
+0156                 <span class="comment">% cross-layer searching application, no data to transmit</span>
+0157                 <span class="comment">% send the packet up to the application layer</span>
+0158                 rrep_destination_crosslayer(j) = rrep_destination_crosslayer(j) + 1;
+0159                 newevent = event;
+0160                 newevent.instant = t;
+0161                 newevent.node = j;
+0162                 newevent.type = <span class="string">'recv_app'</span>;
+0163                 NewEvents = [NewEvents; newevent]; clear newevent;
+0164             <span class="keyword">else</span>    <span class="comment">% a regular RREP at network layer received</span>
+0165                 <span class="comment">% send the following data packet by this route</span>
+0166                 newevent = event;
+0167                 newevent.instant = t;
+0168                 newevent.type = <span class="string">'send_mac'</span>;
+0169                 newevent.node = j;
+0170                 newevent.net.type = <span class="string">'data'</span>;
+0171                 newevent.net.id = <a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>(j);
+0172                 newevent.net.src = j;
+0173                 newevent.net.dst = i;
+0174                 <span class="comment">% keep net.size, net.route</span>
+0175                 newevent.pkt.tx = j;
+0176                 newevent.pkt.rv = newevent.net.route(2); <span class="comment">% next hop</span>
+0177                 newevent.pkt.type=<span class="string">'data'</span>;
+0178                 newevent.pkt.size=newevent.net.size;
+0179                 newevent.pkt.rate=default_rate;
+0180                 newevent.pkt.ttl = length(newevent.net.route) + 1;
+0181                 newevent.pkt.power=default_power;
+0182                 newevent.pkt.id=0;  <span class="comment">% will be updated in 'send_phy'</span>
+0183                 newevent.pkt.navcommu=0; <span class="comment">% will be updated in lower layer</span>
+0184                 NewEvents = [NewEvents; newevent];
+0185                 clear newevent;
+0186             <span class="keyword">end</span>
+0187             <span class="comment">% no ACK at network layer</span>
+0188             <span class="comment">% the net_queue is always empty, so no next network layer packet to send</span>
+0189         <span class="keyword">else</span>
+0190             <span class="comment">% I need to forward this RREP back to the next hop towards the source</span>
+0191             rrep_forward(j) = rrep_forward(j) + 1;
+0192             <span class="keyword">if</span> strcmp(event.app.type, <span class="string">'crosslayer_searching'</span>)
+0193                 rrep_forward_crosslayer(j) = rrep_forward_crosslayer(j) + 1;
+0194             <span class="keyword">end</span>
+0195             newevent = event;
+0196             newevent.instant = t;
+0197             newevent.type = <span class="string">'send_mac'</span>;
+0198             newevent.node = j;
+0199             newevent.net.type = <span class="string">'rrep'</span>;
+0200             newevent.pkt.tx = j;
+0201             newevent.pkt.rv = newevent.net.route(temp - 1); <span class="comment">% next hop</span>
+0202             <span class="comment">% if cdebug, disp(['time ' num2str(t) ' node ' num2str(j) ' will forward RREP to node ' num2str(newevent.pkt.rv)]); end</span>
+0203             NewEvents = [NewEvents; newevent]; clear newevent;
+0204         <span class="keyword">end</span>
+0205     <span class="keyword">case</span> <span class="string">'data'</span>
+0206         <span class="keyword">if</span> event.net.dst == 0
+0207             <span class="comment">% a network layer broadcast packet</span>
+0208             <span class="keyword">if</span> event.pkt.rv ~= 0
+0209                 warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' receives a broadcast at NET, but not at MAC'</span>]);
+0210             <span class="keyword">end</span>
+0211             <span class="keyword">if</span> event.app.castmethod==<span class="string">'block_broadcast'</span>
+0212                 newevent = event;
+0213                 newevent.instant = t;
+0214                 newevent.type = <span class="string">'recv_app'</span>;
+0215                 newevent.node = j;
+0216                 NewEvents = [NewEvents; newevent]; clear newevent;
+0217                 
+0218                 <span class="keyword">return</span>;
+0219             <span class="keyword">elseif</span> event.app.castmethod==<span class="string">'allow_broadcast'</span>
+0220                 <span class="keyword">if</span> event.net.id &gt; bcast_table(j, event.net.src)
+0221                     bcast_table(j, event.net.src) = event.net.id;
+0222                     newevent = event;
+0223                     newevent.instant = t + rand*slot_time;
+0224                     newevent.type = <span class="string">'send_mac'</span>;
+0225                     newevent.pkt.tx = j;
+0226                     NewEvents = [NewEvents; newevent]; clear newevent;
+0227                     
+0228                 <span class="keyword">end</span>
+0229             <span class="keyword">end</span>
+0230             <span class="keyword">return</span>;
+0231         <span class="keyword">end</span>
+0232         <span class="comment">% receives a unicast data packet at network layer</span>
+0233         <span class="keyword">if</span> isempty(event.net.route)
+0234             warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' is receiving a Net_DATA without any route entry'</span>]);
+0235             <span class="keyword">return</span>;
+0236         <span class="keyword">end</span>
+0237         temp = find(event.net.route == j);
+0238         <span class="keyword">if</span> length(temp) &gt; 1
+0239             warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' appears more than once in a route for data packet'</span>]);
+0240             <span class="keyword">return</span>;
+0241         <span class="keyword">end</span>
+0242         <span class="keyword">if</span> length(temp) &lt;= 0
+0243             warning([<span class="string">'recv_net: node '</span> num2str(j) <span class="string">' does not appear in a data packet it receives'</span>]);
+0244             <span class="keyword">return</span>;
+0245         <span class="keyword">end</span>
+0246         <span class="keyword">if</span> j == event.net.dst   <span class="comment">% or temp == length(event.net.route)</span>
+0247             <span class="comment">% I am the destination</span>
+0248             newevent = event;
+0249             newevent.instant = t;
+0250             newevent.type = <span class="string">'recv_app'</span>;
+0251             newevent.node = j;
+0252             NewEvents = [NewEvents; newevent]; clear newevent;
+0253         <span class="keyword">else</span>
+0254             <span class="comment">% I should forward this data packet to the next hop towards the destination</span>
+0255             newevent = event;
+0256             newevent.instant = t;
+0257             newevent.type = <span class="string">'send_mac'</span>;
+0258             newevent.pkt.tx = j;
+0259             newevent.pkt.rv = newevent.net.route(temp + 1); <span class="comment">% next hop</span>
+0260             NewEvents = [NewEvents; newevent]; clear newevent;
+0261         <span class="keyword">end</span>
+0262     <span class="keyword">otherwise</span>
+0263         disp([<span class="string">'recv_net: Undefined network layer packet type: '</span> event.net.type]);
+0264 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

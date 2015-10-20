@@ -1,0 +1,747 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of run_isr_trafsim</title>
+  <meta name="keywords" content="run_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html ISR-TrafSim.v2.0 -->
+<h1>run_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [] = run_isr_trafsim() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Simulation Run (main cycle)
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../ISR-TrafSim.v2.0/check/list_cross_already_reserve_gest_isr_trafsim.html" class="code" title="function [  ] = list_cross_already_reserve_gest_isr_trafsim(  )">list_cross_already_reserve_gest_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/check/list_round_already_reserve_gest_isr_trafsim.html" class="code" title="function [  ] = list_round_already_reserve_gest_isr_trafsim(  )">list_round_already_reserve_gest_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/commu/lib/script_init.html" class="code" title="">script_init</a>	</li><li><a href="../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="cross_gest_isr_trafsim.html" class="code" title="function [] = cross_gest_isr_trafsim()">cross_gest_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="datacar_isr_trafsim.html" class="code" title="function [out] = isr_tfs_datacar_isr_trafsim(arg,n)">datacar_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/cross_proximity_isr_trafsim.html" class="code" title="function [  ] = cross_proximity_isr_trafsim(  )">cross_proximity_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/delete_task_isr_trafsim.html" class="code" title="function [] = delete_task_isr_trafsim()">delete_task_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/grid_isr_trafsim.html" class="code" title="function [out] = grid_isr_trafsim(arg)">grid_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/launch_isr_trafsim.html" class="code" title="function [] = launch_isr_trafsim(arg)">launch_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/pcorners_isr_trafsim.html" class="code" title="function [cornX, cornY] = pcorners_isr_trafsim(t,length,width)">pcorners_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li><li><a href="../ISR-TrafSim.v2.0/func/round_proximity_isr_trafsim.html" class="code" title="function [  ] = round_proximity_isr_trafsim(  )">round_proximity_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/slip_isr_trafsim.html" class="code" title="function [] = slip_isr_trafsim()">slip_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/graphic/graphical_environment_isr_trafsim.html" class="code" title="function [] = graphical_environment_isr_trafsim()">graphical_environment_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/graphic/print_isr_trafsim.html" class="code" title="function [] = print_isr_trafsim(arg,n)">print_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/graphic/printset_isr_trafsim.html" class="code" title="function [] = printset_isr_trafsim()">printset_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="move_isr_trafsim.html" class="code" title="function [] = move_isr_trafsim()">move_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="round_gest_isr_trafsim.html" class="code" title="function [] = round_gest_isr_trafsim()">round_gest_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/statistics/compute_stats_isr_trafsim.html" class="code" title="function [  ] = compute_stats_isr_trafsim(  )">compute_stats_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="traffic_gestion_isr_trafsim.html" class="code" title="function [cmdacc cause] = traffic_gestion_isr_trafsim(n)">traffic_gestion_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ISR_TRAFSIM.html" class="code" title="">ISR_TRAFSIM</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Simulation Run (main cycle)</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [] = run_isr_trafsim()</a>
+0046 <span class="keyword">global</span> s c d1 d2
+0047 
+0048 <span class="comment">% To relauch simulator</span>
+0049 <span class="keyword">if</span>(isfield(s, <span class="string">'original'</span>))
+0050     s=s.original;
+0051 <span class="keyword">else</span>
+0052     s.original=s;
+0053 <span class="keyword">end</span>
+0054 
+0055 <span class="comment">% Verify if is necessary clear files</span>
+0056 <span class="keyword">if</span>(size(dir(<span class="string">'savedata\car'</span>),1)&gt;2)
+0057     rmdir(<span class="string">'savedata\car'</span>,<span class="string">'s'</span>)
+0058     mkdir(<span class="string">'savedata\car'</span>)
+0059 <span class="keyword">end</span>
+0060 
+0061 <span class="comment">% Initialization of the graphical environment</span>
+0062 <a href="../ISR-TrafSim.v2.0/graphic/graphical_environment_isr_trafsim.html" class="code" title="function [] = graphical_environment_isr_trafsim()">graphical_environment_isr_trafsim</a>();
+0063 
+0064 <span class="comment">% Initializes places with oil (slip places)</span>
+0065 <a href="../ISR-TrafSim.v2.0/func/slip_isr_trafsim.html" class="code" title="function [] = slip_isr_trafsim()">slip_isr_trafsim</a>();
+0066 
+0067 <span class="comment">% Generate trajectory points and print roads</span>
+0068 <a href="../ISR-TrafSim.v2.0/graphic/printset_isr_trafsim.html" class="code" title="function [] = printset_isr_trafsim()">printset_isr_trafsim</a>();
+0069 
+0070 <span class="comment">% Initializes all the variables necessary for the cars</span>
+0071 c=<a href="datacar_isr_trafsim.html" class="code" title="function [out] = isr_tfs_datacar_isr_trafsim(arg,n)">datacar_isr_trafsim</a>(<span class="string">'init'</span>);
+0072 
+0073 <span class="comment">% Initialization of the magnets</span>
+0074 <span class="keyword">global</span> mag_data
+0075 mag_data=magnets_isr_trafsim(<span class="string">'init'</span>);    <span class="comment">% Initialization of the graphical environment</span>
+0076 <a href="../ISR-TrafSim.v2.0/graphic/graphical_environment_isr_trafsim.html" class="code" title="function [] = graphical_environment_isr_trafsim()">graphical_environment_isr_trafsim</a>();
+0077 
+0078 <span class="comment">% Group the indices cells per road for generate map accumulator</span>
+0079 <span class="keyword">if</span>(s.ocmap_accum_graph)
+0080     <a href="../ISR-TrafSim.v2.0/func/grid_isr_trafsim.html" class="code" title="function [out] = grid_isr_trafsim(arg)">grid_isr_trafsim</a>(<span class="string">'cells'</span>);
+0081 <span class="keyword">end</span>
+0082 
+0083 <span class="comment">% Memory reservation for laser simulation</span>
+0084 <span class="keyword">if</span>(s.las)
+0085     <span class="keyword">global</span> las_data
+0086     map2(s.dimx,s.dimy,las_data.res,[0 0 0 0 0]',las_data.rays,las_data.range,las_data.open);
+0087 <span class="keyword">end</span>
+0088 
+0089 <span class="comment">% Load conf settings</span>
+0090 s.ri(1:12,8)=s.in(1:12,8);
+0091 
+0092 <span class="comment">% Initialization of the road launch table</span>
+0093 <a href="../ISR-TrafSim.v2.0/func/launch_isr_trafsim.html" class="code" title="function [] = launch_isr_trafsim(arg)">launch_isr_trafsim</a>(<span class="string">'init'</span>);
+0094 
+0095 <span class="comment">% Generate trajectory points and print roads</span>
+0096 <a href="../ISR-TrafSim.v2.0/graphic/printset_isr_trafsim.html" class="code" title="function [] = printset_isr_trafsim()">printset_isr_trafsim</a>();
+0097 
+0098 <span class="comment">% Initialization of the magnets</span>
+0099 mag_data=magnets_isr_trafsim(<span class="string">'init'</span>);
+0100 
+0101 <span class="comment">% Initialization of stops</span>
+0102 s.stoplist=[];
+0103 <span class="keyword">if</span>(s.cross_mode==0 || s.cross_mode==1 || s.cross_mode==2)
+0104     s.stoplist=[s.stoplist s.crosslist];
+0105 <span class="keyword">end</span>
+0106 <span class="keyword">if</span>(s.round_gest==1)
+0107     s.stoplist=[s.stoplist s.roundlist];
+0108 <span class="keyword">end</span>
+0109 s.lights=zeros(3,28);
+0110 <span class="keyword">for</span> i=1:length(s.stoplist)
+0111     s.lights(1,s.stoplist(1,i))=1;
+0112 <span class="keyword">end</span>
+0113 
+0114 <span class="comment">% Initializes all the variables necessary for the communication ovr-the-air</span>
+0115 <span class="keyword">if</span>(s.otacommu==1 &amp;&amp; s.otacommuemulation==1),<a href="../ISR-TrafSim.v2.0/commu/lib/script_init.html" class="code" title="">script_init</a>; <a href="../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>(<span class="string">'add_node'</span>,90);<span class="keyword">end</span>
+0116 
+0117 <span class="keyword">if</span>(s.mode==0), s.hbar=waitbar(0,<span class="string">'Running simulation, please wait...'</span>); <span class="keyword">end</span>
+0118 <span class="keyword">if</span>(s.mode==2)
+0119     openSocket();
+0120 <span class="keyword">end</span>
+0121 
+0122 <span class="comment">% To add acumulator table at specific time</span>
+0123 in_extra=[];
+0124 <span class="keyword">for</span> i=1:size(s.in_extra,1)
+0125     <span class="keyword">if</span>(nnz(s.in_extra(i,:))==3)
+0126         in_extra=[in_extra ; s.in_extra(i,:)];
+0127     <span class="keyword">end</span>
+0128 <span class="keyword">end</span>
+0129 <span class="keyword">if</span>(~isempty(in_extra))
+0130     in_extra=sortrows(in_extra,1);
+0131 <span class="keyword">end</span>
+0132 
+0133 
+0134 <span class="comment">% To fill scenario with vehicles (in each road entrace)</span>
+0135 <span class="comment">% For each road</span>
+0136 s.ri(1:12,8)=s.in(1:12,8);
+0137 <span class="keyword">if</span>(s.full)
+0138     <span class="keyword">for</span> r=1:s.rn
+0139         sx=s.ri(r,1);           <span class="comment">% Start X point</span>
+0140         sy=s.ri(r,2);           <span class="comment">% Start Y point</span>
+0141         ang=s.ri(r,7);          <span class="comment">% Orientation angle</span>
+0142         entrance=s.ri(r,8);     <span class="comment">% Start Y point</span>
+0143         d=0;
+0144         <span class="keyword">if</span>(entrance==1)     <span class="comment">% if is a entrance road</span>
+0145             <span class="keyword">for</span> n=1:s.full_cars;
+0146                 <span class="comment">% Insert car in scenario</span>
+0147                 px=sx+d*cos(ang); py=sy+d*sin(ang); <span class="comment">% Place whre vehivle will be deployed</span>
+0148                 [~,n]=launch_car_isr_tfs(r,0);     <span class="comment">% Launch car</span>
+0149                 c.car(n).pos.x=px;                  <span class="comment">% Set car news position</span>
+0150                 c.car(n).pos.y=py;                  <span class="comment">% Set car news position</span>
+0151                 c.car(n).pos.t=ang;                 <span class="comment">% Set car news position</span>
+0152                 [c.car(n).cornX, c.car(n).cornY]=<a href="../ISR-TrafSim.v2.0/func/pcorners_isr_trafsim.html" class="code" title="function [cornX, cornY] = pcorners_isr_trafsim(t,length,width)">pcorners_isr_trafsim</a>(c.car(n).pos.t,c.car(n).length,c.car(n).width);
+0153                 c.car(n).dyn=[0 0];                 <span class="comment">% Set car speed and</span>
+0154                 
+0155                 <span class="comment">% Refresh current setpoint</span>
+0156                 dist=zeros(1,size(c.car(n).traj,2));
+0157                 <span class="keyword">for</span> i=1:size(c.car(n).traj,2)
+0158                     dist(1,i)=dist_isr_trafsim(c.car(n).pos.x,c.car(n).pos.y,c.car(n).traj(1,i),c.car(n).traj(2,i));
+0159                 <span class="keyword">end</span>
+0160                 [~,col]=min(dist);
+0161                 c.car(n).setp=col+3;
+0162                 
+0163                 <span class="comment">% Prepare next launch</span>
+0164                 d=d+6;                              <span class="comment">% To next launch</span>
+0165             <span class="keyword">end</span>
+0166         <span class="keyword">end</span>
+0167     <span class="keyword">end</span>
+0168 <span class="keyword">end</span>
+0169 
+0170 <span class="keyword">if</span>(s.mode==1)                       <span class="comment">% Online</span>
+0171     p=length(c.listactive);
+0172     <span class="keyword">if</span>(p~=0)
+0173         <span class="keyword">for</span> j=1:p
+0174             <a href="../ISR-TrafSim.v2.0/graphic/print_isr_trafsim.html" class="code" title="function [] = print_isr_trafsim(arg,n)">print_isr_trafsim</a>(<span class="string">'car'</span>,j)
+0175         <span class="keyword">end</span>
+0176     <span class="keyword">end</span>
+0177 <span class="keyword">end</span>
+0178 drawnow
+0179 s.collisions=<a href="../ISR-TrafSim.v2.0/func/grid_isr_trafsim.html" class="code" title="function [out] = grid_isr_trafsim(arg)">grid_isr_trafsim</a>(<span class="string">'update'</span>);            <span class="comment">% Update occupation 'grid' map</span>
+0180 
+0181 <span class="comment">% To save video file</span>
+0182 <span class="keyword">if</span>(s.make_video)
+0183     writerObj = VideoWriter(<span class="string">'savedata\isr_tfs'</span>,<span class="string">'MPEG-4'</span>);
+0184     set(writerObj,<span class="string">'FrameRate'</span>,100)
+0185     open(writerObj)
+0186 <span class="keyword">end</span>
+0187 
+0188 <span class="comment">% Init list to keep track of cars that already reserv</span>
+0189 s.list_round_already_reserve=s.roundlist;
+0190 s.list_cross_already_reserve=s.crosslist;
+0191 
+0192 <span class="comment">% Run all necessary cycles</span>
+0193 comptime=0;
+0194 <span class="keyword">for</span> time=0:s.step_time:(s.duration-s.step_time)
+0195     tic
+0196     
+0197     <span class="comment">% To add acumulator table at specific time</span>
+0198     <span class="keyword">if</span>(~isempty(in_extra))
+0199         <span class="keyword">if</span>(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(time,0.01)==in_extra(1,1))
+0200             road=in_extra(1,3);
+0201             amount_cars=in_extra(1,2);
+0202             col=find(s.rl(1,:)==road);
+0203             s.rl(2,col)=s.rl(2,col)+amount_cars;
+0204             in_extra(1,:)=[];
+0205         <span class="keyword">end</span>
+0206     <span class="keyword">end</span>
+0207     
+0208     <span class="keyword">if</span>(s.mode==0)
+0209         waitbar(s.time/s.duration,s.hbar)
+0210     <span class="keyword">end</span>
+0211     
+0212     <span class="comment">% Refresh the stored time</span>
+0213     s.time=time;
+0214     <span class="keyword">if</span>(mod(time,1)==0)
+0215         str=sprintf(<span class="string">'Time= %d/%d (s) | Cars created= %d/%d | Cars active= %d | Computation time= %f (s)'</span>,s.time,s.duration,s.curNcars,s.ncars,size(c.listactive,2),comptime);
+0216         disp(str)
+0217         comptime=0;
+0218     <span class="keyword">end</span>
+0219     
+0220     <span class="comment">% Plot online information on ISR-TFS windows</span>
+0221     <span class="keyword">if</span>(s.mode==1)
+0222         <span class="keyword">if</span>(s.printtime==1)
+0223             <a href="../ISR-TrafSim.v2.0/graphic/print_isr_trafsim.html" class="code" title="function [] = print_isr_trafsim(arg,n)">print_isr_trafsim</a>(<span class="string">'time'</span>,0)
+0224         <span class="keyword">end</span>
+0225         <span class="keyword">if</span>(s.printonlineinfo==1)
+0226             <a href="../ISR-TrafSim.v2.0/graphic/print_isr_trafsim.html" class="code" title="function [] = print_isr_trafsim(arg,n)">print_isr_trafsim</a>(<span class="string">'info'</span>,0)
+0227         <span class="keyword">end</span>
+0228     <span class="keyword">end</span>
+0229     
+0230     <span class="comment">% Checks the appearance of new cars</span>
+0231     <a href="../ISR-TrafSim.v2.0/func/launch_isr_trafsim.html" class="code" title="function [] = launch_isr_trafsim(arg)">launch_isr_trafsim</a>(<span class="string">'check'</span>)
+0232     
+0233     <span class="comment">% Move all cars in simulator</span>
+0234     <a href="move_isr_trafsim.html" class="code" title="function [] = move_isr_trafsim()">move_isr_trafsim</a>();
+0235     
+0236     <span class="comment">% Simulate laser for all cars</span>
+0237     <span class="keyword">if</span>(s.las&gt;0)
+0238         las_isr_trafsim(<span class="string">'func'</span>);
+0239     <span class="keyword">end</span>
+0240     
+0241     <span class="keyword">if</span>(s.collision_detect)
+0242         
+0243         <span class="comment">% Updates the occupation map</span>
+0244         s.collisions=<a href="../ISR-TrafSim.v2.0/func/grid_isr_trafsim.html" class="code" title="function [out] = grid_isr_trafsim(arg)">grid_isr_trafsim</a>(<span class="string">'update'</span>);
+0245         
+0246         <span class="keyword">if</span>(mod(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(time,0.001),1/s.fres)==0)
+0247             <span class="comment">% Compute information to plot graph of occupation of roads versus time</span>
+0248             <span class="keyword">if</span>(s.ocmap_accum_graph)
+0249                 <a href="../ISR-TrafSim.v2.0/func/grid_isr_trafsim.html" class="code" title="function [out] = grid_isr_trafsim(arg)">grid_isr_trafsim</a>(<span class="string">'compute'</span>);
+0250             <span class="keyword">end</span>
+0251             
+0252             <span class="comment">% Increment accumulation map</span>
+0253             <span class="keyword">if</span>(s.ocmap_accum)
+0254                 s.occup_map_accu=s.occup_map_accu+double(logical(s.ocmap));
+0255                 aux=(double(s.ocmap)&gt;0).*s.time;
+0256                 s.ocmap3=s.ocmap3+((s.ocmap3==0).*aux);
+0257             <span class="keyword">end</span>
+0258             
+0259             <span class="keyword">if</span>(s.overtake==1)
+0260                 <span class="comment">% Change lane</span>
+0261                 overtake_isr_tfs();
+0262             <span class="keyword">end</span>
+0263         <span class="keyword">end</span>
+0264         
+0265         <span class="comment">% Analyzes collisions and stop cars envolved</span>
+0266         ncolli=length(s.collisions);
+0267         <span class="keyword">if</span>(ncolli&gt;0)
+0268             <span class="keyword">for</span> i=1:ncolli
+0269                 <span class="keyword">if</span>(s.collisions(i)&gt;=100)
+0270                     aux=find(c.listactive==s.collisions(i));
+0271                     c.car(aux).cmdacc=-999;
+0272                 <span class="keyword">end</span>
+0273             <span class="keyword">end</span>
+0274         <span class="keyword">end</span>
+0275     <span class="keyword">end</span>
+0276     
+0277     <span class="comment">% Delete cars from simulator and erase information and handlers are no longer needed</span>
+0278     <a href="../ISR-TrafSim.v2.0/func/delete_task_isr_trafsim.html" class="code" title="function [] = delete_task_isr_trafsim()">delete_task_isr_trafsim</a>();
+0279     <a href="../ISR-TrafSim.v2.0/check/list_round_already_reserve_gest_isr_trafsim.html" class="code" title="function [  ] = list_round_already_reserve_gest_isr_trafsim(  )">list_round_already_reserve_gest_isr_trafsim</a>();  <span class="comment">% To delete car from that list</span>
+0280     <a href="../ISR-TrafSim.v2.0/check/list_cross_already_reserve_gest_isr_trafsim.html" class="code" title="function [  ] = list_cross_already_reserve_gest_isr_trafsim(  )">list_cross_already_reserve_gest_isr_trafsim</a>();  <span class="comment">% To delete car from that list</span>
+0281     
+0282     <span class="comment">% Control traffic lights from crossroads</span>
+0283     <span class="keyword">if</span>(s.cross_mode==0 || s.cross_mode==1)
+0284         trafficlights_cross_vision_isr_trafsim();
+0285     <span class="keyword">elseif</span>(s.cross_mode==2 )
+0286         trafficlights_cross_isr_trafsim();
+0287     <span class="keyword">end</span>
+0288     
+0289     <span class="comment">% Control traffic lights from roundabout</span>
+0290     <span class="keyword">if</span>(s.round_gest==1)
+0291         trafficlights_round_isr_trafsim();
+0292     <span class="keyword">end</span>
+0293     
+0294     <span class="comment">% Analyzes the occupation map to make the list of cars nearby</span>
+0295     <a href="../ISR-TrafSim.v2.0/func/grid_isr_trafsim.html" class="code" title="function [out] = grid_isr_trafsim(arg)">grid_isr_trafsim</a>(<span class="string">'func'</span>);
+0296     
+0297     <span class="comment">% Generate the acelaration command for all cars</span>
+0298     s.list_ignore_round=[];
+0299     s.list_ignore_cross=[];
+0300     <span class="keyword">for</span> n=1:length(c.listactive)
+0301         <span class="keyword">if</span>(s.round_gest==1 &amp;&amp; s.otacommu==1 &amp;&amp; c.car(n).commu_vel_prof==1 &amp;&amp; ~isempty(c.car(n).vel_prof) ) <span class="comment">% If car receive velocity profile</span>
+0302             
+0303             <span class="comment">% If car receive a NaN velocity profile -&gt; Wait</span>
+0304             <span class="keyword">if</span>( isnan(c.car(n).vel_prof) )
+0305                 c.car(n).cmdacc=-1;
+0306                 c.car(n).cause=0;
+0307                 <span class="comment">% If exist a velocity profile to follow</span>
+0308             <span class="keyword">else</span>
+0309                 <span class="keyword">if</span>(c.car(n).vel_prof(1,c.car(n).vp)&lt;s.time)
+0310                     c.car(n).vp=c.car(n).vp+1;
+0311                 <span class="keyword">end</span>
+0312                 
+0313                 <span class="comment">% Decides to tell the driver if he should slow down or accelerate</span>
+0314                 <span class="keyword">if</span>( c.car(n).dyn(1) &gt; c.car(n).vel_prof(2,c.car(n).vp) )
+0315                     c.car(n).cmdacc=-1;
+0316                 <span class="keyword">elseif</span>( c.car(n).dyn(1) &lt; c.car(n).vel_prof(2,c.car(n).vp) )
+0317                     c.car(n).cmdacc=1;
+0318                 <span class="keyword">end</span>
+0319                 
+0320                 <span class="comment">% Stops tell the driver if he should slow down or accelerate</span>
+0321                 <span class="keyword">if</span>(c.car(n).vp&gt;=c.car(n).vpn )<span class="comment">%|| c.car(n).traj(3,c.car(n).setp)==c.car(n).rar)</span>
+0322                     c.car(n).vel_prof=[];
+0323                 <span class="keyword">end</span>
+0324             <span class="keyword">end</span>
+0325         <span class="keyword">elseif</span>(s.cross_mode==2 &amp;&amp; s.otacommu==1 &amp;&amp; c.car(n).commu_vel_prof2==1 &amp;&amp; ~isempty(c.car(n).vel_prof2) ) <span class="comment">% If car receive velocity profile</span>
+0326             
+0327             <span class="comment">% If car receive a NaN velocity profile -&gt; Wait</span>
+0328             <span class="keyword">if</span>( isnan(c.car(n).vel_prof2) )
+0329                 c.car(n).cmdacc=-1;
+0330                 c.car(n).cause=0;
+0331                 <span class="comment">% If exist a velocity profile to follow</span>
+0332             <span class="keyword">else</span>
+0333                 <span class="keyword">if</span>(c.car(n).vel_prof2(1,c.car(n).vp2)&lt;s.time)
+0334                     c.car(n).vp2=c.car(n).vp2+1;
+0335                 <span class="keyword">end</span>
+0336                 
+0337                 <span class="comment">% Decides to tell the driver if he should slow down or accelerate</span>
+0338                 <span class="keyword">if</span>( c.car(n).dyn(1) &gt; c.car(n).vel_prof2(2,c.car(n).vp2) )
+0339                     c.car(n).cmdacc=-1;
+0340                 <span class="keyword">elseif</span>( c.car(n).dyn(1) &lt; c.car(n).vel_prof2(2,c.car(n).vp2) )
+0341                     c.car(n).cmdacc=1;
+0342                 <span class="keyword">end</span>
+0343                 
+0344                 <span class="comment">% Stops tell the driver if he should slow down or accelerate</span>
+0345                 <span class="keyword">if</span>(c.car(n).vp2&gt;=c.car(n).vpn2 )<span class="comment">%|| c.car(n).traj(3,c.car(n).setp)==c.car(n).rar)</span>
+0346                     c.car(n).vel_prof2=[];
+0347                 <span class="keyword">end</span>
+0348             <span class="keyword">end</span>
+0349         <span class="keyword">else</span>
+0350             [c.car(n).cmdacc, c.car(n).cause]=<a href="traffic_gestion_isr_trafsim.html" class="code" title="function [cmdacc cause] = traffic_gestion_isr_trafsim(n)">traffic_gestion_isr_trafsim</a>(n);
+0351         <span class="keyword">end</span>
+0352         
+0353         <span class="comment">% to cars without V2I ignore other traffic inside roundabout</span>
+0354         <span class="keyword">if</span>(c.car(n).road&gt;=30 &amp;&amp; c.car(n).road&lt;40 &amp;&amp; c.car(n).dri_ignore_trf_round==1)
+0355             c.car(n).cmdacc=1;
+0356             s.list_ignore_round(end+1)=c.car(n).id;
+0357         <span class="keyword">end</span>
+0358         
+0359         <span class="comment">% to cars without V2I ignore other traffic inside crossroads</span>
+0360         <span class="keyword">if</span>(c.car(n).road==40 &amp;&amp; c.car(n).dri_ignore_trf_cross==1)
+0361             c.car(n).cmdacc=1;
+0362             s.list_ignore_cross(end+1)=c.car(n).id;
+0363         <span class="keyword">end</span>
+0364     <span class="keyword">end</span>
+0365     
+0366     <span class="comment">% Send GPS information over OTA communication</span>
+0367     <span class="keyword">if</span>(s.otacommu==1)
+0368         
+0369         <span class="comment">% Refresh positions for OTA communications</span>
+0370         <span class="keyword">if</span>(s.otacommuemulation==1),<a href="../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>(<span class="string">'refresh'</span>);<span class="keyword">end</span> <span class="comment">% NAO ENTRA!!!</span>
+0371         
+0372         <span class="comment">% Broadcast GPS information</span>
+0373         <span class="keyword">if</span>(mod(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(time,0.001),1/s.otafgps)==0 &amp;&amp; s.otagps==1)
+0374             <a href="../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>([90 0 s.time],<span class="string">'gps_info'</span>);    <span class="comment">% 90=SenderID (roundabout), 0=ReceiverID (Broadcast)</span>
+0375         <span class="keyword">end</span>
+0376         
+0377         <span class="comment">% Process events of OTA communications</span>
+0378         <span class="keyword">if</span>(s.otacommuemulation)
+0379             <span class="keyword">if</span>(~isempty(Event_list))
+0380                 ota_commu_run(s.time+s.step_time, [log_file, num2str(Nnodes)])
+0381             <span class="keyword">end</span>
+0382         <span class="keyword">end</span>
+0383     <span class="keyword">end</span>
+0384     
+0385     <span class="comment">% Refresh list of cars ear to the roundabout % crossroads</span>
+0386     <a href="../ISR-TrafSim.v2.0/func/round_proximity_isr_trafsim.html" class="code" title="function [  ] = round_proximity_isr_trafsim(  )">round_proximity_isr_trafsim</a>();
+0387     <a href="../ISR-TrafSim.v2.0/func/cross_proximity_isr_trafsim.html" class="code" title="function [  ] = cross_proximity_isr_trafsim(  )">cross_proximity_isr_trafsim</a>();
+0388     
+0389     
+0390     <span class="comment">% Roundabout gestion module</span>
+0391     <span class="keyword">if</span>(s.round_gest==1 &amp;&amp; s.otacommu==1 &amp;&amp; ~mod(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001),(1/s.f_traffic_gest)) )
+0392         <a href="round_gest_isr_trafsim.html" class="code" title="function [] = round_gest_isr_trafsim()">round_gest_isr_trafsim</a>();
+0393     <span class="keyword">end</span>
+0394     
+0395     <span class="comment">% CrossRoad gestion module</span>
+0396     <span class="keyword">if</span>(s.cross_mode==2 &amp;&amp; s.otacommu==1 &amp;&amp; ~mod(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001),(1/s.f_traffic_gest)) )
+0397         <a href="cross_gest_isr_trafsim.html" class="code" title="function [] = cross_gest_isr_trafsim()">cross_gest_isr_trafsim</a>();
+0398     <span class="keyword">end</span>
+0399     
+0400     <span class="comment">% Free Slots on registation tables</span>
+0401     <span class="keyword">for</span> col=1:size(s.rg_count_tab,2)    <span class="comment">% For roundabout</span>
+0402         road=s.rg_count_tab(1,col);
+0403         <span class="keyword">for</span> lin=3:10
+0404             <span class="keyword">if</span>(s.rg_count_tab(lin,col)~=0)
+0405                 carID=s.rg_count_tab(lin,col);
+0406                 pos=find(c.listactive==carID);
+0407                 <span class="keyword">if</span>(~isnan(carID))
+0408                     <span class="keyword">if</span>(isempty(pos))                                            <span class="comment">% If car already exit from simulator</span>
+0409                         s.rg_count_tab(lin,col)=0;                                 <span class="comment">% Erase car ID from table</span>
+0410                         s.rg_count_tab(2,col)=s.rg_count_tab(2,col)-1;             <span class="comment">% Decrease somatory from table</span>
+0411                     <span class="keyword">elseif</span>(c.car(pos).roadprev==road &amp;&amp; c.car(pos).road~=road)  <span class="comment">% If car leaves the road and exits another road before</span>
+0412                         s.rg_count_tab(lin,col)=0;                                 <span class="comment">% Erase car ID from table</span>
+0413                         s.rg_count_tab(2,col)=s.rg_count_tab(2,col)-1;             <span class="comment">% Decrease somatory from table</span>
+0414                     <span class="keyword">end</span>
+0415                 <span class="keyword">end</span>
+0416             <span class="keyword">end</span>
+0417         <span class="keyword">end</span>
+0418     <span class="keyword">end</span>
+0419     
+0420     <span class="keyword">for</span> col=1:size(s.rg_count_tab2,2)    <span class="comment">% for crossroads</span>
+0421         road=s.rg_count_tab2(1,col);
+0422         <span class="keyword">for</span> lin=3:10
+0423             <span class="keyword">if</span>(s.rg_count_tab2(lin,col)~=0)
+0424                 carID=s.rg_count_tab2(lin,col);
+0425                 pos=find(c.listactive==carID);
+0426                 <span class="keyword">if</span>(~isnan(carID))
+0427                     <span class="keyword">if</span>(isempty(pos))                                            <span class="comment">% If car already exit from simulator</span>
+0428                         s.rg_count_tab2(lin,col)=0;                                 <span class="comment">% Erase car ID from table</span>
+0429                         s.rg_count_tab2(2,col)=s.rg_count_tab2(2,col)-1;             <span class="comment">% Decrease somatory from table</span>
+0430                     <span class="keyword">elseif</span>(c.car(pos).roadprev==road &amp;&amp; c.car(pos).road~=road)  <span class="comment">% If car leaves the road and exits another road before</span>
+0431                         s.rg_count_tab2(lin,col)=0;                                 <span class="comment">% Erase car ID from table</span>
+0432                         s.rg_count_tab2(2,col)=s.rg_count_tab2(2,col)-1;             <span class="comment">% Decrease somatory from table</span>
+0433                     <span class="keyword">end</span>
+0434                 <span class="keyword">end</span>
+0435             <span class="keyword">end</span>
+0436         <span class="keyword">end</span>
+0437     <span class="keyword">end</span>
+0438     
+0439     <span class="comment">% Print all cars active</span>
+0440     <span class="keyword">if</span>(s.mode==1)
+0441         p=length(c.listactive);
+0442         <span class="keyword">if</span>(p~=0)
+0443             <span class="keyword">for</span> j=1:p
+0444                 <a href="../ISR-TrafSim.v2.0/graphic/print_isr_trafsim.html" class="code" title="function [] = print_isr_trafsim(arg,n)">print_isr_trafsim</a>(<span class="string">'car'</span>,j)
+0445             <span class="keyword">end</span>
+0446         <span class="keyword">end</span>
+0447     <span class="keyword">elseif</span>(s.mode==2)                   <span class="comment">% C++</span>
+0448         tab=zeros(100,9);   <span class="comment">% [On/off x y teta length width cR cG cB] max=100cars</span>
+0449         <span class="keyword">for</span> j=1:length(c.listactive);
+0450             tab(j,:)=[1 c.car(j).pos.x c.car(j).pos.y c.car(j).pos.t c.car(j).length c.car(j).width c.car(j).dri.color(1) c.car(j).dri.color(2) c.car(j).dri.color(3)];
+0451         <span class="keyword">end</span>
+0452         <span class="comment">%tab=single(tab);</span>
+0453         pkt=reshape(tab',1,900);
+0454         fwrite(s.net,pkt,<span class="string">'double'</span>);
+0455         a=whos(<span class="string">'pkt'</span>);
+0456         <span class="comment">%a.bytes</span>
+0457         <span class="comment">%keyboard</span>
+0458         <span class="comment">%disp('#')</span>
+0459     <span class="keyword">end</span>
+0460     
+0461     <span class="comment">% Adjust the window to follow a particular car ID, if is necessary</span>
+0462     <span class="keyword">if</span>(s.mode==1)
+0463         <span class="keyword">if</span>(s.followcar&gt;0)
+0464             aux=find(c.listactive==s.followcar);
+0465             <span class="keyword">if</span>(~isempty(aux))
+0466                 axis([c.car(aux).pos.x-(s.dimx/5) c.car(aux).pos.x+(s.dimx/5) c.car(aux).pos.y-(s.dimy/5) c.car(aux).pos.y+(s.dimy/5)]);
+0467             <span class="keyword">else</span>
+0468                 axis([0+5 s.dimx-5 0+5 s.dimy-5]);
+0469             <span class="keyword">end</span>
+0470         <span class="keyword">else</span>
+0471             axis([0+5 s.dimx-5 0+5 s.dimy-5]);
+0472         <span class="keyword">end</span>
+0473         <span class="comment">% Draw all cars</span>
+0474         drawnow
+0475         <span class="comment">% Store frame to video</span>
+0476         <span class="keyword">if</span>(s.make_video)
+0477             frame=getframe;
+0478             writeVideo(writerObj,frame);
+0479         <span class="keyword">end</span>
+0480     <span class="keyword">end</span>
+0481     
+0482     <span class="comment">% Acumulate computation time</span>
+0483     comptime=comptime+toc;
+0484     
+0485     <span class="keyword">if</span>(s.flag_view_3D~=0)
+0486         <span class="keyword">if</span>(~isempty(s.ocmap_3D))
+0487             <span class="comment">%keyboard</span>
+0488             view_3D_map(s.flag_view_3D)
+0489             disp(<span class="string">'Close figure window to continue'</span>)
+0490             <span class="keyword">while</span>(~isempty(findobj(<span class="string">'type'</span>,<span class="string">'figure'</span>,<span class="string">'name'</span>,<span class="string">'3D Reservation'</span>)))
+0491                 pause(1)
+0492             <span class="keyword">end</span>
+0493             s.flag_view_3D=0;
+0494         <span class="keyword">end</span>
+0495     <span class="keyword">end</span>
+0496 <span class="keyword">end</span>
+0497 
+0498 <span class="comment">% Close video</span>
+0499 <span class="keyword">if</span>(s.make_video)
+0500     close(writerObj);
+0501 <span class="keyword">end</span>
+0502 
+0503 <span class="keyword">if</span>(s.mode==0), close(s.hbar); <span class="keyword">end</span>
+0504 <span class="keyword">if</span>(s.mode==1), close(s.hfigsim); <span class="keyword">end</span>
+0505 <span class="keyword">if</span>(s.mode==2)
+0506     tab=zeros(100,9);   <span class="comment">% [On/off x y teta length width cR cG cB] max=100cars</span>
+0507     tab(1,1)=single(999);
+0508     pkt=reshape(tab',1,900);
+0509     fwrite(s.net,pkt,<span class="string">'double'</span>);
+0510 <span class="keyword">end</span>
+0511 
+0512 <span class="comment">% save pre data</span>
+0513 save savedata\predata.mat
+0514 
+0515 <span class="comment">% End of simulation</span>
+0516 disp(<span class="string">'End of simulation'</span>);
+0517 disp(<span class="string">' '</span>);
+0518 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0519 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0520 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0521 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0522 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0523 
+0524 
+0525 <span class="comment">% Display cars stats in command line</span>
+0526 <span class="keyword">if</span>(s.disp_res)
+0527     <a href="../ISR-TrafSim.v2.0/statistics/compute_stats_isr_trafsim.html" class="code" title="function [  ] = compute_stats_isr_trafsim(  )">compute_stats_isr_trafsim</a>();
+0528     <span class="keyword">if</span>(s.round_gest==0)
+0529         str1=<span class="string">'No Gestion'</span>;
+0530     <span class="keyword">elseif</span>(s.round_gest==1 &amp;&amp; s.round_method==1)
+0531         str1=<span class="string">'RIMSw'</span>;
+0532     <span class="keyword">elseif</span>(s.round_gest==1 &amp;&amp; s.round_method==2)
+0533         str1=<span class="string">'RIMSe'</span>;
+0534     <span class="keyword">end</span>
+0535     <span class="keyword">if</span>(s.cross_mode==0)
+0536         str2=<span class="string">'No Gestion'</span>;
+0537     <span class="keyword">elseif</span>(s.cross_mode==1)
+0538         str2=<span class="string">'CIVS'</span>;
+0539     <span class="keyword">elseif</span>(s.cross_mode==2 &amp;&amp; s.cross_method==1)
+0540         str2=<span class="string">'CIMSw'</span>;
+0541     <span class="keyword">elseif</span>(s.cross_mode==2 &amp;&amp; s.cross_method==2)
+0542         str2=<span class="string">'CIMSe'</span>;
+0543     <span class="keyword">end</span>
+0544     disp([<span class="string">'Roundabout: '</span> str1 <span class="string">'   /    Crossroad: '</span> str2])
+0545     disp(<span class="string">' '</span>)
+0546 <span class="keyword">end</span>
+0547 
+0548 <span class="comment">% Save data in directory 'save'</span>
+0549 <span class="keyword">if</span>(s.save_data==1)
+0550     d = clock; yy=num2str(d(1),<span class="string">'%4.0f'</span>); mm=num2str(d(2),<span class="string">'%02.0f'</span>); dd=num2str(d(3),<span class="string">'%02.0f'</span>); h=num2str(d(4),<span class="string">'%02.0f'</span>); m=num2str(d(5),<span class="string">'%02.0f'</span>); name=strcat(yy,mm,dd,h,m);
+0551     cd savedata\
+0552     save(name)
+0553     cd ..
+0554 <span class="keyword">end</span>
+0555 
+0556 <span class="comment">% Plot occupation map accumulator</span>
+0557 <span class="keyword">if</span>(s.ocmap_accum)
+0558     s.hgraph2=figure(4);
+0559     set(s.hgraph2,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,<span class="string">'Occupation Map'</span>,<span class="string">'Position'</span>,[100 100 s.dimx*6 s.dimy*6],<span class="string">'Resize'</span>,<span class="string">'off'</span>);
+0560     auxmap=s.occup_map_accu;
+0561     M=max(max(auxmap));
+0562     <span class="keyword">for</span> i=1:size(s.occup_map_accu,1)
+0563         <span class="keyword">for</span> j=1:size(s.occup_map_accu,2)
+0564             <span class="keyword">if</span>(auxmap(i,j)&gt;0)
+0565                 <span class="keyword">if</span>((auxmap(i,j)/M)&gt;=0.15)
+0566                     auxmap(i,j)=auxmap(i,j)/M;
+0567                 <span class="keyword">else</span>
+0568                     auxmap(i,j)=0.15;
+0569                 <span class="keyword">end</span>
+0570             <span class="keyword">end</span>
+0571         <span class="keyword">end</span>
+0572     <span class="keyword">end</span>
+0573     hold on;
+0574     surf(auxmap,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>);
+0575     load isr_tfs_colormap
+0576     set(s.hgraph2,<span class="string">'Colormap'</span>,mycmap);
+0577     caxis([0 1]);
+0578     axis(<span class="string">'equal'</span>)
+0579     t=colorbar;
+0580     set(get(t,<span class="string">'ylabel'</span>),<span class="string">'String'</span>, <span class="string">'Occupation level'</span>);
+0581     xlabel(<span class="string">'X-Axis [m]'</span>)
+0582     ylabel(<span class="string">'Y-Axis [m]'</span>)
+0583     saveas(s.hgraph2,<span class="string">'savedata\ocmap_accum.fig'</span>)
+0584     <span class="comment">% shading interp</span>
+0585 <span class="keyword">end</span>
+0586 
+0587 <span class="comment">% Plot occupation map accumulator over the time</span>
+0588 <span class="keyword">if</span>(s.ocmap_accum_graph)
+0589     s.hgraph3=figure(5);
+0590     set(s.hgraph3,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,<span class="string">'Occupation Map over the time'</span>,<span class="string">'Position'</span>,[100 100 s.dimx*6 s.dimy*6],<span class="string">'Resize'</span>,<span class="string">'off'</span>);
+0591     hold on; axis([0 s.ocmap_time(1,end) 0 max(max(s.ocmap_time(2:<span class="keyword">end</span>,:)))])
+0592     <span class="keyword">for</span> i=1:s.rn
+0593         plot(s.ocmap_time(1,:),s.ocmap_time(i+1,:))
+0594     <span class="keyword">end</span>
+0595 <span class="keyword">end</span>
+0596 
+0597 <span class="comment">% Display paths velocity</span>
+0598 <span class="keyword">if</span>(s.disp_res2)
+0599     load isr_tfs_colormap
+0600     [z]=size(s.ocmap4,3);
+0601     <span class="keyword">for</span> r=1:6
+0602         <span class="keyword">if</span>(r==1)
+0603             load path1(2_20).mat
+0604             aux=fliplr(path1);
+0605             str=<span class="string">'savedata\path1(2_20).fig'</span>;
+0606         <span class="keyword">elseif</span>(r==2)
+0607             load path2(1_27).mat
+0608             aux=fliplr(path2);
+0609             str=<span class="string">'savedata\path2(1_27).fig'</span>;
+0610         <span class="keyword">elseif</span>(r==3)
+0611             load path3(5_25).mat
+0612             aux=fliplr(path3);
+0613             str=<span class="string">'savedata\path3(5_25).fig'</span>;
+0614         <span class="keyword">elseif</span>(r==4)
+0615             load path4(6_24).mat
+0616             aux=fliplr(path4);
+0617             str=<span class="string">'savedata\path4(6_24).fig'</span>;
+0618         <span class="keyword">elseif</span>(r==5)
+0619             load path5(1_25).mat
+0620             aux=fliplr(path5);
+0621             str=<span class="string">'savedata\path5(1_25).fig'</span>;
+0622         <span class="keyword">elseif</span>(r==6)
+0623             load path6(7_19).mat
+0624             aux=fliplr(path6);
+0625             str=<span class="string">'savedata\path6(7_19).fig'</span>;
+0626         <span class="keyword">end</span>
+0627         [n]=size(aux,2);
+0628         vel=zeros(z,n);
+0629         <span class="keyword">for</span> i=1:z
+0630             <span class="keyword">for</span> j=1:n
+0631                 vel(i,j)=s.ocmap4(aux(1,j),aux(2,j),i);
+0632                 <span class="keyword">if</span>(vel(i,j)&gt;0 &amp;&amp; vel(i,j)&lt;2/3.6)
+0633                     vel(i,j)=2/3.6;
+0634                 <span class="keyword">end</span>
+0635             <span class="keyword">end</span>
+0636         <span class="keyword">end</span>
+0637         h=figure(10+r);
+0638         hold on;
+0639         surf([1:size(vel,2)],[1:size(vel,1)]/s.fres2,vel*3.6)
+0640         load isr_tfs_colormap2
+0641         set(h,<span class="string">'Colormap'</span>,mycmap);
+0642         caxis([0 60]);
+0643         M=size(vel,2);
+0644         m=size(vel,1);
+0645         view(2)
+0646         axis(<span class="string">'square'</span>)
+0647         axis([0 size(vel,2) 0 size(vel,1)/s.fres2]);
+0648         t=colorbar;
+0649         set(get(t,<span class="string">'ylabel'</span>),<span class="string">'String'</span>, <span class="string">'Velocity [Km/h]'</span>);
+0650         shading interp
+0651         xlabel(<span class="string">'Cells'</span>)
+0652         ylabel(<span class="string">'Time [s]'</span>)
+0653         saveas(h,str)
+0654     <span class="keyword">end</span>
+0655 <span class="keyword">end</span>
+0656 
+0657 <span class="keyword">end</span>
+0658 
+0659</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

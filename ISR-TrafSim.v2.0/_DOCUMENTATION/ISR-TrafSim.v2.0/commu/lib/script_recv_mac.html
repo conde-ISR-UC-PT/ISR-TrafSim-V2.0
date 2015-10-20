@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_recv_mac</title>
+  <meta name="keywords" content="script_recv_mac">
+  <meta name="description" content="script_recv_mac;">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_recv_mac
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_recv_mac;</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">script_recv_mac;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>	return a new id for node i</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%script_recv_mac;</span>
+0002 
+0003 t = event.instant;
+0004 i = event.pkt.tx;
+0005 j = event.node;
+0006 <span class="keyword">if</span> adebug, disp([<span class="string">'recv_mac @ node '</span> num2str(j)]); <span class="keyword">end</span>
+0007 <span class="keyword">if</span> event.pkt.rv == 0 &amp; strcmp(event.pkt.type, <span class="string">'data'</span>) == 0
+0008     <span class="comment">% broadcast but not data packet</span>
+0009     error([<span class="string">'recv_mac: node '</span> num2str(j) <span class="string">' receives a broadcast packet with a wrong type: '</span> event.pkt.type]);
+0010 <span class="keyword">end</span>
+0011 <span class="keyword">if</span> j == i
+0012     <span class="comment">% I myself sent this packet, no action</span>
+0013     <span class="keyword">return</span>;
+0014 <span class="keyword">end</span>
+0015 <span class="keyword">switch</span> event.pkt.type
+0016     <span class="keyword">case</span> <span class="string">'rts'</span>
+0017         <span class="comment">% send back a CTS</span>
+0018         newevent = event;
+0019         newevent.instant = t + SIFS;
+0020         newevent.type = <span class="string">'send_phy'</span>;
+0021         newevent.node = j;
+0022         <span class="comment">% keep the data size, rate, and id as RTS packet</span>
+0023         newevent.pkt.type = <span class="string">'cts'</span>;
+0024         newevent.pkt.tx=j;
+0025         newevent.pkt.rv=i;
+0026         newevent.pkt.navcommu=event.pkt.navcommu - SIFS - cts_tx_time;
+0027         NewEvents = [NewEvents; newevent]; clear newevent;
+0028     <span class="keyword">case</span> <span class="string">'cts'</span>
+0029         <span class="comment">% remove pending id for RTS</span>
+0030         <span class="keyword">if</span> pending_id(j) ~= event.pkt.id
+0031             <span class="keyword">if</span> ddebug, disp([<span class="string">'the received CTS id '</span> num2str(event.pkt.id) <span class="string">' does not match the pending RTS id '</span> num2str(pending_id(j))]); <span class="keyword">end</span>
+0032             <span class="comment">% probably this CTS is in response to an earlier RTS,</span>
+0033             <span class="comment">% but I have retransmitted a new RTS which is replied</span>
+0034             <span class="comment">% already or I have retransmitted so many times and given up</span>
+0035             <span class="comment">% so we just ignore this CTS.</span>
+0036             <span class="keyword">return</span>;
+0037         <span class="keyword">end</span>
+0038         pending_id(j) = 0;
+0039         retransmit(j) = 0;
+0040         <span class="comment">% send DATA</span>
+0041         newevent = event;
+0042         newevent.instant = t + SIFS;
+0043         newevent.type = <span class="string">'send_phy'</span>;
+0044         newevent.node = j;
+0045         <span class="comment">% keep the data size and rate as before</span>
+0046         <span class="comment">% newevent.pkt.ttl = 1;</span>
+0047         newevent.pkt.type = <span class="string">'data'</span>;
+0048         newevent.pkt.tx=j;
+0049         newevent.pkt.rv=i;
+0050         <span class="comment">% creat a new id for the data packet</span>
+0051         newevent.pkt.id = <a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>(j);
+0052         newevent.pkt.navcommu = 0; <span class="comment">% not necessary because RTS already did so</span>
+0053         NewEvents = [NewEvents; newevent]; clear newevent;
+0054     <span class="keyword">case</span> <span class="string">'data'</span>
+0055         <span class="comment">% should check that this is not a duplicated or out-of-order packet</span>
+0056         <span class="keyword">if</span> event.pkt.rv ~= 0    <span class="comment">% send ACK if not broadcast</span>
+0057             <span class="comment">% send back an ACK</span>
+0058             newevent = event;
+0059             newevent.instant = t + SIFS;
+0060             newevent.type = <span class="string">'send_phy'</span>;
+0061             newevent.node = j;
+0062             <span class="comment">% keep the data size, rate, and id the same as DATA packet</span>
+0063             newevent.pkt.type = <span class="string">'ack'</span>;
+0064             newevent.pkt.tx=j;
+0065             newevent.pkt.rv=i;
+0066             newevent.pkt.navcommu=0; <span class="comment">% not necessary because CTS already did so</span>
+0067             NewEvents = [NewEvents; newevent]; clear newevent;
+0068         <span class="keyword">end</span>
+0069         <span class="comment">% send data up to network layer</span>
+0070         newevent = event;
+0071         <span class="comment">% Make sure the ACK is sent out before processing this data packet in</span>
+0072         <span class="comment">% the upper layers because the upper layers may immediately</span>
+0073         <span class="comment">% send more packets upon receiving this data packet.</span>
+0074         <span class="keyword">if</span> event.pkt.rv ~= 0,
+0075             newevent.instant = t + SIFS + ack_tx_time + 2*eps;
+0076         <span class="keyword">else</span>
+0077             newevent.instant = t + 2*eps;
+0078         <span class="keyword">end</span>
+0079         newevent.type = <span class="string">'recv_net'</span>;
+0080         newevent.node = j;
+0081         NewEvents = [NewEvents; newevent]; clear newevent;
+0082     <span class="keyword">case</span> <span class="string">'ack'</span>
+0083         <span class="comment">% make sure the acknowledged packet is the just sent DATA packet</span>
+0084         <span class="keyword">if</span> pending_id(j) ~= event.pkt.id
+0085             <span class="keyword">if</span> ddebug, disp([<span class="string">'the received ACK id='</span> num2str(event.pkt.id) <span class="string">' does not match the pending DATA id='</span> num2str(pending_id(j))]); <span class="keyword">end</span>
+0086             <span class="comment">% probably this is a duplicated ACK (same reason as the above CTS case)</span>
+0087             <span class="keyword">return</span>;
+0088         <span class="keyword">end</span>
+0089         <span class="comment">% remove pending id for DATA</span>
+0090         pending_id(j) = 0;
+0091         retransmit(j) = 0;
+0092         <span class="keyword">if</span> ~isempty(mac_queue(j).list)
+0093             <span class="comment">% more packets are waiting to be sent</span>
+0094             <span class="comment">% newevent.instant = t + turnaround_time; % switch from receive to transmit</span>
+0095             <span class="comment">% if ddebug, disp('recv_mac: after receiving ACK, take the next packet from mac_queue'); end</span>
+0096             mac_status(j) = 1;
+0097             newevent = mac_queue(j).list(1);
+0098             mac_queue(j).list(1) = [];
+0099             newevent.instant = t + cca_time;
+0100             newevent.type = <span class="string">'wait_for_channel'</span>;
+0101             newevent.node = j;
+0102             <span class="comment">% the packet setup is already done in 'send_mac'</span>
+0103             NewEvents = [NewEvents; newevent]; clear newevent;
+0104         <span class="keyword">else</span>
+0105             mac_status(j) = 0;
+0106         <span class="keyword">end</span>
+0107     <span class="keyword">otherwise</span>
+0108         disp([<span class="string">'recv_mac: Undefined mac packet type: '</span> event.pkt.type]);
+0109 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

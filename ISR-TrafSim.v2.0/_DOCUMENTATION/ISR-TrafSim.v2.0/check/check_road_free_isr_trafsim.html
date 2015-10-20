@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of check_road_free_isr_trafsim</title>
+  <meta name="keywords" content="check_road_free_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html check -->
+<h1>check_road_free_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [out] = check_road_free_isr_trafsim(r,d) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Check if road is clear in a distance (1-Clear, 0-Road filled)
+ If distance is zero, all road is verified
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/traffic_gestion_isr_trafsim.html" class="code" title="function [cmdacc cause] = traffic_gestion_isr_trafsim(n)">traffic_gestion_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Check if road is clear in a distance (1-Clear, 0-Road filled)</span>
+0027 <span class="comment">% If distance is zero, all road is verified</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0030 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0031 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0032 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0033 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0034 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0037 <span class="comment">%   Urbano Nunes*</span>
+0038 <span class="comment">%   Luis Conde Bento**</span>
+0039 <span class="comment">%   Ricardo Parafita*</span>
+0040 <span class="comment">%   Sergio Santos*</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0043 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0044 <span class="comment">%--------------------------------------------------------------------------</span>
+0045 
+0046 <a name="_sub0" href="#_subfunctions" class="code">function [out] = check_road_free_isr_trafsim(r,d)</a>
+0047 <span class="keyword">global</span> s
+0048 
+0049 <span class="comment">% If distance argumemt is zero, all road is verified</span>
+0050 <span class="keyword">if</span>(d==0)
+0051     d=s.ri(r,6);    <span class="comment">% d is the road length</span>
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% Roads information (road)[1xi 2yi 3xf 4yf 5nsetp 6length 7ang 8intype 9endtype 10nextlaunch 11countdelay]</span>
+0055 px=s.ri(r,1);
+0056 py=s.ri(r,2);
+0057 t=s.ri(r,7);
+0058 l=s.rw/2;
+0059 c1x=px+l*cos(t-pi/2);
+0060 c1y=py+l*sin(t-pi/2);
+0061 c2x=px+l*cos(t+pi/2);
+0062 c2y=py+l*sin(t+pi/2);
+0063 px_=px+d*cos(t);
+0064 py_=py+d*sin(t);
+0065 c4x=px_+l*cos(t-pi/2);
+0066 c4y=py_+l*sin(t-pi/2);
+0067 c3x=px_+l*cos(t+pi/2);
+0068 c3y=py_+l*sin(t+pi/2);
+0069 
+0070 <span class="comment">% Checks which the pixels that are within the polygon</span>
+0071 xbox=[c1x c2x c3x c4x c1x];
+0072 ybox=[c1y c2y c3y c4y c1y];
+0073 
+0074 <span class="comment">% 1000x com inpolygon Elapsed time is 22.108233 seconds.</span>
+0075 <span class="comment">% 1000x com a mask    Elapsed time is 0.608906 seconds.</span>
+0076 mask = poly2mask(xbox*s.occup_res,ybox*s.occup_res,size(s.ocmap,1),size(s.ocmap,2));
+0077 out = ~logical(nnz(s.ocmap(:,:) &amp; mask));
+0078 
+0079 <span class="keyword">end</span>
+0080</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

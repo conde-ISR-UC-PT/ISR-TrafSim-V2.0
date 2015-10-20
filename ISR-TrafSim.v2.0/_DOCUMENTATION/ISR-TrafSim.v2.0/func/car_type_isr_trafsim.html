@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of car_type_isr_trafsim</title>
+  <meta name="keywords" content="car_type_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>car_type_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [ parameters ] = car_type_isr_trafsim( type ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Runs the main program of the Traffic Simulator
+
+-USE----------------------------------------------------------------------
+
+ car_type_isr_tfs(type)
+
+ -&gt; Input(s)
+   » type      -   type of vehicles
+
+ -&gt; Output(s)
+   » Car physical parameters
+       length  -   [m]
+       width   -   [m]
+       Wsbw    -   [m] (space between wheels)
+       mass    -   Weigth [Kg]
+       c_d     -   Aerodynamic Drag Coefficient
+       c_r     -   Rolling Resistance Coefficient
+       A       -   Frontal Area [m^2]
+       D       -   % 205 / 55 R16
+       r_dyn   -   Tire Radius [m]
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="launch_car_isr_trafsim.html" class="code" title="function [id,n] = launch_car_isr_trafsim(r,~)">launch_car_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Runs the main program of the Traffic Simulator</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% car_type_isr_tfs(type)</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% -&gt; Input(s)</span>
+0033 <span class="comment">%   » type      -   type of vehicles</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% -&gt; Output(s)</span>
+0036 <span class="comment">%   » Car physical parameters</span>
+0037 <span class="comment">%       length  -   [m]</span>
+0038 <span class="comment">%       width   -   [m]</span>
+0039 <span class="comment">%       Wsbw    -   [m] (space between wheels)</span>
+0040 <span class="comment">%       mass    -   Weigth [Kg]</span>
+0041 <span class="comment">%       c_d     -   Aerodynamic Drag Coefficient</span>
+0042 <span class="comment">%       c_r     -   Rolling Resistance Coefficient</span>
+0043 <span class="comment">%       A       -   Frontal Area [m^2]</span>
+0044 <span class="comment">%       D       -   % 205 / 55 R16</span>
+0045 <span class="comment">%       r_dyn   -   Tire Radius [m]</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0048 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0049 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0050 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0051 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0052 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0055 <span class="comment">%   Urbano Nunes*</span>
+0056 <span class="comment">%   Luis Conde Bento**</span>
+0057 <span class="comment">%   Ricardo Parafita*</span>
+0058 <span class="comment">%   Sergio Santos*</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0061 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0062 <span class="comment">%--------------------------------------------------------------------------</span>
+0063 
+0064 <a name="_sub0" href="#_subfunctions" class="code">function [ parameters ] = car_type_isr_trafsim( type )</a>
+0065 
+0066 <span class="comment">% Car type 1 - European Hatchback (Mégane III 1.4 TCe 130cv Dynamique)</span>
+0067 <span class="keyword">if</span>(type==1)
+0068     length=4.295;    width=1.808;     mass=1205; Wsbw=2.641;
+0069     c_d=0.326;      A=2.21;         c_r=0.013;
+0070     D=((205*0.55 * 2) + 16 * 25.4)/1000; <span class="comment">% 205 / 55 R16</span>
+0071     r_dyn=D/2;
+0072     <span class="comment">% Car type 2 - European light truck or minivan  (TRAFIC PASSENGER FP Passenger 9 lugares L1H1 1.0T 2.0 dCi 90cv )</span>
+0073 <span class="keyword">else</span>
+0074     length=4.782;    width=1.904;     mass=1912; Wsbw=3.490;
+0075     c_d=0.362;      A=3.38;         c_r=0.013;
+0076     D=((205*0.65 * 2) + 16 * 25.4)/1000; <span class="comment">% 205 / 65 R16</span>
+0077     r_dyn=D/2;
+0078 <span class="keyword">end</span>
+0079 
+0080 <span class="comment">% Exit parameters</span>
+0081 parameters.length=length;
+0082 parameters.width=width;
+0083 parameters.mass=mass;
+0084 parameters.Wsbw=Wsbw;
+0085 parameters.c_r=c_r;
+0086 parameters.c_d=c_d;
+0087 parameters.A=A;
+0088 parameters.r_dyn=r_dyn;
+0089 
+0090 <span class="keyword">end</span>
+0091</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

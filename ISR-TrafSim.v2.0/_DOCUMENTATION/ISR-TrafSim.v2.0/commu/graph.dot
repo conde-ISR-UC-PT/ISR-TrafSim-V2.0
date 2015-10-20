@@ -1,0 +1,10 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  rxtx_module_isr_trafsim -> ota_commu_isr_trafsim;
+
+  ota_commu_isr_trafsim [URL="ota_commu_isr_trafsim.html"];
+  ota_commu_run_isr_trafsim [URL="ota_commu_run_isr_trafsim.html"];
+  rxtx_module_isr_trafsim [URL="rxtx_module_isr_trafsim.html"];
+  script_recv_app [URL="script_recv_app.html"];
+  script_send_app [URL="script_send_app.html"];
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of inv_recv_power</title>
+  <meta name="keywords" content="inv_recv_power">
+  <meta name="description" content="Dcommu = inv_recv_power('shadowing', Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, pathLossExp, D0commu, 10^(SNR/10)*white_noise_variance)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>inv_recv_power
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Dcommu = inv_recv_power('shadowing', Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, pathLossExp, D0commu, 10^(SNR/10)*white_noise_variance)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [Dcommu] = inv_recv_power(rmodel, Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, pathLossExp, D0commu, Pr) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Dcommu = inv_recv_power('shadowing', Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, pathLossExp, D0commu, 10^(SNR/10)*white_noise_variance)
+ Given received power Pr, or equally SNR, find the corresponding distance Dcommu.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Dcommu] = inv_recv_power(rmodel, Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, pathLossExp, D0commu, Pr)</a>
+0002 <span class="comment">% Dcommu = inv_recv_power('shadowing', Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, pathLossExp, D0commu, 10^(SNR/10)*white_noise_variance)</span>
+0003 <span class="comment">% Given received power Pr, or equally SNR, find the corresponding distance Dcommu.</span>
+0004 
+0005 <span class="keyword">switch</span> rmodel
+0006     <span class="keyword">case</span> <span class="string">'friis'</span>
+0007         <span class="comment">%        Pt * Gt * Gr * (lambdacommu^2)</span>
+0008         <span class="comment">%  Pr = --------------------------</span>
+0009         <span class="comment">%        (4 *pi * Dcommu)^2 * Lcommu</span>
+0010         Dcommu = sqrt(Pt*Gt*Gr*lambdacommu^2/Pr/Lcommu)/4/pi;
+0011     <span class="keyword">case</span> <span class="string">'tworay'</span>
+0012         <span class="comment">% if Dcommu &lt; crossover_dist, use Friis free space model</span>
+0013         <span class="comment">% if Dcommu &gt;= crossover_dist, use two ray model</span>
+0014         <span class="comment">%          Pt * Gt * Gr * (ht^2 * hr^2)</span>
+0015         <span class="comment">%   Pr = ----------------------------</span>
+0016         <span class="comment">%            Dcommu^4 * Lcommu</span>
+0017         crossover_dist = (4 * pi * ht * hr) / lambdacommu;
+0018         Dcommu = sqrt(Pt*Gt*Gr*lambdacommu^2/Pr/Lcommu)/4/pi;
+0019         <span class="keyword">if</span> (Dcommu &gt; crossover_dist)
+0020             Dcommu = (Pt*Gt*Gr*(hr*hr*ht*ht)/Pr/Lcommu)^(1/4);
+0021         <span class="keyword">end</span>
+0022     <span class="keyword">case</span> <span class="string">'shadowing'</span>
+0023         <span class="comment">% Pr0 = friss(D0commu)</span>
+0024         <span class="comment">% Pr(db) = Pr0(db) - 10*Nnodes*log(Dcommu/D0commu) + X0</span>
+0025         <span class="comment">% where X0 is a Gaussian random variable with zero mean and a variance in db</span>
+0026         <span class="comment">%        Pt * Gt * Gr * (lambdacommu^2)   D0commu^pathLossExp    (X0/10)</span>
+0027         <span class="comment">%  Pr = --------------------------*-----------------*10</span>
+0028         <span class="comment">%        (4 *pi * D0commu)^2 * Lcommu          Dcommu^pathLossExp</span>
+0029         <span class="comment">% Assume X0=0</span>
+0030         Dcommu = (Pt*Gt*Gr*lambdacommu*lambdacommu/(4*pi*D0commu)^2/Lcommu*D0commu^pathLossExp/Pr)^(1/pathLossExp);
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

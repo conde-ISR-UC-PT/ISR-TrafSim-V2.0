@@ -1,0 +1,582 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of printset_isr_trafsim</title>
+  <meta name="keywords" content="printset_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html graphic -->
+<h1>printset_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [] = printset_isr_trafsim() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Print all parts of scenario simulated (lanes,roundabout,etc...)
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [] = pcross()</a></li><li><a href="#_sub2" class="code">function [] = proads()</a></li><li><a href="#_sub3" class="code">function [] = roads()</a></li><li><a href="#_sub4" class="code">function [] = roundabout()</a></li><li><a href="#_sub5" class="code">function [] = gen_set_points( r , arg )</a></li><li><a href="#_sub6" class="code">function [d]=rlength(arg)</a></li><li><a href="#_sub7" class="code">function [ang]=rorientation(arg)</a></li><li><a href="#_sub8" class="code">function [] = proad(i)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Print all parts of scenario simulated (lanes,roundabout,etc...)</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [] = printset_isr_trafsim()</a>
+0046 <span class="keyword">global</span> s gps_data
+0047 
+0048 <a href="#_sub3" class="code" title="subfunction [] = roads()">roads</a>();        <span class="comment">% Define trajectory setpoints</span>
+0049 <a href="#_sub4" class="code" title="subfunction [] = roundabout()">roundabout</a>();   <span class="comment">% Define trajectory setpoints and print lanes</span>
+0050 <a href="#_sub2" class="code" title="subfunction [] = proads()">proads</a>();       <span class="comment">% Print roads setpoints</span>
+0051 <a href="#_sub1" class="code" title="subfunction [] = pcross()">pcross</a>();       <span class="comment">% Print cross</span>
+0052 
+0053 <span class="comment">% Add the cross center point</span>
+0054 [~, col,~]=size(s.r);
+0055 s.r(:,col+1,:)=0;
+0056 <span class="keyword">for</span> i=1:s.rn
+0057     <span class="keyword">if</span>(s.ri(i,9)==3)
+0058         s.r(i,col+1,1)=116;
+0059         s.r(i,col+1,2)=50;
+0060         s.ri(i,5)=s.ri(i,5)+1;
+0061     <span class="keyword">end</span>
+0062 <span class="keyword">end</span>
+0063 
+0064 <span class="comment">% Divide roundabout setpoints in parts</span>
+0065 <span class="comment">% Outside lane (rexit 30 32 34 36)</span>
+0066 [lin,~]=size(s.r1);
+0067 cont=30;
+0068 setp=1;
+0069 <span class="keyword">for</span> i=1:lin
+0070     s.r(cont,setp,1)=s.r1(i,1);
+0071     s.r(cont,setp,2)=s.r1(i,2);
+0072     <span class="keyword">if</span>(mod(s.r1(i,3),90)==0 &amp;&amp; s.r1(i,3)~=0)
+0073         cont=cont+2;
+0074         setp=0;
+0075     <span class="keyword">end</span>
+0076     setp=setp+1;
+0077 <span class="keyword">end</span>
+0078 
+0079 <span class="comment">% Inside lane (rexit 31 33 35 37)</span>
+0080 [lin ,~]=size(s.r2);
+0081 cont=31;
+0082 setp=1;
+0083 <span class="keyword">for</span> i=1:lin
+0084     s.r(cont,setp,1)=s.r2(i,1);
+0085     s.r(cont,setp,2)=s.r2(i,2);
+0086     <span class="keyword">if</span>(mod(s.r2(i,3),90)==0 &amp;&amp; s.r2(i,3)~=0)
+0087         cont=cont+2;
+0088         setp=0;
+0089     <span class="keyword">end</span>
+0090     setp=setp+1;
+0091 <span class="keyword">end</span>
+0092 
+0093 <span class="comment">% Plot GPS fixed station</span>
+0094 <span class="keyword">if</span>(s.gps_type==1)
+0095     
+0096     pos=xyz2enu(gps_data.xyz_origin_ref,s.xyz_origin);
+0097     posx=pos(1);
+0098     posy=pos(2);
+0099     s.refposxRound=posx;
+0100     s.refposyRound=posy;
+0101 <span class="keyword">else</span>
+0102     posx=s.round_center(1);
+0103     posy=s.round_center(2);
+0104     s.refposxRound=posx;
+0105     s.refposyRound=posy;
+0106 <span class="keyword">end</span>
+0107 
+0108 <span class="keyword">if</span>(s.mode==1)
+0109     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.1:2*pi, x=[x posx+0.5*cos(ang)]; y=[y posy+0.5*sin(ang)];   <span class="keyword">end</span>
+0110     fill(x,y,<span class="string">'k'</span>)
+0111     
+0112     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.1:2*pi, x=[x posx+1*cos(ang)]; y=[y posy+1*sin(ang)];   <span class="keyword">end</span>
+0113     plot(x,y,<span class="string">'k'</span>)
+0114     
+0115     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.1:2*pi, x=[x posx+2*cos(ang)]; y=[y posy+2*sin(ang)];   <span class="keyword">end</span>
+0116     plot(x,y,<span class="string">'k'</span>)
+0117     
+0118     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.1:2*pi, x=[x posx+3*cos(ang)]; y=[y posy+3*sin(ang)];   <span class="keyword">end</span>
+0119     plot(x,y,<span class="string">'--k'</span>)
+0120     
+0121     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.1:2*pi, x=[x posx+4*cos(ang)]; y=[y posy+4*sin(ang)];   <span class="keyword">end</span>
+0122     plot(x,y,<span class="string">'--k'</span>)
+0123 <span class="keyword">end</span>
+0124 
+0125 <span class="comment">% Define and print cross zone if needed</span>
+0126 aux=s.distcrossextra;
+0127 aa=110-aux;
+0128 bb=122+aux;
+0129 cc=56+aux;
+0130 dd=44-aux;
+0131 s.crosszone=[aa bb cc dd];
+0132 <span class="keyword">if</span>(s.printcrosszone==1)
+0133     plot([aa bb bb aa aa],[cc cc dd dd cc],<span class="string">'--g'</span>);
+0134 <span class="keyword">end</span>
+0135 
+0136 <span class="comment">% Print area controled by gestion system</span>
+0137 <span class="keyword">if</span>(s.round_gest==1 &amp;&amp; s.mode==1)
+0138     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.05:2*pi, x=[x 50+s.control_radius_round*cos(ang)]; y=[y 50+s.control_radius_round*sin(ang)];<span class="keyword">end</span>
+0139     <span class="keyword">if</span>(s.make_video==0)
+0140         plot(x,y,<span class="string">'--g'</span>)
+0141     <span class="keyword">end</span>
+0142 <span class="keyword">end</span>
+0143 
+0144 <span class="comment">% Print area controled by gestion system</span>
+0145 <span class="keyword">if</span>(s.cross_mode==2 &amp;&amp; s.mode==1)
+0146     x=[]; y=[]; <span class="keyword">for</span> ang=0:0.05:2*pi, x=[x 115+s.control_radius_cross*cos(ang)]; y=[y 50+s.control_radius_cross*sin(ang)];<span class="keyword">end</span>
+0147     <span class="keyword">if</span>(s.make_video==0)
+0148         plot(x,y,<span class="string">'--g'</span>)
+0149     <span class="keyword">end</span>
+0150 <span class="keyword">end</span>
+0151 
+0152 <span class="comment">% Print oil in the roads</span>
+0153 <span class="keyword">if</span>(s.fus4&gt;=1 &amp;&amp; s.printslipplace==1)
+0154     
+0155     <span class="keyword">for</span> i=1:size(s.slip_list,1)
+0156         x_c=[]; y_c=[];
+0157         <span class="keyword">for</span> ang=0:0.3:2*pi
+0158             x_c=[x_c s.slip_list(i,1)+s.slip_radius*cos(ang)];
+0159             y_c=[y_c s.slip_list(i,2)+s.slip_radius*sin(ang)];
+0160         <span class="keyword">end</span>
+0161         fill(x_c,y_c,[0.5 0.25 0])
+0162     <span class="keyword">end</span>
+0163 <span class="keyword">end</span>
+0164 drawnow
+0165 <span class="keyword">end</span>
+0166 
+0167 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0168 <span class="comment">% Print cross center</span>
+0169 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0170 <a name="_sub1" href="#_subfunctions" class="code">function [] = pcross()</a>
+0171 <span class="keyword">global</span>  s
+0172 
+0173 <span class="comment">% Print center of cross</span>
+0174 a=s.distcrossextra;
+0175 b=a/2;
+0176 <span class="keyword">if</span>(s.mode==1)
+0177     fill([122+a 122+a 110-a 110-a],[44 56 56 44],<span class="string">'w'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>)
+0178     fill([122 122 110 110],[44-a 56+a 56+a 44-a],<span class="string">'w'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>)
+0179     fill([122 122 122+a],[56 56+a 56],<span class="string">'w'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>)
+0180     fill([122 122 122+a],[44 44-a 44],<span class="string">'w'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>)
+0181     fill([110 110 110-a],[56 56+a 56],<span class="string">'w'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>)
+0182     fill([110 110 110-a],[44 44-a 44],<span class="string">'w'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>)
+0183     <span class="comment">%         plot([95 95],[30 70],'g--');</span>
+0184     <span class="comment">%         plot([95 135],[70 70],'g--');</span>
+0185     <span class="comment">%         plot([135 135],[70 30],'g--');</span>
+0186     <span class="comment">%         plot([135 95],[30 30],'g--');</span>
+0187     plot([122+b 110-b],[56+b 56+b],<span class="string">'k--'</span>,<span class="string">'LineWidth'</span>,2);
+0188     plot([122+b 110-b],[44-b 44-b],<span class="string">'k--'</span>,<span class="string">'LineWidth'</span>,2);
+0189     plot([110-b 110-b],[56+b 44-b],<span class="string">'k--'</span>,<span class="string">'LineWidth'</span>,2);
+0190     plot([122+b 122+b],[56+b 44-b],<span class="string">'k--'</span>,<span class="string">'LineWidth'</span>,2);
+0191     plot([122+b 110-b],[56+b 44-b],<span class="string">'k--'</span>,<span class="string">'LineWidth'</span>,1);
+0192     plot([110-b 122+b],[56+b 44-b],<span class="string">'k--'</span>,<span class="string">'LineWidth'</span>,1);
+0193 <span class="keyword">end</span>
+0194 
+0195 
+0196 
+0197 <span class="keyword">end</span>
+0198 
+0199 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0200 <span class="comment">% Print roads trajectory setpoints</span>
+0201 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0202 <a name="_sub2" href="#_subfunctions" class="code">function [] = proads()</a>
+0203 <span class="keyword">global</span> s
+0204 
+0205 <span class="comment">% Print Roads</span>
+0206 <span class="keyword">for</span> i=1:s.rn
+0207     <span class="comment">% Print road setpoints</span>
+0208     <span class="keyword">if</span>(s.mode==1)
+0209         <span class="comment">% Roads</span>
+0210         <span class="keyword">for</span> j=1:s.ri(i,5)
+0211             <span class="keyword">if</span>(s.printrsp==1)
+0212                 <span class="comment">% Plot road setpoints</span>
+0213                 plot(s.r(i,j,1),s.r(i,j,2),<span class="string">'y.'</span>)
+0214             <span class="keyword">end</span>
+0215             <span class="comment">% Plot road ID</span>
+0216             <span class="keyword">if</span>(j==3 &amp;&amp; s.printrid==1)
+0217                 text(s.r(i,j,1),s.r(i,j,2),num2str(i),<span class="string">'color'</span>,<span class="string">'k'</span>,<span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="string">'Fontsize'</span>,6);
+0218             <span class="keyword">end</span>
+0219         <span class="keyword">end</span>
+0220     <span class="keyword">end</span>
+0221 <span class="keyword">end</span>
+0222 
+0223 <span class="keyword">end</span>
+0224 
+0225 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0226 <span class="comment">% Roads trajectory setpoints</span>
+0227 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0228 <a name="_sub3" href="#_subfunctions" class="code">function [] = roads()</a>
+0229 <span class="keyword">global</span> s
+0230 extRoad=50;
+0231 i=0;
+0232 <span class="comment">% Roads  - Store information                ri(1,:)=[xi yi xf yf nsetpoints length orientation intype endtype]</span>
+0233 <span class="comment">% Entrance in simulator (1-12)</span>
+0234 i=i+1; s.ri(i,8)=1; s.ri(i,9)=2; s.ri(i,1:4)=[0 -s.rw/2+50 31 -s.rw/2+50];  s.rn=i;
+0235 i=i+1; s.ri(i,8)=1; s.ri(i,9)=2; s.ri(i,1:4)=[0 -s.rw*(s.rw/2)+50 31 -s.rw*(s.rw/2)+50];  s.rn=i;
+0236 i=i+1; s.ri(i,8)=1; s.ri(i,9)=2; s.ri(i,1:4)=[s.rw/2+50 0 s.rw/2+50 31];  s.rn=i;
+0237 i=i+1; s.ri(i,8)=1; s.ri(i,9)=2; s.ri(i,1:4)=[s.rw*(s.rw/2)+50 0 s.rw*(s.rw/2)+50 31];  s.rn=i;
+0238 i=i+1; s.ri(i,8)=1; s.ri(i,9)=3; s.ri(i,1:4)=[s.rw/2+116 0 s.rw/2+116 44];  s.rn=i;
+0239 i=i+1; s.ri(i,8)=1; s.ri(i,9)=3; s.ri(i,1:4)=[s.rw*(s.rw/2)+116 0 s.rw*(s.rw/2)+116 44];  s.rn=i;
+0240 i=i+1; s.ri(i,8)=1; s.ri(i,9)=3; s.ri(i,1:4)=[160 s.rw/2+50 122 s.rw/2+50];  s.rn=i;
+0241 i=i+1; s.ri(i,8)=1; s.ri(i,9)=3; s.ri(i,1:4)=[160 s.rw*(s.rw/2)+50 122 s.rw*(s.rw/2)+50];  s.rn=i;
+0242 i=i+1; s.ri(i,8)=1; s.ri(i,9)=3; s.ri(i,1:4)=[-s.rw/2+116 100 -s.rw/2+116 56];  s.rn=i;
+0243 i=i+1; s.ri(i,8)=1; s.ri(i,9)=3; s.ri(i,1:4)=[-s.rw*(s.rw/2)+116 100 -s.rw*(s.rw/2)+116 56];  s.rn=i;
+0244 i=i+1; s.ri(i,8)=1; s.ri(i,9)=2; s.ri(i,1:4)=[-s.rw/2+50 100 -s.rw/2+50 69];  s.rn=i;
+0245 i=i+1; s.ri(i,8)=1; s.ri(i,9)=2; s.ri(i,1:4)=[-s.rw*(s.rw/2)+50 100 -s.rw*(s.rw/2)+50 69];  s.rn=i;
+0246 
+0247 <span class="comment">% Middle roads (13-16)</span>
+0248 i=i+1; s.ri(i,8)=3; s.ri(i,9)=2; s.ri(i,1:4)=[110 s.rw/2+50 69 s.rw/2+50];  s.rn=i;
+0249 i=i+1; s.ri(i,8)=3; s.ri(i,9)=2; s.ri(i,1:4)=[110 s.rw*(s.rw/2)+50 69 s.rw*(s.rw/2)+50];  s.rn=i;
+0250 i=i+1; s.ri(i,8)=2; s.ri(i,9)=3; s.ri(i,1:4)=[69 -s.rw/2+50 110 -s.rw/2+50];  s.rn=i;
+0251 i=i+1; s.ri(i,8)=2; s.ri(i,9)=3; s.ri(i,1:4)=[69 -s.rw*(s.rw/2)+50 110 -s.rw*(s.rw/2)+50];  s.rn=i;
+0252 
+0253 <span class="comment">% Exit Roads (17-28)</span>
+0254 i=i+1; s.ri(i,8)=2; s.ri(i,9)=0; s.ri(i,1:4)=[31 s.rw/2+50 0 s.rw/2+50];  s.rn=i;
+0255 i=i+1; s.ri(i,8)=2; s.ri(i,9)=0; s.ri(i,1:4)=[31 s.rw*(s.rw/2)+50 0 s.rw*(s.rw/2)+50];  s.rn=i;
+0256 i=i+1; s.ri(i,8)=2; s.ri(i,9)=0; s.ri(i,1:4)=[-s.rw/2+50 31 -s.rw/2+50 0];  s.rn=i;
+0257 i=i+1; s.ri(i,8)=2; s.ri(i,9)=0; s.ri(i,1:4)=[-s.rw*(s.rw/2)+50 31 -s.rw*(s.rw/2)+50 0];  s.rn=i;
+0258 i=i+1; s.ri(i,8)=3; s.ri(i,9)=0; s.ri(i,1:4)=[-s.rw/2+116 44 -s.rw/2+116 0];  s.rn=i;
+0259 i=i+1; s.ri(i,8)=3; s.ri(i,9)=0; s.ri(i,1:4)=[-s.rw*(s.rw/2)+116 44 -s.rw*(s.rw/2)+116 0];  s.rn=i;
+0260 i=i+1; s.ri(i,8)=3; s.ri(i,9)=0; s.ri(i,1:4)=[122 -s.rw/2+50 160 -s.rw/2+50];  s.rn=i;
+0261 i=i+1; s.ri(i,8)=3; s.ri(i,9)=0; s.ri(i,1:4)=[122 -s.rw*(s.rw/2)+50 160 -s.rw*(s.rw/2)+50];  s.rn=i;
+0262 i=i+1; s.ri(i,8)=3; s.ri(i,9)=0; s.ri(i,1:4)=[s.rw/2+116 56 s.rw/2+116 100];  s.rn=i;
+0263 i=i+1; s.ri(i,8)=3; s.ri(i,9)=0; s.ri(i,1:4)=[s.rw*(s.rw/2)+116 56 s.rw*(s.rw/2)+116 100];  s.rn=i;
+0264 i=i+1; s.ri(i,8)=2; s.ri(i,9)=0; s.ri(i,1:4)=[s.rw/2+50 69 s.rw/2+50 100];  s.rn=i;
+0265 i=i+1; s.ri(i,8)=2; s.ri(i,9)=0; s.ri(i,1:4)=[s.rw*(s.rw/2)+50 69 s.rw*(s.rw/2)+50 100];  s.rn=i;
+0266 
+0267 <span class="comment">% Calculate road setpoints</span>
+0268 <span class="keyword">for</span> i=1:s.rn
+0269     s.ri(i,6)=<a href="#_sub6" class="code" title="subfunction [d]=rlength(arg)">rlength</a>( s.ri(i,1:4) );           <span class="comment">% Calculates the length of road</span>
+0270     s.ri(i,5)=2+floor( s.ri(i,6) / s.rd );      <span class="comment">% Calculates the number of setpoints needed</span>
+0271     s.ri(i,7)=<a href="#_sub7" class="code" title="subfunction [ang]=rorientation(arg)">rorientation</a>( s.ri(i,1:4) );      <span class="comment">% Calculates the road orientation</span>
+0272     <a href="#_sub5" class="code" title="subfunction [] = gen_set_points( r , arg )">gen_set_points</a>( i , s.ri(i,:) );            <span class="comment">% Generates the road setpoints and store them</span>
+0273     
+0274     <span class="comment">% If the last 2 setpoints are equal delete the last</span>
+0275     aa=<a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r(i,s.ri(i,5),1),0.001);    bb=<a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r(i,s.ri(i,5)-1,1),0.001);
+0276     cc=<a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r(i,s.ri(i,5),2),0.001);    dd=<a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r(i,s.ri(i,5)-1,2),0.001);
+0277     <span class="keyword">if</span>( ( aa == bb ) &amp;&amp; ( cc == dd) )
+0278         s.r(i,s.ri(i,5),1)=0;
+0279         s.r(i,s.ri(i,5),2)=0;
+0280         s.ri(i,5)=s.ri(i,5)-1;
+0281     <span class="keyword">end</span>
+0282 <span class="keyword">end</span>
+0283 
+0284 <span class="comment">% Print lanes</span>
+0285 <span class="keyword">for</span> i=1:s.rn
+0286     <span class="keyword">if</span>(s.mode==1)
+0287         <a href="#_sub8" class="code" title="subfunction [] = proad(i)">proad</a>(i);   <span class="comment">% Print lanes</span>
+0288     <span class="keyword">end</span>
+0289 <span class="keyword">end</span>
+0290 
+0291 <span class="comment">%Store next launch time</span>
+0292 s.ri(1:i,10)=0;
+0293 
+0294 <span class="keyword">end</span>
+0295 
+0296 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0297 <span class="comment">% Roundabout trajectory setpoints</span>
+0298 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0299 <a name="_sub4" href="#_subfunctions" class="code">function [] = roundabout()</a>
+0300 <span class="keyword">global</span> s
+0301 
+0302 <span class="comment">% Roundabout definitions</span>
+0303 xc=s.round_center(1); yc=s.round_center(2);           <span class="comment">% Center</span>
+0304 rI=s.radiusI;           <span class="comment">% Radius of the trajectory (inside lane)</span>
+0305 rO=s.radiusO;           <span class="comment">% Radius of the trajectory (outside lane)</span>
+0306 
+0307 <span class="comment">% Print lanes</span>
+0308 <span class="keyword">if</span>(s.mode==1)
+0309     x1=[]; y1=[]; r1=s.radiusI-(s.rrw/2);   <span class="comment">% Orange Center</span>
+0310     x2=[]; y2=[]; r2=s.radiusI+(s.rrw/2);   <span class="comment">% Line between the two tracks</span>
+0311     x3=[]; y3=[]; r3=s.radiusO+(s.rrw/2);   <span class="comment">% Lanes (two)</span>
+0312     <span class="keyword">for</span> ang=0:0.1:2*pi
+0313         x1=[x1 xc+r1*cos(ang)]; x2=[x2 xc+r2*cos(ang)]; x3=[x3 xc+r3*cos(ang)];
+0314         y1=[y1 yc+r1*sin(ang)]; y2=[y2 yc+r2*sin(ang)]; y3=[y3 yc+r3*sin(ang)];
+0315         
+0316     <span class="keyword">end</span>
+0317     fill(x3,y3,<span class="string">'w'</span>,<span class="string">'Edgecolor'</span>,<span class="string">'w'</span>);
+0318     plot(x2,y2,<span class="string">'k--'</span>);
+0319     fill(x1,y1,[0.8 0.8 0.8])
+0320 <span class="keyword">end</span>
+0321 
+0322 <span class="comment">% Roundabout outside lane setpoints</span>
+0323 aux=0;
+0324 <span class="keyword">for</span> t=0:s.rbd(1,1):360
+0325     aux=aux+1;
+0326     s.r1(aux,1)=xc+rO*cos(t*pi/180); s.r1(aux,2)=yc+rO*sin(t*pi/180); s.r1(aux,3)=t;
+0327     <span class="keyword">if</span>(s.printrsp==1  &amp;&amp; s.mode==1)
+0328         plot(s.r1(aux,1),s.r1(aux,2),<span class="string">'w.'</span>)
+0329     <span class="keyword">end</span>
+0330 <span class="keyword">end</span>
+0331 s.r1i(1,1)=aux;
+0332 <span class="comment">%If last setpoint is repeated delete them</span>
+0333 <span class="keyword">if</span>( <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r1(aux,1),0.001) == <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r1(1,1),0.001)  )
+0334     <span class="keyword">if</span>( <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r1(aux,2),0.001) == <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r1(1,2),0.001) )
+0335         s.r1(aux,:)=[];
+0336         s.r1i(1,1)=aux-1;
+0337     <span class="keyword">end</span>
+0338 <span class="keyword">end</span>
+0339 
+0340 <span class="comment">% Roundabout inside lane setpoints</span>
+0341 aux=0;
+0342 <span class="keyword">for</span> t=0:s.rbd(1,2):360      <span class="comment">% Inside lane</span>
+0343     aux=aux+1;
+0344     s.r2(aux,1)=xc+rI*cos(t*pi/180); s.r2(aux,2)=yc+rI*sin(t*pi/180); s.r2(aux,3)=t;
+0345     <span class="keyword">if</span>(s.printrsp==1 &amp;&amp; s.mode==1)
+0346         plot(s.r2(aux,1),s.r2(aux,2),<span class="string">'w.'</span>)
+0347     <span class="keyword">end</span>
+0348 <span class="keyword">end</span>
+0349 s.r2i(1,1)=aux;
+0350 <span class="comment">%If last setpoint is repeated delete them</span>
+0351 <span class="keyword">if</span>( <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r2(aux,1),0.001) == <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r2(1,1),0.001)  )
+0352     <span class="keyword">if</span>( <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r2(aux,2),0.001) == <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.r2(1,2),0.001) )
+0353         s.r2(aux,:)=[];
+0354         s.r2i(1,1)=aux-1;
+0355     <span class="keyword">end</span>
+0356 <span class="keyword">end</span>
+0357 <span class="keyword">end</span>
+0358 
+0359 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0360 <span class="comment">% Generate setpoints to one road</span>
+0361 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0362 <a name="_sub5" href="#_subfunctions" class="code">function [] = gen_set_points( r , arg )</a>
+0363 <span class="keyword">global</span> s
+0364 
+0365 xi=arg(1); yi=arg(2); xf=arg(3); yf=arg(4); n=arg(5); ang=arg(7);
+0366 
+0367 <span class="comment">% Stores the initial point</span>
+0368 s.r(r,1,1)=xi;      s.r(r,1,2)=yi;
+0369 
+0370 <span class="comment">% Stores the midlle points</span>
+0371 <span class="keyword">for</span> i=2:(n-1)
+0372     s.r(r,i,1)=xi+s.rd*(i-1)*cos(ang);   s.r(r,i,2)=yi+s.rd*(i-1)*sin(ang);
+0373 <span class="keyword">end</span>
+0374 
+0375 <span class="comment">% Stores the end point</span>
+0376 s.r(r,n,1)=xf; s.r(r,n,2)=yf;
+0377 
+0378 <span class="keyword">end</span>
+0379 
+0380 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0381 <span class="comment">% Calculation the length of road</span>
+0382 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0383 <a name="_sub6" href="#_subfunctions" class="code">function [d]=rlength(arg)</a>
+0384 xi=arg(1); yi=arg(2); xf=arg(3); yf=arg(4);
+0385 d=sqrt( (xf-xi)^2 + (yf-yi)^2 );
+0386 <span class="keyword">end</span>
+0387 
+0388 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0389 <span class="comment">% Calculation the orientation of road</span>
+0390 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0391 <a name="_sub7" href="#_subfunctions" class="code">function [ang]=rorientation(arg)</a>
+0392 xi=arg(1); yi=arg(2); xf=arg(3); yf=arg(4);
+0393 ang=atan2((yf-yi) , (xf-xi));
+0394 <span class="keyword">end</span>
+0395 
+0396 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0397 <span class="comment">% Plot a single road</span>
+0398 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0399 <a name="_sub8" href="#_subfunctions" class="code">function [] = proad(i)</a>
+0400 <span class="keyword">global</span> s
+0401 
+0402 ang=s.ri(i,7); xi=s.ri(i,1); yi=s.ri(i,2); xf=s.ri(i,3); yf=s.ri(i,4);
+0403 
+0404 <span class="comment">% Calculate corner points</span>
+0405 c1x=xi+(s.rw/2)*cos(ang+pi/2);  c1y=yi+(s.rw/2)*sin(ang+pi/2);
+0406 c2x=xi+(s.rw/2)*cos(ang-pi/2);  c2y=yi+(s.rw/2)*sin(ang-pi/2);
+0407 c3x=xf+(s.rw/2)*cos(ang+pi/2);  c3y=yf+(s.rw/2)*sin(ang+pi/2);
+0408 c4x=xf+(s.rw/2)*cos(ang-pi/2);  c4y=yf+(s.rw/2)*sin(ang-pi/2);
+0409 
+0410 <span class="comment">% Plot road</span>
+0411 fill([c1x c2x c4x c3x],[c1y c2y c4y c3y],<span class="string">'w'</span>,<span class="string">'Facecolor'</span>,<span class="string">'w'</span>,<span class="string">'edgecolor'</span>,<span class="string">'w'</span>);
+0412 
+0413 <span class="keyword">if</span>(intersect(i,[3 4 5 6 25 26 27 28]))
+0414     <span class="keyword">if</span>(mod(i,2)==0) <span class="comment">% Odd</span>
+0415         
+0416         <span class="comment">% Plot road side lines</span>
+0417         <span class="keyword">for</span> n=c2y:5:c4y
+0418             plot([c1x c3x],[n n+2.5],<span class="string">'k'</span>);
+0419         <span class="keyword">end</span>
+0420         
+0421         plot([c2x c4x],[c2y c4y],<span class="string">'k'</span>);
+0422     <span class="keyword">else</span> <span class="comment">% Even</span>
+0423         
+0424         <span class="comment">% Plot road side lines</span>
+0425         <span class="keyword">for</span> n=c1y:5:c3y
+0426             plot([c2x c4x],[n n+2.5],<span class="string">'k'</span>);
+0427         <span class="keyword">end</span>
+0428         
+0429         plot([c1x c3x],[c1y c3y],<span class="string">'k'</span>);
+0430         
+0431     <span class="keyword">end</span>
+0432 <span class="keyword">elseif</span> (intersect(i,[9 10 11 12 19 20 21 22]))
+0433     <span class="keyword">if</span>(mod(i,2)==0) <span class="comment">% Odd</span>
+0434         
+0435         plot([c2x c4x],[c2y c4y],<span class="string">'k'</span>);
+0436         <span class="comment">% Plot road side lines</span>
+0437         <span class="keyword">for</span> n=c3y:5:c1y
+0438             plot([c1x c3x],[n n-2.5],<span class="string">'k'</span>);
+0439         <span class="keyword">end</span>
+0440         
+0441     <span class="keyword">else</span> <span class="comment">% Even</span>
+0442         
+0443         plot([c1x c3x],[c1y c3y],<span class="string">'k'</span>);
+0444         <span class="comment">% Plot road side lines</span>
+0445         
+0446         <span class="keyword">for</span> n=c4y:5:c2y
+0447             plot([c2x c4x],[n n-2.5],<span class="string">'k'</span>);
+0448         <span class="keyword">end</span>
+0449         
+0450     <span class="keyword">end</span>
+0451     <span class="comment">% Horizontal Roads</span>
+0452 <span class="keyword">elseif</span> (intersect(i,[1 2 15 16 23 24]))
+0453     <span class="keyword">if</span>(mod(i,2)==0) <span class="comment">% Odd</span>
+0454         
+0455         <span class="comment">% Plot road side lines</span>
+0456         <span class="keyword">for</span> n=c2x:5:c4x
+0457             plot([n n+2.5],[c1y c3y],<span class="string">'k'</span>);
+0458         <span class="keyword">end</span>
+0459         
+0460         plot([c2x c4x],[c2y c4y],<span class="string">'k'</span>);
+0461     <span class="keyword">else</span> <span class="comment">% Even</span>
+0462         
+0463         <span class="comment">% Plot road side lines</span>
+0464         <span class="keyword">for</span> n=c1x:5:c3x
+0465             plot([n n+2.5],[c2y c4y],<span class="string">'k'</span>);
+0466         <span class="keyword">end</span>
+0467         plot([c1x c3x],[c1y c3y],<span class="string">'k'</span>);
+0468     <span class="keyword">end</span>
+0469     
+0470 <span class="keyword">elseif</span> (intersect(i,[7 8 13 14 17 18]))
+0471     <span class="keyword">if</span>(mod(i,2)==0) <span class="comment">% Odd</span>
+0472         
+0473         <span class="comment">% Plot road side lines</span>
+0474         <span class="keyword">for</span> n=c4x:5:c2x
+0475             plot([n n+2.5],[c1y c3y],<span class="string">'k'</span>);
+0476         <span class="keyword">end</span>
+0477         
+0478         plot([c2x c4x],[c2y c4y],<span class="string">'k'</span>);
+0479     <span class="keyword">else</span> <span class="comment">% Even</span>
+0480         
+0481         <span class="comment">% Plot road side lines</span>
+0482         <span class="keyword">for</span> n=c3x:5:c1x
+0483             plot([n n+2.5],[c2y c4y],<span class="string">'k'</span>);
+0484         <span class="keyword">end</span>
+0485         plot([c1x c3x],[c1y c3y],<span class="string">'k'</span>);
+0486     <span class="keyword">end</span>
+0487     
+0488 <span class="keyword">else</span>
+0489     <span class="comment">% Plot road side lines</span>
+0490     plot([c1x c3x],[c1y c3y],<span class="string">'k'</span>);   plot([c2x c4x],[c2y c4y],<span class="string">'k'</span>);
+0491 <span class="keyword">end</span>
+0492 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

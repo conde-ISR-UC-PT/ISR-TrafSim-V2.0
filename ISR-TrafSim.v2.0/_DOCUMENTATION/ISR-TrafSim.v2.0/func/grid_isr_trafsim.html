@@ -1,0 +1,435 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of grid_isr_trafsim</title>
+  <meta name="keywords" content="grid_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>grid_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [out] = grid_isr_trafsim(arg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Update/Analayse occupation grid with vehicles
+
+-USE----------------------------------------------------------------------
+
+ isr_tfs_grid(arg)
+
+ -&gt; Input(s)
+   » 'arg'     -   Option
+       update      -   Update grid
+       func        -   For each vehicle determining the vehicles
+                       that are close using diferent methods
+       semaphore   -   Write semaphores on grid
+       cells       -   Group the cells by segment
+       compute     -   Checks the cells occuped in each road
+
+ -&gt; Output(s)
+   » [x y t newV newW pwr pwf]
+       (x,y,t) -   Pose updated
+       newV    -   Linear velocity updated
+       newW    -   Angular velocity updated
+       pwr     -   Pulses of rear wheel encoder with error
+       pwf     -   Pulses of front wheel encoder with error
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [] = grid_compute()</a></li><li><a href="#_sub2" class="code">function [] = grid_init()</a></li><li><a href="#_sub3" class="code">function [] = grid_analyze()</a></li><li><a href="#_sub4" class="code">function [out] = grid_update()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Update/Analayse occupation grid with vehicles</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% isr_tfs_grid(arg)</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% -&gt; Input(s)</span>
+0033 <span class="comment">%   » 'arg'     -   Option</span>
+0034 <span class="comment">%       update      -   Update grid</span>
+0035 <span class="comment">%       func        -   For each vehicle determining the vehicles</span>
+0036 <span class="comment">%                       that are close using diferent methods</span>
+0037 <span class="comment">%       semaphore   -   Write semaphores on grid</span>
+0038 <span class="comment">%       cells       -   Group the cells by segment</span>
+0039 <span class="comment">%       compute     -   Checks the cells occuped in each road</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% -&gt; Output(s)</span>
+0042 <span class="comment">%   » [x y t newV newW pwr pwf]</span>
+0043 <span class="comment">%       (x,y,t) -   Pose updated</span>
+0044 <span class="comment">%       newV    -   Linear velocity updated</span>
+0045 <span class="comment">%       newW    -   Angular velocity updated</span>
+0046 <span class="comment">%       pwr     -   Pulses of rear wheel encoder with error</span>
+0047 <span class="comment">%       pwf     -   Pulses of front wheel encoder with error</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0050 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0051 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0052 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0053 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0054 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0057 <span class="comment">%   Urbano Nunes*</span>
+0058 <span class="comment">%   Luis Conde Bento**</span>
+0059 <span class="comment">%   Ricardo Parafita*</span>
+0060 <span class="comment">%   Sergio Santos*</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0063 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0064 <span class="comment">%--------------------------------------------------------------------------</span>
+0065 
+0066 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0067 <span class="comment">% Selects the option desired and call the function</span>
+0068 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0069 <a name="_sub0" href="#_subfunctions" class="code">function [out] = grid_isr_trafsim(arg)</a>
+0070 out=0;
+0071 [~, c]=size(arg);
+0072 <span class="keyword">if</span>(c==6)        <span class="comment">% 'update'</span>
+0073     out=<a href="#_sub4" class="code" title="subfunction [out] = grid_update()">grid_update</a>();
+0074 <span class="keyword">elseif</span>(c==4)    <span class="comment">% 'func'</span>
+0075     <a href="#_sub3" class="code" title="subfunction [] = grid_analyze()">grid_analyze</a>();
+0076 <span class="keyword">elseif</span>(c==9)    <span class="comment">% 'semaphore'</span>
+0077     grid_sema();
+0078 <span class="keyword">elseif</span>(c==5)    <span class="comment">% 'cells'</span>
+0079     <a href="#_sub2" class="code" title="subfunction [] = grid_init()">grid_init</a>();
+0080 <span class="keyword">elseif</span>(c==7)    <span class="comment">% 'compute'</span>
+0081     <a href="#_sub1" class="code" title="subfunction [] = grid_compute()">grid_compute</a>();
+0082 <span class="keyword">end</span>
+0083 
+0084 <span class="keyword">end</span>
+0085 
+0086 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0087 <span class="comment">% Checks the cells occupied in each road</span>
+0088 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0089 <a name="_sub1" href="#_subfunctions" class="code">function [] = grid_compute()</a>
+0090 <span class="keyword">global</span> s
+0091 
+0092 tot=<a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001);
+0093 <span class="keyword">for</span> i = 1 : s.rn
+0094     
+0095     [~,c,~]=size(s.ocmap_ind);
+0096     count=0;
+0097     <span class="keyword">for</span> j=1:c
+0098         <span class="keyword">if</span>(s.ocmap_ind(1,j,i)~=0 &amp;&amp; s.ocmap_ind(1,j,i)~=0)
+0099             <span class="keyword">if</span>(s.ocmap(s.ocmap_ind(1,j,i),s.ocmap_ind(2,j,i))~=0 )
+0100                 count=count+1;
+0101             <span class="keyword">end</span>
+0102         <span class="keyword">end</span>
+0103     <span class="keyword">end</span>
+0104     
+0105     tot=[tot;count];
+0106 <span class="keyword">end</span>
+0107 s.ocmap_time=[s.ocmap_time tot];
+0108 <span class="keyword">end</span>
+0109 
+0110 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0111 <span class="comment">%  Group the cells by road</span>
+0112 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0113 <a name="_sub2" href="#_subfunctions" class="code">function [] = grid_init()</a>
+0114 <span class="keyword">global</span> s
+0115 
+0116 <span class="comment">% Grouping the pixels that is worth checking around</span>
+0117 <span class="keyword">if</span> (size(s.ocmap,1) == 100) &amp;&amp; (size(s.ocmap,2)==160) &amp;&amp; (s.occup_res==1)
+0118     load group_cell_by_road.mat
+0119 <span class="keyword">else</span>
+0120     cont=0;
+0121     <span class="keyword">for</span> j = 1 : size(s.ocmap,2)
+0122         <span class="keyword">for</span> i = 1 : size(s.ocmap,1)
+0123             cont=cont+1;
+0124             pointsX(1,cont)=(j-1)*(1/s.occup_res)+(1/(2*s.occup_res));
+0125             coordiX(1,cont)=j;
+0126             pointsY(1,cont)=(i-1)*(1/s.occup_res)+(1/(2*s.occup_res));
+0127             coordiY(1,cont)=i;
+0128         <span class="keyword">end</span>
+0129     <span class="keyword">end</span>
+0130 <span class="keyword">end</span>
+0131 
+0132 <span class="comment">% For each road group the indices of cells</span>
+0133 s.ocmap_ind=[];
+0134 <span class="keyword">for</span> i = 1 : s.rn
+0135     x1=s.ri(i,1); y1=s.ri(i,2); x2=s.ri(i,3); y2=s.ri(i,4); a=s.ri(i,7); b=s.rw/2; d=(pi/2);
+0136     xbox=[ x1+b*cos(a+d) x1+b*cos(a-d) x2+b*cos(a-d) x2+b*cos(a+d)  x1+b*cos(a+d)];
+0137     ybox=[ y1+b*sin(a+d) y1+b*sin(a-d) y2+b*sin(a-d) y2+b*sin(a+d)  y1+b*sin(a+d)];
+0138     
+0139     <span class="comment">% Checks which the pixels that are inside the polygon</span>
+0140     in = inpolygon(pointsX(1,:),pointsY(1,:),xbox,ybox);
+0141     
+0142     <span class="comment">% Store the cels wich belongs to the select road</span>
+0143     cels=length(in); aux=[];
+0144     
+0145     <span class="keyword">for</span> j=find(in(1,:)==1)
+0146         aux=[aux [coordiY(j) ; coordiX(j) ]];
+0147     <span class="keyword">end</span>
+0148     
+0149     s.ocmap_ind(1,[1:size(aux,2)],i)=aux(1,:);
+0150     s.ocmap_ind(2,[1:size(aux,2)],i)=aux(2,:);
+0151 <span class="keyword">end</span>
+0152 <span class="keyword">end</span>
+0153 
+0154 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0155 <span class="comment">%  Determining the cars that are close</span>
+0156 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0157 <a name="_sub3" href="#_subfunctions" class="code">function [] = grid_analyze()</a>
+0158 <span class="keyword">global</span> c s
+0159 
+0160 <span class="keyword">if</span>(s.zone_type==4)
+0161     ncars=length(c.listactive);
+0162     <span class="keyword">for</span> i=1:ncars
+0163         c.car(i).list=[];
+0164         <span class="keyword">for</span> j=1:ncars
+0165             <span class="keyword">if</span>(i~=j)
+0166                 dd=dist_isr_trafsim(c.car(i).pos.x,c.car(i).pos.y,c.car(j).pos.x,c.car(j).pos.y);
+0167                 <span class="keyword">if</span>(dd&lt;s.circle_r)
+0168                     <span class="keyword">if</span>(isempty(intersect(c.car(i).list,c.car(j).id)))
+0169                         c.car(i).list=[c.car(i).list c.car(j).id];
+0170                     <span class="keyword">end</span>
+0171                 <span class="keyword">end</span>
+0172             <span class="keyword">end</span>
+0173         <span class="keyword">end</span>
+0174         
+0175         <span class="keyword">for</span> j=1:length(s.stoplist)
+0176             
+0177             dd=dist_isr_trafsim(c.car(i).pos.x,c.car(i).pos.y,s.ri(s.stoplist(j),3),s.ri(s.stoplist(j),4));
+0178             <span class="keyword">if</span>(dd&lt;s.circle_r)
+0179                 <span class="keyword">if</span>(isempty(intersect(c.car(i).list,s.stoplist(j))))
+0180                     c.car(i).list=[c.car(i).list s.stoplist(j)];
+0181                 <span class="keyword">end</span>
+0182             <span class="keyword">end</span>
+0183         <span class="keyword">end</span>
+0184     <span class="keyword">end</span>
+0185 <span class="keyword">else</span>
+0186     ncars=length(c.listactive);
+0187     
+0188     <span class="keyword">for</span> n=1:ncars
+0189         
+0190         <span class="comment">% Rotate points of area wich will be analyzed</span>
+0191         <span class="keyword">if</span>(s.zone_type==1 || s.zone_type==3)
+0192             <span class="comment">% Rotation matrix</span>
+0193             m_rot=[cos(c.car(n).pos.t) -sin(c.car(n).pos.t) 0; sin(c.car(n).pos.t) cos(c.car(n).pos.t) 0; 0 0 1];
+0194             <span class="comment">% Rotate points</span>
+0195             p=[];
+0196             <span class="keyword">for</span> i=1:s.npoints
+0197                 p=[p m_rot*[s.xg(i);s.yg(i);1]];
+0198             <span class="keyword">end</span>
+0199             <span class="comment">% Add offset</span>
+0200             p(1,:)=p(1,:)+c.car(n).pos.x;
+0201             p(2,:)=p(2,:)+c.car(n).pos.y;
+0202         <span class="keyword">elseif</span>(s.zone_type==2)
+0203             <span class="comment">% Add offset</span>
+0204             p(1,:)=s.xg(1,:)+c.car(n).pos.x;
+0205             p(2,:)=s.yg(1,:)+c.car(n).pos.y;
+0206         <span class="keyword">end</span>
+0207         
+0208         <span class="comment">% Pixels of mass center</span>
+0209         <span class="comment">% Calculates the pixels which correspond to the points of the mass center</span>
+0210         px0=floor( c.car(n).pos.x*s.occup_res )+1;
+0211         py0=floor( c.car(n).pos.y*s.occup_res )+1;
+0212         
+0213         <span class="comment">% To store points and pixels</span>
+0214         cels=s.lmax*s.occup_res; cont=0;
+0215         pointsX=zeros(1,(cels*cels)); coordiX=zeros(1,(cels*cels)); pointsY=zeros(1,(cels*cels)); coordiY=zeros(1,(cels*cels));
+0216         
+0217         <span class="comment">% Grouping the pixels that is worth checking around</span>
+0218         <span class="keyword">for</span> j = round(px0-cels) : round(px0+cels)
+0219             <span class="keyword">for</span> i = round(py0-cels) : round(py0+cels)
+0220                 <span class="keyword">if</span>(j&gt;0 &amp;&amp; j&lt;=s.dimx*s.occup_res &amp;&amp; i&gt;0 &amp;&amp; i&lt;=s.dimy*s.occup_res)
+0221                     cont=cont+1;
+0222                     pointsX(1,cont)=(j-1)*(1/s.occup_res)+(1/(2*s.occup_res));
+0223                     coordiX(1,cont)=j;
+0224                     pointsY(1,cont)=(i-1)*(1/s.occup_res)+(1/(2*s.occup_res));
+0225                     coordiY(1,cont)=i;
+0226                 <span class="keyword">end</span>
+0227             <span class="keyword">end</span>
+0228         <span class="keyword">end</span>
+0229         
+0230         <span class="comment">% Checks which the pixels that are within the polygon</span>
+0231         in = inpolygon(pointsX(1,[1:cont]),pointsY(1,[1:cont]),p(1,:),p(2,:));
+0232         
+0233         <span class="comment">% Checks for cars within the zone of interest</span>
+0234         cels=length(in);
+0235         list=[];
+0236         <span class="keyword">for</span> i=1:cels
+0237             <span class="keyword">if</span>(in(1,i)==1)
+0238                 aux=s.ocmap(coordiY(i),coordiX(i));
+0239                 <span class="keyword">if</span>(aux~=0 &amp;&amp; aux~=c.car(n).id)
+0240                     <span class="keyword">if</span>(isempty(find(list==aux, 1)))
+0241                         list=[list aux];
+0242                     <span class="keyword">end</span>
+0243                 <span class="keyword">end</span>
+0244             <span class="keyword">end</span>
+0245         <span class="keyword">end</span>
+0246         c.car(n).list=list;
+0247     <span class="keyword">end</span>
+0248 <span class="keyword">end</span>
+0249 <span class="keyword">end</span>
+0250 
+0251 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0252 <span class="comment">%  Updates the map of occupation with car ID's</span>
+0253 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0254 <a name="_sub4" href="#_subfunctions" class="code">function [out] = grid_update()</a>
+0255 <span class="keyword">global</span> s c
+0256 out=[];
+0257 
+0258 <span class="comment">% To display paths velocity</span>
+0259 flag=0;
+0260 <span class="keyword">if</span>(s.disp_res2)
+0261     <span class="keyword">if</span>(mod(<a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.0001),(1/s.fres2))==0)
+0262         flag=1;
+0263         mapaux=zeros(s.dimy*s.occup_res,s.dimx*s.occup_res);
+0264     <span class="keyword">end</span>
+0265 <span class="keyword">end</span>
+0266 
+0267 <span class="comment">% Clear the map</span>
+0268 s.ocmap=uint8(zeros(s.dimy*s.occup_res,s.dimx*s.occup_res));
+0269 
+0270 <span class="comment">% Update the map</span>
+0271 ncars=length(c.listactive);
+0272 <span class="keyword">for</span> n=1:ncars
+0273     <span class="comment">% Define polygon points</span>
+0274     xbox=[c.car(n).cornX c.car(n).cornX(1)]+c.car(n).pos.x;
+0275     ybox=[c.car(n).cornY c.car(n).cornY(1)]+c.car(n).pos.y;
+0276     
+0277     mask = poly2mask(xbox*s.occup_res,ybox*s.occup_res,size(s.ocmap,1),size(s.ocmap,2));
+0278     maskid=uint8(mask.*c.car(n).id);
+0279     <span class="keyword">if</span>(c.car(n).dyn(1)&gt;0)
+0280         maskdyn=double(mask).*c.car(n).dyn(1);
+0281     <span class="keyword">else</span>
+0282         maskdyn=double(mask).*0.1;
+0283     <span class="keyword">end</span>
+0284     <span class="keyword">if</span>(logical(nnz(s.ocmap(:,:) &amp; mask)))   <span class="comment">% If exist colision</span>
+0285         disp([<span class="string">'Colision of car '</span> num2str(c.car(n).id) <span class="string">' at '</span> num2str(s.time) <span class="string">' (s)'</span>])
+0286         keyboard
+0287     <span class="keyword">end</span>
+0288     
+0289     s.ocmap=s.ocmap+maskid;
+0290     <span class="keyword">if</span>(flag)
+0291         mapaux=mapaux+maskdyn;
+0292     <span class="keyword">end</span>
+0293 <span class="keyword">end</span>
+0294 
+0295 <span class="comment">% To display paths velocity</span>
+0296 <span class="keyword">if</span>(flag)
+0297     [lin, col, z]=size(s.ocmap4);
+0298     <span class="keyword">if</span>(lin==0 &amp;&amp; col==0)
+0299         s.ocmap4(:,:,1)=mapaux;
+0300     <span class="keyword">else</span>
+0301         s.ocmap4(:,:,z+1)=mapaux;
+0302     <span class="keyword">end</span>
+0303 <span class="keyword">end</span>
+0304 
+0305 <span class="comment">% To print stop on ocmap</span>
+0306 <span class="keyword">if</span>(isempty(s.stoplist)==0)
+0307     <span class="keyword">for</span> i=1:length(s.stoplist)
+0308         road=s.stoplist(1,i);
+0309         rx=s.ri(road,3);
+0310         ry=s.ri(road,4);
+0311         
+0312         <span class="comment">% Calculates the pixels which correspond to the point of roadend</span>
+0313         px0=floor( rx*s.occup_res )+1;
+0314         <span class="keyword">if</span>(px0&gt;s.dimx*s.occup_res)
+0315             px0=s.dimx*s.occup_res;
+0316         <span class="keyword">end</span>
+0317         py0=floor( ry*s.occup_res )+1;
+0318         <span class="keyword">if</span>(py0&gt;s.dimy*s.occup_res)
+0319             py0=s.dimy*s.occup_res;
+0320         <span class="keyword">end</span>
+0321         s.ocmap(py0,px0)=road;
+0322     <span class="keyword">end</span>
+0323 <span class="keyword">end</span>
+0324 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

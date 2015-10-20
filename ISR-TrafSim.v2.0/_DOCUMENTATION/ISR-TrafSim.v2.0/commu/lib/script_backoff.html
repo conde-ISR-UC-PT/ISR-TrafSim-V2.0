@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_backoff</title>
+  <meta name="keywords" content="script_backoff">
+  <meta name="description" content="script_backoff;">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_backoff
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_backoff;</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">script_backoff;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="carrier_sense.html" class="code" title="function busy = carrier_sense(rv)">carrier_sense</a>	check if the channel is busy</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%script_backoff;</span>
+0002 t = event.instant;
+0003 i = event.node;
+0004 j = event.pkt.rv;
+0005 <span class="keyword">if</span> bdebug, disp([<span class="string">'backoff @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0006 <span class="keyword">if</span> node(i, 4) == 0 &amp; <a href="carrier_sense.html" class="code" title="function busy = carrier_sense(rv)">carrier_sense</a>(i) == 0
+0007     <span class="comment">% the node is still idle and the channel is free, continue backoff</span>
+0008     <span class="keyword">if</span> backoff_counter(i) &gt; 1
+0009         backoff_counter(i) = backoff_counter(i) - 1;
+0010         newevent = event;
+0011         newevent.instant = t + slot_time;
+0012         newevent.type = <span class="string">'backoff'</span>;
+0013         newevent.node = i;
+0014         NewEvents = [NewEvents; newevent]; clear newevent;
+0015     <span class="keyword">else</span>    <span class="comment">% ready to send the packet</span>
+0016         backoff_counter(i) = 0; <span class="comment">% reset counter for next use</span>
+0017         newevent = event;
+0018         newevent.instant = t;
+0019         newevent.type = <span class="string">'send_phy'</span>;
+0020         newevent.node = i;
+0021         NewEvents = [NewEvents; newevent];
+0022         <span class="comment">% txtime = tx_time(newevent.pkt);</span>
+0023         clear newevent;
+0024         <span class="comment">% mac_queue will be taken care of after really send this packet in 'send_phy_finish'</span>
+0025         <span class="comment">%                 if j == 0   % broadcast: the real data is sent here</span>
+0026         <span class="comment">%                     % we can send the next packet from mac_queue now</span>
+0027         <span class="comment">%                     if ~isempty(mac_queue(i).list)</span>
+0028         <span class="comment">%                         % more packets are waiting to be sent</span>
+0029         <span class="comment">%                         newevent = mac_queue(i).list(1);</span>
+0030         <span class="comment">%                         mac_queue(i).list(1) = [];</span>
+0031         <span class="comment">%                         newevent.instant = t + txtime + cca_time;   % question: should cca_time or other be used here?</span>
+0032         <span class="comment">%                         newevent.type = 'wait_for_channel';</span>
+0033         <span class="comment">%                         newevent.node = i;</span>
+0034         <span class="comment">%                         NewEvents = [NewEvents; newevent]; clear newevent;</span>
+0035         <span class="comment">%                     else</span>
+0036         <span class="comment">%                         % will reset in 'send_phy_finish'</span>
+0037         <span class="comment">%                         % mac_status(i) = 0;</span>
+0038         <span class="comment">%                     end</span>
+0039         <span class="comment">%                 else</span>
+0040         <span class="comment">%                     % unicast: the RTS is sent here, will wait for CTS or timeout_rts</span>
+0041         <span class="comment">%                     % do nothing here</span>
+0042         <span class="comment">%                 end</span>
+0043     <span class="keyword">end</span>
+0044 <span class="keyword">else</span>   <span class="comment">% channel becomes busy during backoff count-down</span>
+0045     <span class="keyword">if</span> backoff_counter(i) &gt; 1
+0046         backoff_counter(i) = backoff_counter(i) - 1;
+0047     <span class="keyword">else</span>
+0048         <span class="comment">% start a new backoff counter when count-down is zero</span>
+0049         backoff_attempt(i) = backoff_attempt(i) + 1;
+0050         temp = min(backoff_attempt(i)+CW_min,CW_max);
+0051         backoff_counter(i) = floor((2^temp-1)*rand);
+0052     <span class="keyword">end</span>
+0053     newevent = event;
+0054     newevent.instant = t + cca_time;
+0055     newevent.type = <span class="string">'wait_for_channel'</span>;
+0056     newevent.node = i;
+0057     NewEvents = [NewEvents; newevent]; clear newevent;
+0058 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

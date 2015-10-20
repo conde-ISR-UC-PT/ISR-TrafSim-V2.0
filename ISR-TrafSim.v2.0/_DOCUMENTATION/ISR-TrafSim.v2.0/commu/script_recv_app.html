@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_recv_app</title>
+  <meta name="keywords" content="script_recv_app">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html commu -->
+<h1>script_recv_app
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/commu/lib/action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0028 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0029 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0030 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0031 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0032 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0035 <span class="comment">%   Urbano Nunes*</span>
+0036 <span class="comment">%   Luis Conde Bento**</span>
+0037 <span class="comment">%   Ricardo Parafita*</span>
+0038 <span class="comment">%   Sergio Santos*</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0041 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0042 <span class="comment">%--------------------------------------------------------------------------</span>
+0043 
+0044 t = event.instant;
+0045 j = event.node;
+0046 <span class="keyword">global</span> c s
+0047 
+0048 <span class="keyword">if</span> bdebug, disp([<span class="string">'recv_app @ node '</span> num2str(j)]); <span class="keyword">end</span>
+0049 <span class="keyword">switch</span> event.app.type
+0050     <span class="keyword">case</span> <span class="string">'crosslayer_searching'</span>
+0051         <span class="keyword">if</span> ddebug, disp([<span class="string">'recv_app: time '</span> num2str(t) <span class="string">' node '</span> num2str(j) <span class="string">' receives the reply of crosslayer searching with route '</span> num2str(event.net.route)]); <span class="keyword">end</span>
+0052         fid = fopen(log_file, <span class="string">'a'</span>);
+0053         <span class="keyword">if</span> fid == -1, error([<span class="string">'Cannot open file'</span>, log_file]); <span class="keyword">end</span>
+0054         <span class="comment">% Record traffic_id, topo_id, end_time, hop_count, requesting node, requesting key</span>
+0055         fprintf(fid, <span class="string">'%Dcommu %Dcommu %g %Dcommu %Dcommu %Dcommu \Nnodes'</span>, [event.app.id1; event.app.id2; t; length(event.net.route)-1; j; event.app.key]);
+0056         fclose(fid);
+0057     <span class="keyword">case</span> <span class="string">'dht_searching'</span>
+0058         tempi = find(event.app.route==j);
+0059         <span class="keyword">if</span> isempty(tempi) | length(tempi)&gt;1
+0060             <span class="keyword">if</span> ddebug, disp([<span class="string">'recv_app: dht_searching: node '</span> num2str(j) <span class="string">' receives a wrong DHT searching request with route: '</span> num2str(event.app.route)]); <span class="keyword">end</span>
+0061             <span class="keyword">return</span>;
+0062         <span class="keyword">end</span>
+0063         <span class="keyword">if</span> tempi == length(event.app.route)
+0064             <span class="comment">% I am the destination of this overlay request: send the answer back to the requestor</span>
+0065             <span class="comment">% if ddebug, disp(['recv_app: at time ' num2str(t) ' destination node ' num2str(j) ' receives the DHT request from node ' num2str(event.app.route(1))]); end</span>
+0066             newevent = event;
+0067             newevent.type = <span class="string">'send_net'</span>;
+0068             <span class="comment">% Make sure the previous ACK at MAC layer is finished</span>
+0069             newevent.instant = t; <span class="comment">% already taken care of in MAC layer. + SIFS + ack_tx_time + 2*eps;</span>
+0070             newevent.app.hopcount = newevent.app.hopcount + length(newevent.net.route) - 1;
+0071             newevent.net.src = j;
+0072             newevent.net.dst = newevent.app.route(1);
+0073             newevent.net.size = 100*8;
+0074             NewEvents = [NewEvents; newevent]; clear newevent;
+0075         <span class="keyword">elseif</span> tempi == 1
+0076             <span class="comment">% I am the requester: just received the answer from the destination</span>
+0077             <span class="keyword">if</span> ddebug, disp([<span class="string">'recv_app: at time '</span> num2str(t) <span class="string">' node '</span> num2str(j) <span class="string">' receives the DHT reply'</span>]); <span class="keyword">end</span>
+0078             fid = fopen(log_file, <span class="string">'a'</span>);
+0079             <span class="keyword">if</span> fid == -1, error([<span class="string">'Cannot open file'</span>, log_file]); <span class="keyword">end</span>
+0080             <span class="comment">% Record traffic_id, topo_id, start_time, start_hop_count(=0), requesting node, requesting key, overlay route length</span>
+0081             fprintf(fid, <span class="string">'%Dcommu %Dcommu %g %Dcommu %Dcommu %Dcommu %Dcommu \Nnodes'</span>, [event.app.id1; event.app.id2; t; event.app.hopcount; j; event.app.key; length(event.app.route)-1]);
+0082             fclose(fid);
+0083         <span class="keyword">else</span>
+0084             <span class="comment">% if ddebug, disp(['recv_app: at time ' num2str(t) ' overlay node ' num2str(j) ' will forward the DHT request to next overlay node ' num2str(event.app.route(tempi + 1))]); end</span>
+0085             <span class="comment">% I should send request to the next hop in overlay</span>
+0086             newevent = event;
+0087             newevent.type = <span class="string">'send_net'</span>;
+0088             <span class="comment">% Make sure the previous ACK at MAC layer is finished</span>
+0089             newevent.instant = t;   <span class="comment">% alread taken care of in MAC layer. + SIFS + ack_tx_time + 2*eps;</span>
+0090             newevent.app.hopcount = event.app.hopcount + length(event.net.route) - 1;
+0091             newevent.net.src = j;
+0092             newevent.net.dst = event.app.route(tempi + 1);
+0093             newevent.net.size = 100*8;
+0094             NewEvents = [NewEvents; newevent]; clear newevent;
+0095         <span class="keyword">end</span>
+0096     <span class="keyword">case</span> <span class="string">'traffic_simulator'</span>
+0097         <span class="keyword">if</span>(edebug)
+0098             disp([<span class="string">'recv_app: at time '</span> num2str(t) <span class="string">' node '</span> num2str(j) <span class="string">' receives the traffic  simulator'</span>]);
+0099             disp([<span class="string">'Node '</span> num2str(j) <span class="string">' receives the '</span> event.app.info]);
+0100         <span class="keyword">end</span>
+0101         <span class="keyword">if</span>(strcmp(event.app.info,<span class="string">'gps_info'</span>))
+0102             
+0103             id=s.otalist(j);
+0104             pos=find(c.listactive==id);
+0105             c.car(pos).commu_gps_info=1;
+0106             c.car(pos).gps_time=s.time;
+0107             <span class="comment">%disp('receive RTK')</span>
+0108             <span class="keyword">if</span>(s.printcommugpsinfo==1 &amp;&amp; s.mode==1)
+0109                 plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'w+'</span>)
+0110             <span class="keyword">end</span>
+0111             <span class="comment">%disp('rec_gpsinfo'); pause(0.01);</span>
+0112         <span class="keyword">elseif</span>(strcmp(event.app.info,<span class="string">'vel_prof'</span>))
+0113             
+0114             id=s.otalist(j);
+0115             pos=find(c.listactive==id);
+0116             c.car(pos).commu_vel_prof=1;
+0117             <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0118                 plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'wo'</span>)
+0119             <span class="keyword">end</span>
+0120         <span class="keyword">elseif</span>(strcmp(event.app.info,<span class="string">'vel_prof2'</span>))
+0121             
+0122             id=s.otalist(j);
+0123             pos=find(c.listactive==id);
+0124             c.car(pos).commu_vel_prof2=1;
+0125             <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0126                 plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'wo'</span>)
+0127             <span class="keyword">end</span>
+0128             <span class="comment">%disp('rec_velprof');</span>
+0129         <span class="keyword">elseif</span>(strcmp(event.app.info,<span class="string">'notify_round'</span>))
+0130             
+0131             pos=find(s.round_notify_list(12,:)==event.app.road);
+0132             <span class="keyword">if</span>(~isempty(find(s.round_notify_list(1,:)==s.otalist(event.app.id4))))
+0133                 <span class="comment">%                 disp(['Actualizes notify ' num2str(s.otalist(event.app.id4))])</span>
+0134                 col=find(s.round_notify_list(1,:)==s.otalist(event.app.id4));
+0135                 aux=s.round_notify_list(4,col);
+0136                 s.round_notify_list(:,col)=[];
+0137                 s.round_notify_list=[s.round_notify_list [s.otalist(event.app.id4) ; event.app.id4 ; -1 ; aux ; event.app.pos(1) ; event.app.pos(2) ; event.app.track(1) ; event.app.track(2) ; event.app.curvel; event.app.maxvel; event.app.cartype ; event.app.road; s.time] ];
+0138             <span class="keyword">elseif</span>(isempty(pos))
+0139                 <span class="comment">%                 disp(['add notify ' num2str(s.otalist(event.app.id4))])</span>
+0140                 s.round_notify_list=[s.round_notify_list [s.otalist(event.app.id4) ; event.app.id4 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(t,0.001) ; event.app.pos(1) ; event.app.pos(2) ; event.app.track(1) ; event.app.track(2) ; event.app.curvel; event.app.maxvel; event.app.cartype ; event.app.road ; s.time] ];
+0141             <span class="keyword">else</span>
+0142                 dist1=dist_isr_trafsim(s.round_center(1),s.round_center(2),event.app.pos(1),event.app.pos(2));
+0143                 dist2=dist_isr_trafsim(s.round_center(1),s.round_center(2),s.round_notify_list(5,pos),s.round_notify_list(6,pos));
+0144                 <span class="keyword">if</span>(dist1&lt;dist2)
+0145                     <span class="comment">%                     disp(['Subs notify ' num2str(s.round_notify_list(1,pos)) ' -&gt; ' num2str(s.otalist(event.app.id4))])</span>
+0146                     s.round_notify_list(:,pos)=[];
+0147                     s.round_notify_list=[s.round_notify_list [s.otalist(event.app.id4) ; event.app.id4 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(t,0.001) ; event.app.pos(1) ; event.app.pos(2) ; event.app.track(1) ; event.app.track(2) ; event.app.curvel; event.app.maxvel; event.app.cartype ; event.app.road; s.time] ];
+0148                 <span class="keyword">else</span>
+0149                     <span class="comment">%                     disp(['No subs ' num2str(s.round_notify_list(1,pos)) ' -&gt; ' num2str(s.otalist(event.app.id4))])</span>
+0150                 <span class="keyword">end</span>
+0151             <span class="keyword">end</span>
+0152             
+0153             <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0154                 pos=find(c.listactive==s.otalist(event.app.id4));
+0155                 plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'w^'</span>)
+0156             <span class="keyword">end</span>
+0157         <span class="keyword">elseif</span>(strcmp(event.app.info,<span class="string">'notify_cross'</span>))
+0158             
+0159             pos=find(s.cross_notify_list(12,:)==event.app.road);
+0160             <span class="keyword">if</span>(~isempty(find(s.cross_notify_list(1,:)==s.otalist(event.app.id4))))
+0161                 <span class="comment">%                 disp(['Actualizes notify ' num2str(s.otalist(event.app.id4))])</span>
+0162                 col=find(s.cross_notify_list(1,:)==s.otalist(event.app.id4));
+0163                 aux=s.cross_notify_list(4,col);
+0164                 s.cross_notify_list(:,col)=[];
+0165                 s.cross_notify_list=[s.cross_notify_list [s.otalist(event.app.id4) ; event.app.id4 ; -1 ; aux ; event.app.pos(1) ; event.app.pos(2) ; event.app.track(1) ; event.app.track(2) ; event.app.curvel; event.app.maxvel; event.app.cartype ; event.app.road; s.time] ];
+0166             <span class="keyword">elseif</span>(isempty(pos))
+0167                 <span class="comment">%                 disp(['add notify ' num2str(s.otalist(event.app.id4))])</span>
+0168                 s.cross_notify_list=[s.cross_notify_list [s.otalist(event.app.id4) ; event.app.id4 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(t,0.001) ; event.app.pos(1) ; event.app.pos(2) ; event.app.track(1) ; event.app.track(2) ; event.app.curvel; event.app.maxvel; event.app.cartype ; event.app.road ; s.time] ];
+0169             <span class="keyword">else</span>
+0170                 dist1=dist_isr_trafsim(s.cross_center(1),s.cross_center(2),event.app.pos(1),event.app.pos(2));
+0171                 dist2=dist_isr_trafsim(s.cross_center(1),s.cross_center(2),s.cross_notify_list(5,pos),s.cross_notify_list(6,pos));
+0172                 <span class="keyword">if</span>(dist1&lt;dist2)
+0173                     <span class="comment">%                     disp(['Subs notify ' num2str(s.round_notify_list(1,pos)) ' -&gt; ' num2str(s.otalist(event.app.id4))])</span>
+0174                     s.cross_notify_list(:,pos)=[];
+0175                     s.cross_notify_list=[s.cross_notify_list [s.otalist(event.app.id4) ; event.app.id4 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(t,0.001) ; event.app.pos(1) ; event.app.pos(2) ; event.app.track(1) ; event.app.track(2) ; event.app.curvel; event.app.maxvel; event.app.cartype ; event.app.road; s.time] ];
+0176                 <span class="keyword">else</span>
+0177                     <span class="comment">%                     disp(['No subs ' num2str(s.round_notify_list(1,pos)) ' -&gt; ' num2str(s.otalist(event.app.id4))])</span>
+0178                 <span class="keyword">end</span>
+0179             <span class="keyword">end</span>
+0180             
+0181             <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0182                 pos=find(c.listactive==s.otalist(event.app.id4));
+0183                 plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'w^'</span>)
+0184             <span class="keyword">end</span>
+0185         <span class="keyword">else</span>
+0186             keyboard
+0187         <span class="keyword">end</span>
+0188     <span class="keyword">otherwise</span>
+0189         disp([<span class="string">'recv_app: Undefined application layer type: '</span> event.app.type]);
+0190 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

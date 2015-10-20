@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_send_app</title>
+  <meta name="keywords" content="script_send_app">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html commu -->
+<h1>script_send_app
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/commu/lib/action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0028 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0029 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0030 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0031 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0032 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0035 <span class="comment">%   Urbano Nunes*</span>
+0036 <span class="comment">%   Luis Conde Bento**</span>
+0037 <span class="comment">%   Ricardo Parafita*</span>
+0038 <span class="comment">%   Sergio Santos*</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0041 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0042 <span class="comment">%--------------------------------------------------------------------------</span>
+0043 
+0044 t = event.instant;
+0045 i = event.node;
+0046 <span class="keyword">switch</span> event.app.type
+0047     <span class="keyword">case</span> <span class="string">'crosslayer_searching'</span>
+0048         <span class="keyword">if</span> ddebug, disp([<span class="string">'send_app: time '</span> num2str(t) <span class="string">' node '</span> num2str(i) <span class="string">' sends a crosslayer searching request for key(node) '</span> num2str(event.app.key)]); <span class="keyword">end</span>
+0049         fid = fopen(log_file, <span class="string">'a'</span>);
+0050         <span class="keyword">if</span> fid == -1, error([<span class="string">'Cannot open file'</span>, log_file]); <span class="keyword">end</span>
+0051         <span class="comment">% Record traffic_id, topo_id, start_time, start_hop_count(=0), requesting node, requesting key</span>
+0052         fprintf(fid, <span class="string">'%Dcommu %Dcommu %g %Dcommu %Dcommu %Dcommu \Nnodes'</span>, [event.app.id1; event.app.id2; t; 0; i; event.app.key]);
+0053         fclose(fid);
+0054         newevent = event;
+0055         newevent.type = <span class="string">'send_net'</span>;
+0056         newevent.net.src = i;
+0057         newevent.net.dst = newevent.app.key;
+0058         newevent.net.size = 100*8;
+0059         NewEvents = [NewEvents; newevent]; clear newevent;
+0060     <span class="keyword">case</span> <span class="string">'dht_searching'</span>
+0061         newevent = event;
+0062         newevent.type = <span class="string">'send_net'</span>;
+0063         newevent.net.src = i;
+0064         newevent.net.size = 100*8;
+0065         <span class="keyword">if</span> isempty(newevent.app.route)
+0066             <span class="comment">% Initiate the overlay searching</span>
+0067             newevent.app.route = [i];
+0068             tempn = floor(rand*log2(Nnodes));
+0069             <span class="keyword">if</span> tempn &gt; 0
+0070                 <span class="keyword">for</span> tempi = 1:tempn
+0071                     <span class="keyword">while</span> 1
+0072                         tempx = ceil(rand*Nnodes);   <span class="comment">% 1 to Nnodes</span>
+0073                         <span class="keyword">if</span> isempty(find([newevent.app.route newevent.app.key]==tempx)), <span class="keyword">break</span>; <span class="keyword">end</span>
+0074                     <span class="keyword">end</span>
+0075                     newevent.app.route = [newevent.app.route tempx];
+0076                 <span class="keyword">end</span>
+0077             <span class="keyword">end</span>
+0078             newevent.app.route = [newevent.app.route newevent.app.key];
+0079             fid = fopen(log_file, <span class="string">'a'</span>);
+0080             <span class="keyword">if</span> fid == -1, error([<span class="string">'Cannot open file'</span>, log_file]); <span class="keyword">end</span>
+0081             <span class="comment">% Record traffic_id, topo_id, start_time, start_hop_count(=0), requesting node, requesting key,overlay route length</span>
+0082             fprintf(fid, <span class="string">'%Dcommu %Dcommu %g %Dcommu %Dcommu %Dcommu %Dcommu \Nnodes'</span>, [newevent.app.id1; newevent.app.id2; t; 0; i; newevent.app.key; tempn + 1]);
+0083             fclose(fid);
+0084             newevent.net.dst = newevent.app.route(2);
+0085             <span class="keyword">if</span> ddebug, disp([<span class="string">'send_app: at time '</span> num2str(t) <span class="string">' node '</span> num2str(i) <span class="string">' sends a DHT searching request for key(node) '</span> num2str(newevent.app.key) <span class="string">' through overlay route: '</span> num2str(newevent.app.route)]); <span class="keyword">end</span>
+0086         <span class="keyword">else</span>
+0087             disp([<span class="string">'send_app: at time '</span> num2str(t) <span class="string">' node '</span> num2str(i) <span class="string">' should not have a non-empty DHT overlay route '</span> num2str(event.app.route)]);
+0088             <span class="comment">% forward the request to the next hop in the overlay</span>
+0089             <span class="comment">% tempi = find(newevent.app.route==i);</span>
+0090             <span class="comment">% if isempty(tempi) | length(tempi)&gt;1 | tempi &gt;= length(newevent.app.route)</span>
+0091             <span class="comment">%     error(['send_app: dht_searching: node ' num2str(i) ' is not supposed to send such an overlay searching request']);</span>
+0092             <span class="comment">% end</span>
+0093             <span class="comment">% newevent.net.dst = newevent.app.route(tempi+1);</span>
+0094         <span class="keyword">end</span>
+0095         NewEvents = [NewEvents; newevent]; clear newevent;
+0096     <span class="keyword">case</span> <span class="string">'traffic_simulator'</span>
+0097         <span class="comment">%switch event.app.type</span>
+0098         <span class="keyword">if</span> adebug, disp([<span class="string">'send_net2 @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0099         <span class="comment">%disp('*****');</span>
+0100         newevent = event;
+0101         newevent.type = <span class="string">'send_net'</span>;
+0102         newevent.net.src = i;
+0103         newevent.net.dst = newevent.app.id3;
+0104         newevent.net.size = 100*8;
+0105         NewEvents = [NewEvents; newevent]; clear newevent;
+0106     <span class="keyword">otherwise</span>
+0107         disp([<span class="string">'send_app: Undefined application layer type: '</span> event.app.type]);
+0108 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_timeout_rts</title>
+  <meta name="keywords" content="script_timeout_rts">
+  <meta name="description" content="script_timeout_rts">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_timeout_rts
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_timeout_rts</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">script_timeout_rts
+dbstop at 22 in script_timeout_rts.m</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%script_timeout_rts</span>
+0002 <span class="comment">%dbstop at 22 in script_timeout_rts.m</span>
+0003 
+0004 t = event.instant;
+0005 i = event.node;
+0006 j = event.pkt.rv;
+0007 <span class="keyword">if</span> adebug, disp([<span class="string">'timeout_rts @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0008 <span class="keyword">if</span> pending_id(i) == event.pkt.id <span class="comment">% not acknowledged yet, retransmit</span>
+0009     <span class="keyword">if</span> cdebug, disp([<span class="string">'timeout_rts: node '</span> num2str(i) <span class="string">' pending_id='</span> num2str(pending_id(i)) <span class="string">' event_id='</span> num2str(event.pkt.id)]); <span class="keyword">end</span>
+0010     retransmit(i) = retransmit(i) + 1;
+0011     <span class="keyword">if</span> retransmit(i) &gt; max_retries
+0012             <span class="comment">%disp('# Tout RTS')</span>
+0013             <span class="comment">%[event.node event.app.id3]</span>
+0014             <span class="keyword">if</span>(strcmp(event.app.info,<span class="string">'gps_info'</span>))
+0015                 <span class="keyword">global</span> c s
+0016                 id=s.otalist(event.app.id3);
+0017                 pos=find(c.listactive==id);
+0018                 <span class="keyword">if</span>(s.printcommugpsinfo==1 &amp;&amp; s.mode==1)
+0019                     plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'b+'</span>)
+0020                 <span class="keyword">end</span>
+0021             <span class="keyword">elseif</span>(strcmp(event.app.info,<span class="string">'notify'</span>))
+0022                 <span class="keyword">global</span> c s
+0023                 id=s.otalist(event.app.id4);
+0024                 pos=find(c.listactive==id);
+0025                 <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0026                     plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'b^'</span>)
+0027                 <span class="keyword">end</span>
+0028             <span class="keyword">elseif</span>(strcmp(event.app.info,<span class="string">'vel_prof'</span>))
+0029                 <span class="keyword">global</span> c s
+0030                 id=s.otalist(event.app.id3);
+0031                 pos=find(c.listactive==id);
+0032                 <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0033                     plot(c.car(pos).pos.x,c.car(pos).pos.y,<span class="string">'bo'</span>)
+0034                 <span class="keyword">end</span>
+0035             <span class="keyword">end</span>        <span class="comment">% so many retries, drop the packet</span>
+0036         <span class="keyword">if</span> cdebug, disp([<span class="string">'timeout_rts: node '</span> num2str(i) <span class="string">' has retried so many times to transmit RTS'</span>]); <span class="keyword">end</span>
+0037         retransmit(i) = 0;
+0038         pending_id(i) = 0;
+0039         <span class="comment">% question: what if there are waiting packets in mac_queue?</span>
+0040         <span class="comment">% answer: should send them anyway as if the current packet is done.</span>
+0041         <span class="comment">% similar to the the operation when ACK is received</span>
+0042         <span class="keyword">if</span> ~isempty(mac_queue(i).list)
+0043             <span class="comment">% more packets are waiting to be sent</span>
+0044             <span class="comment">% newevent.instant = t + turnaround_time; % switch from receive to transmit</span>
+0045             mac_status(i) = 1;
+0046             newevent = mac_queue(i).list(1);
+0047             mac_queue(i).list(1) = [];
+0048             newevent.instant = t + cca_time;    <span class="comment">% question: cca_time or other</span>
+0049             newevent.type = <span class="string">'wait_for_channel'</span>;
+0050             newevent.node = i;
+0051             <span class="comment">% packet setup is already done in 'send_mac' before put into the mac_queue</span>
+0052             NewEvents = [NewEvents; newevent]; clear newevent;
+0053         <span class="keyword">else</span>
+0054 
+0055             <span class="comment">% cannot send RTS successfully, reset MAC layer</span>
+0056             mac_status(i) = 0;
+0057         <span class="keyword">end</span>
+0058         <span class="keyword">return</span>;
+0059     <span class="keyword">end</span>
+0060     <span class="keyword">if</span> adebug, disp([<span class="string">'timeout_rts: node '</span> num2str(i) <span class="string">' to retransmit RTS'</span>]); <span class="keyword">end</span>
+0061     <span class="comment">% retransmit the RTS</span>
+0062     newevent = event;
+0063     newevent.instant = t + cca_time;    <span class="comment">% check channel status</span>
+0064     newevent.type = <span class="string">'wait_for_channel'</span>;
+0065     newevent.node = i;
+0066     NewEvents = [NewEvents; newevent]; clear newevent;
+0067 <span class="keyword">else</span>
+0068 <span class="comment">%     if pending_id(i) ~= 0 %&amp; ddebug</span>
+0069 <span class="comment">%         disp(['timeout_rts at node ' num2str(i) ' pending id=' num2str(pending_id(i)) ' does not match the waiting RTS id=' num2str(event.pkt.id)]);</span>
+0070 <span class="comment">%     end</span>
+0071 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cross_gest_isr_trafsim</title>
+  <meta name="keywords" content="cross_gest_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html ISR-TrafSim.v2.0 -->
+<h1>cross_gest_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [] = cross_gest_isr_trafsim() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+%-DESCRIPTION--------------------------------------------------------------
+
+ Simulate driver behavior and manage cross traffic gestion - Early Method
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../ISR-TrafSim.v2.0/check/check_road_after_cross_isr_trafsim.html" class="code" title="function [nextroad] = check_road_after_cross_isr_trafsim(traj)">check_road_after_cross_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/commu/lib/send_velocity_profile_isr_trafsim.html" class="code" title="function [res] = send_velocity_profile(n,aux,id,vel_prof,rafter,interssection_type)">send_velocity_profile_isr_trafsim</a>	</li><li><a href="../ISR-TrafSim.v2.0/func/add_car_notify_cross_isr_trafsim.html" class="code" title="function [  ] = add_car_notify_cross_isr_trafsim(  )">add_car_notify_cross_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Simulate driver behavior and manage cross traffic gestion - Early Method</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [] = cross_gest_isr_trafsim()</a>
+0046 <span class="keyword">global</span> s c
+0047 <span class="comment">% s.cross_notify_list -&gt; [id ; node ; state; time; posx; posy; inroad; outroad; currentVel; maxVel; carType, CurrentRoad , timeoflastnotify]</span>
+0048 
+0049 <span class="comment">% Delete layers if are no longer necessary</span>
+0050 delete_layer_isr_trafsim();
+0051 
+0052 <span class="comment">% Add car to s.cross_notify_list if car is not in there (no commu)</span>
+0053 <a href="../ISR-TrafSim.v2.0/func/add_car_notify_cross_isr_trafsim.html" class="code" title="function [  ] = add_car_notify_cross_isr_trafsim(  )">add_car_notify_cross_isr_trafsim</a>();
+0054 
+0055 <span class="comment">% Delete car withot V2I from list s.rg_count_tab2 &amp; s.list_cross_already_reserve</span>
+0056 <span class="keyword">if</span>(s.time&gt;s.time_cross_without_commu &amp;&amp; s.time_cross_without_commu~=-1)
+0057     
+0058     id=s.car_cross_without_commu;
+0059     s.car_cross_without_commu=[];
+0060     s.time_cross_without_commu=-1;
+0061     <span class="keyword">for</span> i=1:size(s.rg_count_tab2,2)
+0062         <span class="keyword">for</span> p=3:10
+0063             <span class="keyword">if</span>(isnan(s.rg_count_tab2(p,i)))
+0064                 s.rg_count_tab2(p,i)=0;
+0065                 s.rg_count_tab2(2,i)=s.rg_count_tab2(2,i)-1;
+0066                 <span class="keyword">break</span>
+0067             <span class="keyword">end</span>
+0068         <span class="keyword">end</span>
+0069     <span class="keyword">end</span>
+0070     <span class="keyword">for</span> i=2:size(s.list_cross_already_reserve,1)
+0071         <span class="keyword">if</span>(~isempty(find(s.list_cross_already_reserve(i,:)==id)))
+0072             s.list_cross_already_reserve(i,:)=[];
+0073             <span class="keyword">break</span>
+0074         <span class="keyword">end</span>
+0075     <span class="keyword">end</span>
+0076     <span class="keyword">if</span>(ismember(id,c.listactive))
+0077         pos=find(c.listactive==id);
+0078         road=find(s.rg_count_tab2(1,:)==c.car(pos).rac);
+0079         <span class="keyword">for</span> p=3:10
+0080             <span class="keyword">if</span>(s.rg_count_tab2(p,road)==0)
+0081                 s.rg_count_tab2(p,road)=id;
+0082                 s.rg_count_tab2(2,road)=s.rg_count_tab2(2,road)+1;
+0083                 <span class="keyword">break</span>
+0084             <span class="keyword">end</span>
+0085         <span class="keyword">end</span>
+0086     <span class="keyword">end</span>
+0087 <span class="keyword">end</span>
+0088 
+0089 <span class="comment">% Process Algoritm</span>
+0090 Exist_Car_withot_V2I=~isempty(s.list_cross_without_commu);  <span class="comment">% Doesn't exist car without communication on the list</span>
+0091 Exist_Notification=size(s.cross_notify_list,2)&gt;1;        <span class="comment">% Exist notifications</span>
+0092 
+0093 <span class="keyword">if</span>(s.pause==1)
+0094     s.pause=0;  <span class="comment">% to pause only once</span>
+0095     keyboard
+0096 <span class="keyword">end</span>
+0097 
+0098 
+0099 
+0100 <span class="keyword">if</span>(Exist_Notification &amp;&amp; ~Exist_Car_withot_V2I)
+0101     aux=2;
+0102     <span class="keyword">while</span>(aux&lt;=size(s.cross_notify_list,2))
+0103         cond1=s.cross_notify_list(3,aux)==-1;
+0104         cond2=s.time&gt;s.cross_notify_list(4,aux)+2;
+0105         cond3=(dist_isr_trafsim(s.cross_center(1),s.cross_center(2),s.cross_notify_list(5,aux),s.cross_notify_list(6,aux)))&lt;s.control_radius_cross;
+0106         <span class="keyword">if</span>(cond1 &amp;&amp; cond2 &amp;&amp; cond3)
+0107             id=s.cross_notify_list(1,aux);                  <span class="comment">% Car Id</span>
+0108             n=find(c.listactive==id);                       <span class="comment">% Car place on c.listactive</span>
+0109             CarCommu=~isnan(s.cross_notify_list(9,aux));    <span class="comment">% If car have communications</span>
+0110             <span class="keyword">if</span>(isempty(id)||isempty(n))
+0111                 keyboard
+0112             <span class="keyword">end</span>
+0113             <span class="keyword">if</span>(CarCommu)
+0114                 <span class="comment">% Generate trajectory</span>
+0115                 traj=gen_traj_isr_trafsim(s.cross_notify_list(7,aux),s.cross_notify_list(8,aux));
+0116                 
+0117                 <span class="comment">% View road after crossroads</span>
+0118                 rafter=<a href="../ISR-TrafSim.v2.0/check/check_road_after_cross_isr_trafsim.html" class="code" title="function [nextroad] = check_road_after_cross_isr_trafsim(traj)">check_road_after_cross_isr_trafsim</a>(traj);
+0119                 
+0120                 vel_prof=reserve_space_isr_trafsim(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001),s.cross_notify_list(5,aux),s.cross_notify_list(6,aux),s.cross_notify_list(9,aux),s.cross_notify_list(10,aux),s.cross_notify_list(11,aux),traj,rafter,n,<span class="string">'cross'</span>,s.cross_method);
+0121                 
+0122                 <span class="comment">% Order to send velocity profile</span>
+0123                 <span class="keyword">if</span>(~isnan(vel_prof))
+0124                     <a href="../ISR-TrafSim.v2.0/commu/lib/send_velocity_profile_isr_trafsim.html" class="code" title="function [res] = send_velocity_profile(n,aux,id,vel_prof,rafter,interssection_type)">send_velocity_profile_isr_trafsim</a>(n,aux,id,vel_prof,rafter,<span class="string">'cross'</span>);
+0125                     <span class="keyword">if</span>(vel_prof(1,end)&gt;s.cross_last_time_used)  <span class="comment">% Store last time used by round gest mode</span>
+0126                         s.cross_last_time_used=vel_prof(1,end);
+0127                     <span class="keyword">end</span>
+0128                     <span class="comment">%viewM(s.ocmap2,s.layer,0,s.occup_res2)</span>
+0129                     <span class="keyword">break</span>
+0130                 <span class="keyword">end</span>
+0131             <span class="keyword">else</span>
+0132                 exist_exit_full=0;
+0133                 <span class="keyword">if</span>(s.cross_notify_list(12,aux)==15 || s.cross_notify_list(12,aux)==16)
+0134                     <span class="keyword">for</span> i=3:size(s.rg_count_tab2,2)
+0135                         <span class="keyword">if</span>(s.rg_count_tab2(2,i)&gt;s.rg_car_limit2)
+0136                             exist_exit_full=1;
+0137                         <span class="keyword">end</span>
+0138                     <span class="keyword">end</span>
+0139                 <span class="keyword">else</span>
+0140                     <span class="keyword">for</span> i=1:size(s.rg_count_tab2,2)
+0141                         <span class="keyword">if</span>(s.rg_count_tab2(2,i)&gt;s.rg_car_limit2)
+0142                             exist_exit_full=1;
+0143                         <span class="keyword">end</span>
+0144                     <span class="keyword">end</span>
+0145                 <span class="keyword">end</span>
+0146                 previous_withouV2I_exit=s.time_cross_without_commu==-1;
+0147                 <span class="comment">% To dont send cars when one of exits is already full</span>
+0148                 <span class="keyword">if</span>(~exist_exit_full &amp;&amp; previous_withouV2I_exit)
+0149                     
+0150                     <span class="comment">% Reserve space</span>
+0151                     [M,L]=reserve_all_paths(s.cross_notify_list(12,aux),n,<span class="string">'wait'</span>,<span class="string">'cross'</span>);
+0152                     
+0153                     <span class="keyword">if</span>(s.time&gt;s.cross_last_time_used)
+0154                         last=s.time;
+0155                     <span class="keyword">else</span>
+0156                         last=s.cross_last_time_used;
+0157                     <span class="keyword">end</span>
+0158                     
+0159                     <span class="comment">% Add generated matrix in correct space</span>
+0160                     <span class="keyword">for</span> i=1:size(M,3)
+0161                         current_layer=<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(last+L(i),0.01);  <span class="comment">% Layer to write</span>
+0162                         
+0163                         <span class="comment">% Add layer if is necessary</span>
+0164                         exist_current_layer=find(s.layer==current_layer);
+0165                         <span class="keyword">if</span>(isempty(exist_current_layer))
+0166                             create_layer(<a href="../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(current_layer,0.01));
+0167                         <span class="keyword">end</span>
+0168                         
+0169                         <span class="comment">% Write layer in correct position and verify if everything is ok</span>
+0170                         layer_pos=find(s.layer==current_layer);
+0171                         <span class="keyword">if</span>(nnz(s.ocmap2(:,:,layer_pos)&amp;M(:,:,i))&gt;0)
+0172                             keyboard
+0173                         <span class="keyword">end</span>
+0174                         s.ocmap2(:,:,layer_pos)=s.ocmap2(:,:,layer_pos)+M(:,:,i);
+0175                     <span class="keyword">end</span>
+0176                     
+0177                     s.list_cross_without_commu(end+1,:)=[id last+L(1) last+L(end) s.cross_notify_list(12,aux)];
+0178                     s.cross_last_time_used=last+L(end);
+0179                     
+0180                     
+0181                     <span class="comment">% Agend time to reserve new cars</span>
+0182                     s.time_cross_without_commu=s.list_cross_without_commu(3);
+0183                     s.car_cross_without_commu=s.list_cross_without_commu(1);
+0184                     <span class="comment">%s.list_cross_already_reserve(end+1,:)=NaN;</span>
+0185                     <span class="keyword">for</span> i=1:size(s.rg_count_tab2,2)
+0186                         <span class="keyword">for</span> p=3:10
+0187                             <span class="keyword">if</span>(s.rg_count_tab2(p,i)==0)
+0188                                 s.rg_count_tab2(p,i)=NaN;
+0189                                 <span class="keyword">break</span>
+0190                             <span class="keyword">end</span>
+0191                         <span class="keyword">end</span>
+0192                     <span class="keyword">end</span>
+0193                     s.rg_count_tab2(2,:)=s.rg_count_tab2(2,:)+1;
+0194                     
+0195                     <span class="comment">% To view the map (help on debug)</span>
+0196                     <span class="comment">%                         viewM(s.ocmap2,s.layer,0,s.occup_res2,n,'cross')</span>
+0197                     
+0198                     <span class="comment">% Delete notification</span>
+0199                     s.cross_notify_list(:,aux)=[];
+0200                     
+0201                     <span class="comment">% Driver ignores traffic rules</span>
+0202                     c.car(n).dri_ignore_trf_cross=1;
+0203                     
+0204                     <span class="comment">%disp(['Ignore Cross: ' num2str(id)]);</span>
+0205                     <span class="keyword">break</span>
+0206                 <span class="keyword">end</span>
+0207             <span class="keyword">end</span>
+0208         <span class="keyword">end</span>
+0209         aux=aux+1;
+0210     <span class="keyword">end</span>
+0211 <span class="keyword">elseif</span>(Exist_Car_withot_V2I)
+0212     
+0213     <span class="keyword">if</span>(s.time&gt;s.list_cross_without_commu(2)) <span class="comment">% s.time&gt;s.list_cross_without_commu(2) to</span>
+0214         <span class="comment">% Give permission to car to advance</span>
+0215         n=find(c.listactive==s.list_cross_without_commu(1));
+0216         c.car(n).nostop(end+1)=(s.list_cross_without_commu(4));
+0217         
+0218         
+0219         <span class="comment">% Add car to list already reserved</span>
+0220         <span class="keyword">if</span>(isempty(find(s.list_cross_already_reserve==s.list_cross_without_commu(1))))
+0221             [ll cc]=find(s.list_cross_already_reserve(1,:)==s.list_cross_without_commu(4));
+0222             s.list_cross_already_reserve(end+1,cc)=s.list_cross_without_commu(1);
+0223         <span class="keyword">end</span>
+0224         
+0225         <span class="comment">% Delete car from list</span>
+0226         [ll cc]=find(s.list_cross_without_commu==s.list_cross_without_commu(1));
+0227         s.list_cross_without_commu(ll,:)=[];
+0228     <span class="keyword">end</span>
+0229 <span class="keyword">end</span>
+0230 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

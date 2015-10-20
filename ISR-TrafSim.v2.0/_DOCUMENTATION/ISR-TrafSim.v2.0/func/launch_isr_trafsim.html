@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of launch_isr_trafsim</title>
+  <meta name="keywords" content="launch_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>launch_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [] = launch_isr_trafsim(arg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Manage the release of vehicles into simulator
+
+-USE----------------------------------------------------------------------
+
+  isr_tfs_launch(arg)
+ -&gt; Input(s)
+   » arg         -   Current linear velocity
+       init        -   Initializes all necessary tables
+       check       -   Check the release of new vehicles
+
+ -&gt; Output(s)
+   » Array with [x y t Pwr Pwf]
+       (x,y,t) -   Updated pose of vehicle
+       Pwr     -   Pulses generated on rear wheel encoder
+       Pwf     -   Pulses generated on front wheel encoder
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/check/check_launch_isr_trafsim.html" class="code" title="function [out] = check_launch_isr_trafsim(r,d)">check_launch_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="launch_car_isr_trafsim.html" class="code" title="function [id,n] = launch_car_isr_trafsim(r,~)">launch_car_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [] = launch_init()</a></li><li><a href="#_sub2" class="code">function [] = check()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Manage the release of vehicles into simulator</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%  isr_tfs_launch(arg)</span>
+0031 <span class="comment">% -&gt; Input(s)</span>
+0032 <span class="comment">%   » arg         -   Current linear velocity</span>
+0033 <span class="comment">%       init        -   Initializes all necessary tables</span>
+0034 <span class="comment">%       check       -   Check the release of new vehicles</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% -&gt; Output(s)</span>
+0037 <span class="comment">%   » Array with [x y t Pwr Pwf]</span>
+0038 <span class="comment">%       (x,y,t) -   Updated pose of vehicle</span>
+0039 <span class="comment">%       Pwr     -   Pulses generated on rear wheel encoder</span>
+0040 <span class="comment">%       Pwf     -   Pulses generated on front wheel encoder</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0043 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0044 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0045 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0046 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0047 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0050 <span class="comment">%   Urbano Nunes*</span>
+0051 <span class="comment">%   Luis Conde Bento**</span>
+0052 <span class="comment">%   Ricardo Parafita*</span>
+0053 <span class="comment">%   Sergio Santos*</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0056 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0057 <span class="comment">%--------------------------------------------------------------------------</span>
+0058 
+0059 <a name="_sub0" href="#_subfunctions" class="code">function [] = launch_isr_trafsim(arg)</a>
+0060 
+0061 <span class="keyword">if</span>(strcmp(arg,<span class="string">'init'</span>))
+0062     <a href="#_sub1" class="code" title="subfunction [] = launch_init()">launch_init</a>();
+0063 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'check'</span>))
+0064     <a href="#_sub2" class="code" title="subfunction [] = check()">check</a>();
+0065 <span class="keyword">end</span>
+0066 
+0067 <span class="keyword">end</span>
+0068 
+0069 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0070 <span class="comment">% Init launch tables</span>
+0071 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0072 <a name="_sub1" href="#_subfunctions" class="code">function [] = launch_init()</a>
+0073 <span class="keyword">global</span> s
+0074 <span class="comment">%dbstop at 77 in isr_tfs_launch.m</span>
+0075 <span class="comment">% Clear Variables</span>
+0076 s.curNcars=0; s.rcp=zeros(28,28,2);
+0077 
+0078 <span class="comment">% Cover all roads to make launch table</span>
+0079 count=0;
+0080 vec=randsample(s.rn,s.rn);
+0081 <span class="keyword">for</span> r=1:size(vec,1)
+0082     road=vec(r);
+0083     <span class="comment">% If road is a entry road</span>
+0084     <span class="keyword">if</span>(s.ri(road,8)==1)
+0085         s.rl=[s.rl [road;0;(count)*s.tlaunchr;0;s.tlaunch;0]];
+0086         count=count+1;
+0087     <span class="keyword">end</span>
+0088 <span class="keyword">end</span>
+0089 
+0090 <span class="comment">% Set Particular entrance flux's</span>
+0091 <span class="keyword">for</span> i=1:size(s.rl,2)
+0092     road=s.rl(1,i);
+0093     s.rl(5,i)=s.in_flux(road);
+0094 <span class="keyword">end</span>
+0095 <span class="keyword">end</span>
+0096 
+0097 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0098 <span class="comment">% Checks the appearance of new cars</span>
+0099 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0100 <a name="_sub2" href="#_subfunctions" class="code">function [] = check()</a>
+0101 <span class="keyword">global</span> s
+0102 
+0103 <span class="comment">%dbstop at 126 in isr_tfs_launch.m</span>
+0104 <span class="comment">%dbstop at 163 in isr_tfs_launch.m</span>
+0105 
+0106 <span class="comment">% If is necessary launch cars in simulator</span>
+0107 <span class="keyword">if</span>(s.curNcars &lt; s.ncars)
+0108     
+0109     <span class="comment">% Check the road launch table accumulators (if exists)</span>
+0110     <span class="keyword">if</span>(sum(s.rl(2,:))~=0)
+0111         
+0112         <span class="comment">% Check road launch table</span>
+0113         <span class="keyword">for</span> r=1:size(s.rl,2)
+0114             
+0115             <span class="comment">% If is necessary launch cars in simulator</span>
+0116             <span class="keyword">if</span>(s.rl(2,r)&gt;0)
+0117                 
+0118                 <span class="comment">% If is necessary launch cars in simulator</span>
+0119                 <span class="keyword">if</span>(s.curNcars &lt; s.ncars)
+0120                     
+0121                     <span class="comment">% Read road number</span>
+0122                     road=s.rl(1,r);
+0123                     
+0124                     <span class="comment">% Check if exist space to launch car in simulator</span>
+0125                     <span class="keyword">if</span>(<a href="../../ISR-TrafSim.v2.0/check/check_launch_isr_trafsim.html" class="code" title="function [out] = check_launch_isr_trafsim(r,d)">check_launch_isr_trafsim</a>(road,(s.distlaunch/2)))
+0126                         
+0127                         <span class="comment">% Initial velocity of car</span>
+0128                         launchvel=0;
+0129                         
+0130                         <span class="comment">% Put road flag ON</span>
+0131                         s.rl(6,r)=1;
+0132                         
+0133                         <span class="comment">% Increase cars launched</span>
+0134                         s.curNcars=s.curNcars+1;
+0135                         
+0136                         <span class="comment">% Launch car</span>
+0137                         id=<a href="launch_car_isr_trafsim.html" class="code" title="function [id,n] = launch_car_isr_trafsim(r,~)">launch_car_isr_trafsim</a>(road,launchvel);
+0138                         
+0139                         <span class="comment">% Store the ID of last car launched in this road</span>
+0140                         s.rl(4,r)=id;
+0141                         
+0142                         <span class="comment">% Decrease the acumulator</span>
+0143                         s.rl(2,r)=s.rl(2,r)-1;
+0144                         <span class="comment">%disp('Lança do acumulador')</span>
+0145                     <span class="keyword">end</span>
+0146                 <span class="keyword">end</span>
+0147             <span class="keyword">end</span>
+0148         <span class="keyword">end</span>
+0149     <span class="keyword">end</span>
+0150     
+0151     <span class="comment">% Check road launch table</span>
+0152     <span class="keyword">for</span> r=1:size(s.rl,2)
+0153         
+0154         <span class="comment">% Check time</span>
+0155         <span class="keyword">if</span>(<a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.rl(3,r),0.01)==<a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.01))
+0156             
+0157             <span class="comment">% If is necessary launch cars in simulator</span>
+0158             <span class="keyword">if</span>(s.curNcars &lt; s.ncars)
+0159                 
+0160                 <span class="comment">% Read road number</span>
+0161                 road=s.rl(1,r);
+0162                 
+0163                 <span class="keyword">if</span>(s.rl(6,r)==0)
+0164                     <span class="comment">% Check if exist space to launch car in simulator</span>
+0165                     <span class="keyword">if</span>(<a href="../../ISR-TrafSim.v2.0/check/check_launch_isr_trafsim.html" class="code" title="function [out] = check_launch_isr_trafsim(r,d)">check_launch_isr_trafsim</a>(road,s.distlaunch))
+0166                         
+0167                         <span class="comment">% Initial velocity of car</span>
+0168                         launchvel=s.velmax1;
+0169                         
+0170                         <span class="comment">% Increase cars launched</span>
+0171                         s.curNcars=s.curNcars+1;
+0172                         
+0173                         <span class="comment">% Launch car</span>
+0174                         id=<a href="launch_car_isr_trafsim.html" class="code" title="function [id,n] = launch_car_isr_trafsim(r,~)">launch_car_isr_trafsim</a>(road,launchvel);
+0175                         
+0176                         <span class="comment">% Store the ID of last car launched in this road</span>
+0177                         s.rl(4,r)=id;
+0178                         <span class="comment">% disp('lança')</span>
+0179                     <span class="keyword">else</span>
+0180                         <span class="comment">%disp('Acumula')</span>
+0181                         <span class="comment">% Increase the acumulator</span>
+0182                         s.rl(2,r)=s.rl(2,r)+1;
+0183                     <span class="keyword">end</span>
+0184                     
+0185                     <span class="comment">% Schedule next launch in this road</span>
+0186                     s.rl(3,r)=s.rl(3,r)+s.rl(5,r);
+0187                     
+0188                 <span class="keyword">else</span>
+0189                     <span class="comment">%disp('Acumula flag')</span>
+0190                     <span class="comment">% Increase the acumulator</span>
+0191                     s.rl(2,r)=s.rl(2,r)+1;
+0192                     
+0193                     <span class="comment">% Schedule next launch in this road</span>
+0194                     s.rl(3,r)=s.rl(3,r)+s.rl(5,r);
+0195                 <span class="keyword">end</span>
+0196             <span class="keyword">end</span>
+0197         <span class="keyword">end</span>
+0198     <span class="keyword">end</span>
+0199 <span class="keyword">end</span>
+0200 
+0201 <span class="comment">% Clear all flags</span>
+0202 s.rl(6,1:end)=0;
+0203 
+0204 <span class="keyword">end</span>
+0205 
+0206 
+0207</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

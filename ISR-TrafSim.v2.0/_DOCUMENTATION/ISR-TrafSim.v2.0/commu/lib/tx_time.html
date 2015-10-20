@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of tx_time</title>
+  <meta name="keywords" content="tx_time">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>tx_time
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function txtime = tx_time(pkt) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="script_send_mac.html" class="code" title="">script_send_mac</a>	script_send_mac;</li><li><a href="script_send_phy.html" class="code" title="">script_send_phy</a>	script_send_phy</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function txtime = tx_time(pkt)</a>
+0002 
+0003 <span class="keyword">global</span> max_size_mac_body size_mac_header size_rts size_cts size_ack size_plcp;
+0004 <span class="keyword">global</span> basic_rate;
+0005 
+0006 <span class="comment">% assume pkt.size &lt;= max_size_mac_body</span>
+0007 
+0008 <span class="keyword">switch</span> pkt.type
+0009     <span class="keyword">case</span> <span class="string">'data'</span>
+0010         txtime = (pkt.size + size_mac_header) / pkt.rate + size_plcp / basic_rate;
+0011     <span class="keyword">case</span> <span class="string">'ack'</span>
+0012         txtime = (size_ack + size_plcp) / basic_rate;
+0013     <span class="keyword">case</span> <span class="string">'rts'</span>
+0014         txtime = (size_rts + size_plcp) / basic_rate;
+0015     <span class="keyword">case</span> <span class="string">'cts'</span>
+0016         txtime = (size_cts + size_plcp) / basic_rate;
+0017     <span class="keyword">otherwise</span>
+0018         disp([<span class="string">'tx_time: wrong packet type: '</span> pkt.type]);
+0019 <span class="keyword">end</span>
+0020 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of delete_task_isr_trafsim</title>
+  <meta name="keywords" content="delete_task_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>delete_task_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [] = delete_task_isr_trafsim() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Delete cars from simulator
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/datacar_isr_trafsim.html" class="code" title="function [out] = isr_tfs_datacar_isr_trafsim(arg,n)">datacar_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Delete cars from simulator</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [] = delete_task_isr_trafsim()</a>
+0046 <span class="keyword">global</span> s c
+0047 <span class="comment">% dbstop at 456 in isr_tfs_run</span>
+0048 
+0049 [~, p]=size(c.listactive);     n=0;
+0050 <span class="keyword">while</span>(n~=p)
+0051     n=n+1;
+0052     <span class="keyword">if</span>(c.car(n).setp&gt;=c.car(n).trajn)
+0053         
+0054         <span class="comment">% to delete car from list from cars without commu</span>
+0055         <span class="comment">% because car can exit from simulator before longest time</span>
+0056         <span class="comment">% calculated to exit (ex: car exit on roundabout first exit and</span>
+0057         <span class="comment">% exits from simulator before wrost time calculated</span>
+0058         <span class="keyword">if</span>(~isempty(s.car_round_without_commu))
+0059             cond1=c.car(n).id==s.car_round_without_commu;
+0060         <span class="keyword">else</span>
+0061             cond1=0;
+0062         <span class="keyword">end</span>
+0063         
+0064         <span class="keyword">if</span>(~isempty(s.car_round_without_commu))
+0065             cond2=c.car(n).id==s.car_cross_without_commu;
+0066         <span class="keyword">else</span>
+0067             cond2=0;
+0068         <span class="keyword">end</span>
+0069         
+0070         <span class="keyword">if</span>(cond1)
+0071             disp(<span class="string">'#####'</span>)<span class="comment">%keyboard</span>
+0072             id=c.car(n).id;
+0073             <span class="keyword">if</span>(~isempty(find(s.round_notify_list==id)))
+0074                 pos=find(s.round_notify_list(1,:)==id);
+0075                 s.round_notify_list(:,pos)=[];
+0076             <span class="keyword">end</span>
+0077             
+0078             <span class="keyword">if</span>(~isempty(find(s.list_round_already_reserve==id)))
+0079                 [ll, cc]=find(s.list_round_already_reserve==id);
+0080                 s.list_round_already_reserve(ll,:)=[];
+0081             <span class="keyword">end</span>
+0082             
+0083             <span class="keyword">for</span> i=1:size(s.rg_count_tab,2)
+0084                 <span class="keyword">for</span> pos=3:10
+0085                     <span class="keyword">if</span>(isnan(s.rg_count_tab(pos,i)))
+0086                         s.rg_count_tab(pos,i)=0;
+0087                         s.rg_count_tab(2,i)=s.rg_count_tab(2,i)-1;
+0088                         <span class="keyword">break</span>
+0089                     <span class="keyword">end</span>
+0090                 <span class="keyword">end</span>
+0091             <span class="keyword">end</span>
+0092             
+0093             s.car_round_without_commu=[];
+0094             s.time_round_without_commu=-1;
+0095         <span class="keyword">end</span>
+0096         
+0097         <span class="keyword">if</span>(cond2)
+0098             disp(<span class="string">'#####'</span>)<span class="comment">%keyboard</span>
+0099             id=c.car(n).id;
+0100             <span class="keyword">if</span>(~isempty(find(s.crodd_notify_list==id)))
+0101                 pos=find(s.cross_notify_list(1,:)==id);
+0102                 s.cross_notify_list(:,pos)=[];
+0103             <span class="keyword">end</span>
+0104             
+0105             <span class="keyword">if</span>(~isempty(find(s.list_cross_already_reserve==id)))
+0106                 [ll, cc]=find(s.list_cross_already_reserve==id);
+0107                 s.list_cross_already_reserve(ll,:)=[];
+0108             <span class="keyword">end</span>
+0109             
+0110             <span class="keyword">for</span> i=1:size(s.rg_count_tab2,2)
+0111                 <span class="keyword">for</span> pos=3:10
+0112                     <span class="keyword">if</span>(isnan(s.rg_count_tab2(pos,i)))
+0113                         s.rg_count_tab2(pos,i)=0;
+0114                         s.rg_count_tab2(2,i)=s.rg_count_tab2(2,i)-1;
+0115                         <span class="keyword">break</span>
+0116                     <span class="keyword">end</span>
+0117                 <span class="keyword">end</span>
+0118             <span class="keyword">end</span>
+0119             
+0120             s.car_cross_without_commu=[];
+0121             s.time_cross_without_commu=-1;
+0122         <span class="keyword">end</span>
+0123         
+0124         <span class="comment">% Increase cars that exit the simulator</span>
+0125         s.cars_exit=s.cars_exit+1;
+0126         
+0127         <span class="comment">% Save individual car data</span>
+0128         <span class="keyword">if</span>(s.save_car==1)
+0129             aux=c.car(n);
+0130             save([<span class="string">'savedata\car\car_'</span> num2str(s.cars_exit)],<span class="string">'aux'</span>)
+0131         <span class="keyword">end</span>
+0132         
+0133         <span class="comment">% Display results from fusion 3</span>
+0134         <span class="keyword">if</span>(s.disp_fus3_res==1 &amp;&amp; s.fus3&gt;=1)
+0135             <span class="comment">%                 dbstop at 473 in isr_tfs_run</span>
+0136             figure
+0137             orgllh = [s.lt*pi/180 s.lg*pi/180 0];
+0138             <span class="keyword">for</span> i = 1:size(c.car(n).est_lat,1)
+0139                 insxyz(i,:)     = llh2xyz([c.car(n).est_lat(i,1)  c.car(n).est_lon(i,1)  c.car(n).est_height(i,1) ]);
+0140                 insgpsxyz(i,:)  = llh2xyz([c.car(n).est_lat_(i,1) c.car(n).est_lon_(i,1) c.car(n).est_height_(i,1)]);
+0141                 insgpsKFxyz(i,:)= llh2xyz([c.car(n).est_lat_KF(1,i) c.car(n).est_lon_KF(1,i) c.car(n).est_height_KF(i,1)]);
+0142                 insenu(i,:)     = xyz2enu(insxyz(i,:),llh2xyz(orgllh));
+0143                 insgpsenu(i,:)  = xyz2enu(insgpsxyz(i,:),llh2xyz(orgllh));
+0144                 insgpsKFenu(i,:)= xyz2enu(insgpsKFxyz(i,:),llh2xyz(orgllh));
+0145             <span class="keyword">end</span>
+0146             hold on
+0147             plot3(c.car(n).TRUEpos(:,1),c.car(n).TRUEpos(:,2),zeros(size(c.car(n).TRUEpos(:,2)),1),<span class="string">'b'</span>)   <span class="comment">% Real position</span>
+0148             plot3(insenu(:,1),insenu(:,2),insenu(:,3),<span class="string">'g'</span>)                       <span class="comment">% INS position</span>
+0149             plot3(insgpsenu(:,1),insgpsenu(:,2),insgpsenu(:,3),<span class="string">'r'</span>)              <span class="comment">% INS + GPS position</span>
+0150             plot3(insgpsKFenu(:,1),insgpsKFenu(:,2),insgpsKFenu(:,3),<span class="string">'k'</span>)        <span class="comment">% INS + GPS + KF position</span>
+0151             plot3(c.car(n).gps_data(:,1),c.car(n).gps_data(:,2),zeros(size(c.car(n).gps_data(:,2),1),1),<span class="string">'m+'</span>)
+0152             legend(<span class="string">'Real'</span>,<span class="string">'INS'</span>,<span class="string">'INS+GPS+ERR'</span>,<span class="string">'INS+GPS+KF'</span>,<span class="string">'GPS'</span>)
+0153             title(<span class="string">'Car Positions'</span>); xlabel(<span class="string">'ENU X-axis (m)'</span>); ylabel(<span class="string">'ENU Y-axis (m)'</span>); zlabel(<span class="string">'ENU Z-axis (m)'</span>); view(2)
+0154             hold off
+0155             axis(<span class="string">'equal'</span>)
+0156             isr_tfs_plot_KF_fb(n)
+0157         <span class="keyword">end</span>
+0158         <span class="comment">% Plot graphic with lateral errors</span>
+0159         <span class="keyword">if</span>(s.lateral_errors)
+0160             s.hgraph1=figure(3);
+0161             <span class="keyword">if</span>(c.car(n).type==1),str=<span class="string">'car'</span>;<span class="keyword">else</span> str=<span class="string">'truck'</span>;<span class="keyword">end</span>
+0162             set(s.hgraph1,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,[<span class="string">'Position Errors of car ID '</span> num2str(c.car(n).id) <span class="string">' (Type - '</span> str <span class="string">' )'</span>] ,<span class="string">'Position'</span>,[100 100 1000 500]);
+0163             aux1=subplot(2,1,1);
+0164             hold on
+0165             plot([1:1:size(c.car(n).traj_err(1,:),2)]*(s.step_time),c.car(n).traj_err(1,:),<span class="string">'r'</span>)
+0166             plot([1:1:size(c.car(n).traj_err(3,:),2)]*(s.step_time),c.car(n).traj_err(3,:),<span class="string">'g'</span>)
+0167             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance Error (m)'</span>); legend(aux1,<span class="string">'Mass center'</span>,<span class="string">'Lock-ahead'</span>);
+0168             aux2=subplot(2,1,2);
+0169             hold on
+0170             array1=c.car(n).traj_err(2,:)*(180/pi);
+0171             array2=c.car(n).traj_err(4,:)*(180/pi);
+0172             <span class="keyword">for</span> i=1:size(array1,2)
+0173                 <span class="keyword">if</span>(array1(1,i)&gt;180)
+0174                     array1(1,i)=array1(1,i)-360;
+0175                 <span class="keyword">elseif</span>(array1(1,i)&lt;-180)
+0176                     array1(1,i)=array1(1,i)+360;
+0177                 <span class="keyword">end</span>
+0178                 <span class="keyword">if</span>(array2(1,i)&gt;180)
+0179                     array2(1,i)=array2(1,i)-360;
+0180                 <span class="keyword">elseif</span>(array2(1,i)&lt;-180)
+0181                     array2(1,i)=array2(1,i)+360;
+0182                 <span class="keyword">end</span>
+0183             <span class="keyword">end</span>
+0184             plot([1:1:size(c.car(n).traj_err(2,:),2)]*(s.step_time),array1,<span class="string">'r'</span>)
+0185             plot([1:1:size(c.car(n).traj_err(4,:),2)]*(s.step_time),array2,<span class="string">'g'</span>)
+0186             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Angular Error (deg)'</span>); legend(aux2,<span class="string">'Mass center'</span>,<span class="string">'Lock-ahead'</span>);
+0187             
+0188         <span class="keyword">end</span>
+0189         
+0190         <span class="keyword">if</span>(s.disp_car_res)
+0191             
+0192             <span class="comment">% Plot GPS and Magnets errors</span>
+0193             s.hgraph4=figure(6);
+0194             <span class="keyword">if</span>(c.car(n).type==1),str=<span class="string">'car'</span>;<span class="keyword">else</span> str=<span class="string">'truck'</span>;<span class="keyword">end</span>
+0195             set(s.hgraph4,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,[<span class="string">'GPS and Permanent Magnets Localization Errors of car with ID '</span> num2str(c.car(n).id) <span class="string">' (Type - '</span> str <span class="string">' )'</span>] ,<span class="string">'Position'</span>,[100 100 1000 500]);
+0196             aux1=subplot(2,1,1);
+0197             hold on
+0198             plot(c.car(n).data(2,:),c.car(n).data(3,:),<span class="string">'r'</span>)
+0199             plot(c.car(n).data(2,:),c.car(n).data(4,:),<span class="string">'g'</span>)
+0200             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance Error (m)'</span>); legend(aux1,<span class="string">'GPS error in X-Axis'</span>,<span class="string">'GPS error in Y-Axis'</span>);
+0201             aux2=subplot(2,1,2);
+0202             hold on
+0203             plot(c.car(n).data(2,:),c.car(n).data(5,:),<span class="string">'o-r'</span>)
+0204             plot(c.car(n).data(2,:),c.car(n).data(6,:),<span class="string">'o-g'</span>)
+0205             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance Error (m)'</span>); legend(aux2,<span class="string">'Magnets error in X-Axis'</span>,<span class="string">'Magnets error in Y-Axis'</span>);
+0206             
+0207             <span class="comment">% Plot INS and Sensorial Fusion errors</span>
+0208             s.hgraph5=figure(7);
+0209             <span class="keyword">if</span>(c.car(n).type==1),str=<span class="string">'car'</span>;<span class="keyword">else</span> str=<span class="string">'truck'</span>;<span class="keyword">end</span>
+0210             set(s.hgraph5,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,[<span class="string">'INS and Sensorial Fusion Localization Errors of car with ID '</span> num2str(c.car(n).id) <span class="string">' (Type - '</span> str <span class="string">' )'</span>] ,<span class="string">'Position'</span>,[100 100 1000 500]);
+0211             aux1=subplot(2,1,1);
+0212             hold on
+0213             plot(c.car(n).data(2,:),c.car(n).data(7,:),<span class="string">'r'</span>)
+0214             plot(c.car(n).data(2,:),c.car(n).data(8,:),<span class="string">'g'</span>)
+0215             plot(c.car(n).data(2,:),c.car(n).data(10,:),<span class="string">'b'</span>)
+0216             plot(c.car(n).data(2,:),c.car(n).data(11,:),<span class="string">'c'</span>)
+0217             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance Error (m)'</span>); legend(aux1,<span class="string">'INS error in X-Axis'</span>,<span class="string">'INS error in Y-Axis'</span>,<span class="string">'Sensorial fusion error in X-Axis'</span>,<span class="string">'Sensorial fusion error in Y-Axis'</span>);
+0218             aux2=subplot(2,1,2);
+0219             hold on
+0220             
+0221             array1=c.car(n).data(9,:)*(180/pi);
+0222             array2=c.car(n).data(12,:)*(180/pi);
+0223             <span class="keyword">for</span> i=1:size(array1,2)
+0224                 <span class="keyword">if</span>(array1(1,i)&gt;180)
+0225                     array1(1,i)=array1(1,i)-360;
+0226                 <span class="keyword">elseif</span>(array1(1,i)&lt;-180)
+0227                     array1(1,i)=array1(1,i)+360;
+0228                 <span class="keyword">end</span>
+0229                 <span class="keyword">if</span>(array2(1,i)&gt;180)
+0230                     array2(1,i)=array2(1,i)-360;
+0231                 <span class="keyword">elseif</span>(array2(1,i)&lt;-180)
+0232                     array2(1,i)=array2(1,i)+360;
+0233                 <span class="keyword">end</span>
+0234             <span class="keyword">end</span>
+0235             plot(c.car(n).data(2,:),array1,<span class="string">'r'</span>)
+0236             plot(c.car(n).data(2,:),array2,<span class="string">'g'</span>)
+0237             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Orientation Error (deg)'</span>); legend(aux2,<span class="string">'INS orientation error'</span>,<span class="string">'Sensorial Fusion orientation error'</span>);
+0238             
+0239             <span class="comment">% Plot odometry errors</span>
+0240             s.hgraph6=figure(8);
+0241             <span class="keyword">if</span>(c.car(n).type==1),str=<span class="string">'car'</span>;<span class="keyword">else</span> str=<span class="string">'truck'</span>;<span class="keyword">end</span>
+0242             set(s.hgraph6,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,[<span class="string">'Odometry Localization Errors of car with ID '</span> num2str(c.car(n).id) <span class="string">' (Type - '</span> str <span class="string">' )'</span>] ,<span class="string">'Position'</span>,[100 100 1000 500]);
+0243             aux1=subplot(2,1,1);
+0244             hold on
+0245             plot(c.car(n).data(2,:),c.car(n).data(13,:),<span class="string">'r'</span>)
+0246             plot(c.car(n).data(2,:),c.car(n).data(14,:),<span class="string">'g'</span>)
+0247             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance Error (m)'</span>); legend(aux1,<span class="string">'Odometry error in X-Axis'</span>,<span class="string">'Odometry error in Y-Axis'</span>);
+0248             aux2=subplot(2,1,2);
+0249             hold on
+0250             array1=c.car(n).data(15,:)*(180/pi);
+0251             <span class="keyword">for</span> i=1:size(array1,2)
+0252                 <span class="keyword">if</span>(array1(1,i)&gt;180)
+0253                     array1(1,i)=array1(1,i)-360;
+0254                 <span class="keyword">elseif</span>(array1(1,i)&lt;-180)
+0255                     array1(1,i)=array1(1,i)+360;
+0256                 <span class="keyword">end</span>
+0257             <span class="keyword">end</span>
+0258             plot(c.car(n).data(2,:),array1,<span class="string">'r'</span>)
+0259             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Orientation Error (deg)'</span>); legend(aux2,<span class="string">'Odometry orientation error'</span>);
+0260             
+0261             <span class="comment">% Plot Euclidean distance errors</span>
+0262             s.hgraph7=figure(9);
+0263             <span class="keyword">if</span>(c.car(n).type==1),str=<span class="string">'car'</span>;<span class="keyword">else</span> str=<span class="string">'truck'</span>;<span class="keyword">end</span>
+0264             set(s.hgraph7,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,[<span class="string">'Euclidean Distance Localization Errors of car with ID '</span> num2str(c.car(n).id) <span class="string">' (Type - '</span> str <span class="string">' )'</span>] ,<span class="string">'Position'</span>,[100 100 1000 500]);
+0265             aux1=subplot(2,1,1); hold on
+0266             plot(c.car(n).data(2,:),sqrt(c.car(n).data(3,:).^2+c.car(n).data(4,:).^2),<span class="string">'-r'</span>,<span class="string">'LineWidth'</span>,2)
+0267             plot(c.car(n).data(2,:),sqrt(c.car(n).data(7,:).^2+c.car(n).data(8,:).^2),<span class="string">'-g'</span>,<span class="string">'LineWidth'</span>,2)
+0268             plot(c.car(n).data(2,:),sqrt(c.car(n).data(10,:).^2+c.car(n).data(10,:).^2),<span class="string">'-y'</span>,<span class="string">'LineWidth'</span>,2)
+0269             plot(c.car(n).data(2,:),sqrt(c.car(n).data(13,:).^2+c.car(n).data(14,:).^2),<span class="string">'-c'</span>,<span class="string">'LineWidth'</span>,2)
+0270             plot(c.car(n).data(2,:),sqrt(c.car(n).data(5,:).^2+c.car(n).data(6,:).^2),<span class="string">'ob'</span>,<span class="string">'LineWidth'</span>,2)
+0271             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance Error (m)'</span>); legend(aux1,<span class="string">'GPS error'</span>,<span class="string">'INS error'</span>,<span class="string">'Sensorial fusion error'</span>,<span class="string">'Odometry error'</span>,<span class="string">'Magnets error'</span>);
+0272             aux2=subplot(2,1,2); hold on
+0273             plot(c.car(n).data(2,:),c.car(n).data(16,:),<span class="string">'-g'</span>,<span class="string">'LineWidth'</span>,2)
+0274             xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Distance (m)'</span>); legend(aux2,<span class="string">'LIDAR minimum detection distance'</span>);
+0275             
+0276             
+0277             <span class="comment">% [time timeinsim gpsEX gpsEY magEX magEY insEX insEY insET fusEX fusEY fusET odoEX odoEY odoET minLaser velLinear road]</span>
+0278         <span class="keyword">end</span>
+0279         
+0280         <span class="comment">% To plot satellites position</span>
+0281         <span class="keyword">if</span>(s.printsateliteposition==1)
+0282             <span class="comment">%                 dbstop at 600 in isr_tfs_run</span>
+0283             haux1=figure(<span class="string">'Name'</span>,[<span class="string">'Satellites positions for car '</span> num2str(c.car(n).id)]);
+0284             hold on
+0285             <span class="keyword">for</span> i=1:round(size(c.car(n).gps_sat_pos,3)/10):size(c.car(n).gps_sat_pos,3)
+0286                 skyplot(c.car(n).gps_sat_pos(:,:,i),c.car(n).gps_sat_num(:,:,i),c.car(n).gps_usrxyz(:,:,i),0,1)
+0287             <span class="keyword">end</span>
+0288             pause
+0289             close(haux1);
+0290         <span class="keyword">end</span>
+0291         
+0292         <span class="comment">% To plot trajectory and estimated trajectory using odometry, KF and laser (and/or magnets)</span>
+0293         <span class="keyword">if</span>(s.disp_fus2_res==1 &amp;&amp; s.fus2&gt;=1)
+0294             haux7=figure(<span class="string">'Name'</span>,[<span class="string">'Errors for car '</span> num2str(c.car(n).id)]);
+0295             haux8=figure(<span class="string">'Name'</span>,[<span class="string">'Errors for car '</span> num2str(c.car(n).id)]);
+0296             <span class="comment">%                 dbstop at 641 in isr_tfs_run</span>
+0297             <span class="comment">%                 dbstop at 647 in isr_tfs_run</span>
+0298             SerrorNoise=sqrt( (c.car(n).posReal(:,1)-c.car(n).posNoise(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posNoise(:,2)).^2 );
+0299             WerrorNoise=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posNoise(:,3));
+0300             
+0301             SerrorCt=sqrt( (c.car(n).posReal(:,1)-c.car(n).posCt(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posCt(:,2)).^2 );
+0302             WerrorCt=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posCt(:,3));
+0303             
+0304             SerrorMag=sqrt( (c.car(n).posReal(:,1)-c.car(n).posMag(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posMag(:,2)).^2 );
+0305             WerrorMag=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posMag(:,3));
+0306             
+0307             aux1=size(c.car(n).posReal,1);
+0308             aux2=size(c.car(n).fus2_pos,1);
+0309             <span class="keyword">if</span>(aux1~=aux2)
+0310                 c.car(n).fus2_pos=c.car(n).fus2_pos(1:aux1,:);
+0311             <span class="keyword">end</span>
+0312             Serrorfus2=sqrt( (c.car(n).posReal(:,1)-c.car(n).fus2_pos(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).fus2_pos(:,2)).^2 );
+0313             Werrorfus2=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).fus2_pos(:,3));
+0314             
+0315             figure(haux7); hold on;
+0316             time=[0:size(c.car(n).deltaS_Noise,2)-1]/100;
+0317             plot(time,SerrorNoise,<span class="string">'g'</span>,time,SerrorCt,<span class="string">'b'</span>,time,SerrorMag,<span class="string">'r'</span>,time,Serrorfus2,<span class="string">'m'</span>)
+0318             
+0319             mag3=[]; mag4=[];
+0320             <span class="keyword">if</span>(~isnan(c.car(n).timePos_MAG_aux4) )      <span class="comment">% When detect laser + his own Mag</span>
+0321                 <span class="keyword">for</span> i=1:size(c.car(n).timePos_MAG_aux4,2)
+0322                     index=round(c.car(n).timePos_MAG_aux4(i)/s.step_time);
+0323                     mag3(end+1)=time(index); mag4(end+1)=Serrorfus2(index) ;
+0324                 <span class="keyword">end</span>
+0325                 plot(mag3,mag4,<span class="string">'or'</span>)
+0326             <span class="keyword">end</span>
+0327             
+0328             mag1=[]; mag2=[];
+0329             <span class="keyword">if</span>(~isnan(c.car(n).fus2_mag_xpos) )         <span class="comment">% When detect laser + Mag</span>
+0330                 <span class="keyword">for</span> i=1:size(c.car(n).fus2_mag_tpos,2)
+0331                     index=round(c.car(n).fus2_mag_tpos(i)/s.step_time);
+0332                     mag1(end+1)=time(index); mag2(end+1)=Serrorfus2(index);
+0333                 <span class="keyword">end</span>
+0334                 plot(mag1,mag2,<span class="string">'ok'</span>)
+0335             <span class="keyword">end</span>
+0336             
+0337             las1=[]; las2=[];
+0338             <span class="keyword">if</span>(~isnan(c.car(n).fus2_las_xpos) )         <span class="comment">%  When detect laser + RTK</span>
+0339                 <span class="keyword">for</span> i=1:size(c.car(n).fus2_las_tpos,2)
+0340                     index=round(c.car(n).fus2_las_tpos(i)/s.step_time);
+0341                     las1(end+1)=time(index); las2(end+1)=Serrorfus2(index);
+0342                 <span class="keyword">end</span>
+0343                 plot(las1,las2,<span class="string">'+k'</span>)
+0344             <span class="keyword">end</span>
+0345             grid; ylabel(<span class="string">'Distance error [m]'</span>); xlabel(<span class="string">'Time [m]'</span>); legend(<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Magnets'</span>,<span class="string">'Laser'</span>,<span class="string">'Self Mag'</span>,<span class="string">'Mag'</span>,<span class="string">'GPS'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0346             
+0347             
+0348             
+0349             
+0350             
+0351             figure(haux8); hold on;
+0352             plot(time,WerrorNoise,<span class="string">'g'</span>,time,WerrorCt,<span class="string">'b'</span>,time,WerrorMag,<span class="string">'r'</span>,time,Werrorfus2,<span class="string">'m'</span>)
+0353             
+0354             mag3=[]; mag4=[];
+0355             <span class="keyword">if</span>(~isnan(c.car(n).timePos_MAG_aux4) )      <span class="comment">% When detect laser + his own Mag</span>
+0356                 <span class="keyword">for</span> i=1:size(c.car(n).timePos_MAG_aux4,2)
+0357                     index=round(c.car(n).timePos_MAG_aux4(i)/s.step_time);
+0358                     mag3(end+1)=time(index); mag4(end+1)=Werrorfus2(index) ;
+0359                 <span class="keyword">end</span>
+0360                 plot(mag3,mag4,<span class="string">'or'</span>)
+0361             <span class="keyword">end</span>
+0362             
+0363             mag1=[]; mag2=[];
+0364             <span class="keyword">if</span>(~isnan(c.car(n).fus2_mag_xpos) )         <span class="comment">% When detect laser + Mag</span>
+0365                 <span class="keyword">for</span> i=1:size(c.car(n).fus2_mag_tpos,2)
+0366                     index=round(c.car(n).fus2_mag_tpos(i)/s.step_time);
+0367                     mag1(end+1)=time(index); mag2(end+1)=Werrorfus2(index);
+0368                 <span class="keyword">end</span>
+0369                 plot(mag1,mag2,<span class="string">'ok'</span>)
+0370             <span class="keyword">end</span>
+0371             
+0372             las1=[]; las2=[];
+0373             <span class="keyword">if</span>(~isnan(c.car(n).fus2_las_xpos) )         <span class="comment">%  When detect laser + RTK</span>
+0374                 <span class="keyword">for</span> i=1:size(c.car(n).fus2_las_tpos,2)
+0375                     index=round(c.car(n).fus2_las_tpos(i)/s.step_time);
+0376                     las1(end+1)=time(index); las2(end+1)=Werrorfus2(index);
+0377                 <span class="keyword">end</span>
+0378                 plot(las1,las2,<span class="string">'+k'</span>)
+0379             <span class="keyword">end</span>
+0380             grid; ylabel(<span class="string">'Orientation error [rad]'</span>); xlabel(<span class="string">'Time [m]'</span>); legend(<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Magnets'</span>,<span class="string">'Laser'</span>,<span class="string">'Self Mag'</span>,<span class="string">'Mag'</span>,<span class="string">'GPS'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0381             
+0382             
+0383             pause
+0384             close(haux7,haux8)
+0385         <span class="keyword">end</span>
+0386         
+0387         <span class="comment">% To plot trajectory and estimated trajectory using odometry and magnets</span>
+0388         <span class="keyword">if</span>(s.disp_fus4_res==1 &amp;&amp; s.fus4&gt;=1)
+0389             <span class="comment">%                 dbstop at 680 in isr_tfs_run</span>
+0390             haux1=figure(<span class="string">'Name'</span>,[<span class="string">'Delta S for car '</span> num2str(c.car(n).id)]);
+0391             hold on
+0392             plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,c.car(n).deltaS_Noise,<span class="string">'g'</span>)
+0393             plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,c.car(n).deltaS_Real,<span class="string">'k'</span>)
+0394             plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,c.car(n).deltaS_KF_CT,<span class="string">'r'</span>)
+0395             <span class="comment">%                 title('Delta S')</span>
+0396             legend(<span class="string">'Noise'</span>,<span class="string">'Real'</span>,<span class="string">'KF-CT'</span>)
+0397             xlabel(<span class="string">'Time [s]'</span>)
+0398             ylabel(<span class="string">'\DeltaS [m]'</span>)
+0399             grid
+0400             
+0401             haux2=figure(<span class="string">'Name'</span>,[<span class="string">'Delta W for car '</span> num2str(c.car(n).id)]);
+0402             hold on
+0403             plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,c.car(n).deltaW_Noise,<span class="string">'g'</span>)
+0404             plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,c.car(n).deltaW_Real,<span class="string">'k'</span>)
+0405             plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,c.car(n).deltaW_KF_CT,<span class="string">'r'</span>)
+0406             <span class="comment">%                 title('Delta W')</span>
+0407             legend(<span class="string">'Noise'</span>,<span class="string">'Real'</span>,<span class="string">'KF-CT'</span>)
+0408             xlabel(<span class="string">'Time [s]'</span>)
+0409             ylabel(<span class="string">'\DeltaW [rad]'</span>)
+0410             grid
+0411             
+0412             haux3=figure(<span class="string">'Name'</span>,[<span class="string">'Trajectory for car '</span> num2str(c.car(n).id)]);
+0413             hold on
+0414             <span class="keyword">if</span>(c.car(n).mag_rule==1)
+0415                 plot(c.car(n).posMag(:,1),c.car(n).posMag(:,2),<span class="string">'r.'</span>,<span class="string">'LineWidth'</span>,2)
+0416                 plot(c.car(n).xPos_MAG_aux4,c.car(n).yPos_MAG_aux4,<span class="string">'*k'</span>)
+0417             <span class="keyword">end</span>
+0418             plot(c.car(n).posReal(:,1),c.car(n).posReal(:,2),<span class="string">'k'</span>)
+0419             plot(c.car(n).posNoise(:,1),c.car(n).posNoise(:,2),<span class="string">'g'</span>)
+0420             plot(c.car(n).posCt(:,1),c.car(n).posCt(:,2),<span class="string">'b'</span>)
+0421             axis(<span class="string">'equal'</span>)
+0422             <span class="comment">%                 title('Trajectory')</span>
+0423             <span class="keyword">if</span>(c.car(n).mag_rule==1)
+0424                 legend(<span class="string">'KF-CT + Magnets'</span>,<span class="string">'Magnets'</span>,<span class="string">'Real'</span>,<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0425             <span class="keyword">else</span>
+0426                 legend(<span class="string">'Real'</span>,<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0427             <span class="keyword">end</span>
+0428             xlabel(<span class="string">'X [m]'</span>); ylabel(<span class="string">'Y [m]'</span>)
+0429             grid
+0430             
+0431             haux4=figure(<span class="string">'Name'</span>,[<span class="string">'Trajectory for car '</span> num2str(c.car(n).id)]);
+0432             hold on
+0433             <span class="keyword">if</span>(c.car(n).mag_rule==1)
+0434                 plot(c.car(n).posMag(:,1),c.car(n).posMag(:,2),<span class="string">'--r'</span>,<span class="string">'LineWidth'</span>,2)
+0435                 plot(c.car(n).xPos_MAG_aux4,c.car(n).yPos_MAG_aux4,<span class="string">'*k'</span>)
+0436             <span class="keyword">end</span>
+0437             plot(c.car(n).posReal(:,1),c.car(n).posReal(:,2),<span class="string">'k'</span>)
+0438             plot(c.car(n).posNoise(:,1),c.car(n).posNoise(:,2),<span class="string">'g'</span>)
+0439             plot(c.car(n).posCt(:,1),c.car(n).posCt(:,2),<span class="string">'b'</span>)
+0440             axis(<span class="string">'equal'</span>)
+0441             <span class="comment">%                 title('Trajectory')</span>
+0442             <span class="keyword">if</span>(c.car(n).mag_rule==1)
+0443                 legend(<span class="string">'KF-CT + Magnets'</span>,<span class="string">'Magnets'</span>,<span class="string">'Real'</span>,<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0444             <span class="keyword">else</span>
+0445                 legend(<span class="string">'Real'</span>,<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0446             <span class="keyword">end</span>
+0447             xlabel(<span class="string">'X [m]'</span>); ylabel(<span class="string">'Y [m]'</span>)
+0448             grid
+0449             
+0450             haux5=figure(<span class="string">'Name'</span>,[<span class="string">'Errors for car '</span> num2str(c.car(n).id)]);
+0451             haux6=figure(<span class="string">'Name'</span>,[<span class="string">'Errors for car '</span> num2str(c.car(n).id)]);
+0452             hold on
+0453             <span class="keyword">if</span>(c.car(n).mag_rule==1)
+0454                 SerrorNoise=sqrt( (c.car(n).posReal(:,1)-c.car(n).posNoise(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posNoise(:,2)).^2 );
+0455                 WerrorNoise=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posNoise(:,3));
+0456                 SerrorCt=sqrt( (c.car(n).posReal(:,1)-c.car(n).posCt(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posCt(:,2)).^2 );
+0457                 WerrorCt=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posCt(:,3));
+0458                 SerrorMag=sqrt( (c.car(n).posReal(:,1)-c.car(n).posMag(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posMag(:,2)).^2 );
+0459                 WerrorMag=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posMag(:,3));
+0460                 figure(haux5)
+0461                 plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,SerrorNoise,<span class="string">'g'</span>,[0:size(c.car(n).deltaS_Noise,2)-1]/100,SerrorCt,<span class="string">'b'</span>,[0:size(c.car(n).deltaS_Noise,2)-1]/100,SerrorMag,<span class="string">'r'</span>)
+0462                 grid; ylabel(<span class="string">'\DeltaS [m]'</span>); xlabel(<span class="string">'Time [m]'</span>); legend(<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Magnets'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0463                 figure(haux6)
+0464                 plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,WerrorNoise,<span class="string">'g'</span>,[0:size(c.car(n).deltaS_Noise,2)-1]/100,WerrorCt,<span class="string">'b'</span>,[0:size(c.car(n).deltaS_Noise,2)-1]/100,WerrorMag,<span class="string">'r'</span>)
+0465                 axis(<span class="string">'equal'</span>); grid; ylabel(<span class="string">'\DeltaW [rad]'</span>); xlabel(<span class="string">'Time [m]'</span>); legend(<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Magnets'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0466                 
+0467             <span class="keyword">else</span>
+0468                 SerrorNoise=sqrt( (c.car(n).posReal(:,1)-c.car(n).posNoise(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posNoise(:,2)).^2 );
+0469                 WerrorNoise=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posNoise(:,3));
+0470                 SerrorCt=sqrt( (c.car(n).posReal(:,1)-c.car(n).posCt(:,1)).^2 +(c.car(n).posReal(:,2)-c.car(n).posCt(:,2)).^2 );
+0471                 WerrorCt=dist_isr_trafsim_ang(c.car(n).posReal(:,3),c.car(n).posCt(:,3));
+0472                 figure(haux5)
+0473                 plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,SerrorNoise,<span class="string">'g'</span>,[0:size(c.car(n).deltaS_Noise,2)-1]/100,SerrorCt,<span class="string">'b'</span>)
+0474                 grid; ylabel(<span class="string">'\DeltaS [m]'</span>); xlabel(<span class="string">'Time [m]'</span>); legend(<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0475                 figure(haux6)
+0476                 plot([0:size(c.car(n).deltaS_Noise,2)-1]/100,WerrorNoise,<span class="string">'g'</span>,[0:size(c.car(n).deltaS_Noise,2)-1]/100,WerrorCt,<span class="string">'b'</span>)
+0477                 axis(<span class="string">'equal'</span>); grid; ylabel(<span class="string">'\DeltaW [rad]'</span>); xlabel(<span class="string">'Time [m]'</span>); legend(<span class="string">'Noise'</span>,<span class="string">'KF-CT'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0478                 
+0479             <span class="keyword">end</span>
+0480             pause
+0481             close(haux5,haux6)
+0482             pause
+0483             close(haux1,haux2,haux3,haux4)
+0484             figure(s.hfigsim)
+0485         <span class="keyword">end</span>
+0486         
+0487         <span class="keyword">if</span>(s.lateral_errors || s.disp_car_res)
+0488             <span class="keyword">if</span>(s.lateral_errors)
+0489                 delete(s.hgraph1)
+0490             <span class="keyword">end</span>
+0491             <span class="keyword">if</span>(s.disp_car_res)
+0492                 delete(s.hgraph7,s.hgraph6,s.hgraph5,s.hgraph4)
+0493             <span class="keyword">end</span>
+0494         <span class="keyword">end</span>
+0495         
+0496         <span class="comment">% Calculate car stats</span>
+0497         <span class="keyword">if</span>(s.disp_res)
+0498             cont=0; aux=[];
+0499             s.cars_time_insim=[s.cars_time_insim (c.car(n).timeinsim/c.car(n).traj(4,end)) ];
+0500             <span class="keyword">for</span> i=1:size(c.car(n).data,2)
+0501                 <span class="keyword">if</span>(c.car(n).data(17,i)==0)
+0502                     cont=cont+1;
+0503                 <span class="keyword">else</span>
+0504                     aux=[aux c.car(n).data(17,i)];
+0505                 <span class="keyword">end</span>
+0506             <span class="keyword">end</span>
+0507             s.cars_time_stop=[s.cars_time_stop cont*(1/s.fres)];
+0508             s.cars_time_stop_perc=[s.cars_time_stop_perc ((cont*(1/s.fres))/c.car(n).timeinsim)*100 ];
+0509             s.cars_time_run=[s.cars_time_run (c.car(n).timeinsim-cont*(1/s.fres))];
+0510             s.cars_time_run_perc=[s.cars_time_run_perc ((c.car(n).timeinsim-cont*(1/s.fres))/c.car(n).timeinsim)*100 ];
+0511             s.cars_mean_vel=[s.cars_mean_vel (sum(c.car(n).data(17,:))/size(c.car(n).data(17,:),2)) ];
+0512             s.cars_mean_run_vel=[s.cars_mean_run_vel (sum(aux)/size(aux,2))];
+0513         <span class="keyword">end</span>
+0514         
+0515         <span class="comment">% Delete handlers if simulator is in on-line mode</span>
+0516         <span class="keyword">if</span>(s.mode==1)
+0517             delete(c.car(n).hcar)
+0518             <span class="keyword">if</span>(c.car(n).hinfo~=-1) delete(c.car(n).hinfo); <span class="keyword">end</span>
+0519             <span class="keyword">if</span>(c.car(n).hgpspos~=-1) delete(c.car(n).hgpspos); <span class="keyword">end</span>
+0520             <span class="keyword">if</span>(c.car(n).hinspos~=-1) delete(c.car(n).hinspos); <span class="keyword">end</span>
+0521             <span class="keyword">if</span>(c.car(n).hfuspos~=-1) delete(c.car(n).hfuspos); <span class="keyword">end</span>
+0522             <span class="keyword">if</span>(c.car(n).hsetp~=-1) delete(c.car(n).hsetp); <span class="keyword">end</span>
+0523             <span class="keyword">if</span>(c.car(n).hcarsec~=-1) delete(c.car(n).hcarsec); <span class="keyword">end</span>
+0524             <span class="keyword">if</span>(c.car(n).hcarsecl~=-1) delete(c.car(n).hcarsecl); <span class="keyword">end</span>
+0525         <span class="keyword">end</span>
+0526         
+0527         <span class="comment">% Delete car from list of communication nodes</span>
+0528         <span class="keyword">if</span>(s.otacommu==1 &amp;&amp; s.otacommuemulation==1)
+0529             isr_tfs_ota_commu(<span class="string">'del_node'</span>,c.car(n).id);
+0530         <span class="keyword">end</span>
+0531         
+0532         id=c.car(n).id; <span class="comment">% disp(['Delete car ' num2str(c.car(n).id)])</span>
+0533         <span class="comment">% Find car Id on the lists</span>
+0534         cond1=ismember(id,s.cross_notify_list);
+0535         <span class="keyword">if</span>(cond1)
+0536             keyboard
+0537             [~, cc]=find(s.cross_notify_list(1,:)==id)
+0538             s.cross_notify_list(:,cc)=[];
+0539             cond1=0;
+0540         <span class="keyword">end</span>
+0541         cond2=ismember(id,s.list_cross_already_reserve);
+0542         <span class="keyword">if</span>(cond2)
+0543             [ll, cc]=find(s.list_cross_already_reserve==id);
+0544             s.list_cross_already_reserve(ll,:)=[];
+0545             cond2=0;
+0546         <span class="keyword">end</span>
+0547         cond3=ismember(id,s.list_cross_without_commu);
+0548         <span class="keyword">if</span>(cond3)
+0549             s.list_cross_without_commu=[];
+0550             cond3=0;
+0551         <span class="keyword">end</span>
+0552         
+0553         cond5=ismember(id,s.round_notify_list);
+0554         <span class="keyword">if</span>(cond5)
+0555             [~, cc]=find(s.round_notify_list(1,:)==id)
+0556             s.round_notify_list(:,cc)=[];
+0557             cond5=0;
+0558         <span class="keyword">end</span>
+0559         cond6=ismember(id,s.list_round_already_reserve);
+0560         <span class="keyword">if</span>(cond6)
+0561             [ll, cc]=find(s.list_round_already_reserve==id);
+0562             s.list_round_already_reserve(ll,:)=[];
+0563             cond6=0;
+0564         <span class="keyword">end</span>
+0565         cond7=ismember(id,s.list_round_without_commu);
+0566         <span class="keyword">if</span>(cond7)
+0567             s.list_round_without_commu=[];
+0568             cond7=0;
+0569         <span class="keyword">end</span>
+0570         
+0571         <span class="keyword">if</span>(cond1 || cond2 || cond3 || cond5 || cond6 || cond7)
+0572             disp(<span class="string">'Element stays in table'</span>)
+0573             keyboard
+0574         <span class="keyword">end</span>
+0575         
+0576         <span class="comment">% Delete car of car's struct</span>
+0577         <a href="../../ISR-TrafSim.v2.0/datacar_isr_trafsim.html" class="code" title="function [out] = isr_tfs_datacar_isr_trafsim(arg,n)">datacar_isr_trafsim</a>(<span class="string">'delc'</span>,c.car(n).id);
+0578         p=p-1; n=n-1;
+0579     <span class="keyword">end</span>
+0580 <span class="keyword">end</span>
+0581 <span class="keyword">end</span>
+0582</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

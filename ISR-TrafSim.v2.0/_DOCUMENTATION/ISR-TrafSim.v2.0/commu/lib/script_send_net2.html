@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_send_net2</title>
+  <meta name="keywords" content="script_send_net2">
+  <meta name="description" content="script_send_net2;">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_send_net2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_send_net2;</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> script_send_net2;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>	return a new id for node i</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% script_send_net2;</span>
+0002 t = event.instant;
+0003 i = event.node;
+0004 j = event.net.dst;
+0005 <span class="keyword">if</span> adebug, disp([<span class="string">'send_net2 @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0006 <span class="comment">% if ddebug, disp(['send_net2: time ' num2str(t) ' node ' num2str(i) ' starts to send a packet to node ' num2str(j)]); end</span>
+0007 <span class="keyword">if</span> j == 0   <span class="comment">% broadcast</span>
+0008     newevent = event;
+0009     newevent.instant = t;
+0010     newevent.type = <span class="string">'send_mac'</span>;
+0011     newevent.node = i;
+0012     newevent.net.type = <span class="string">'data'</span>;
+0013     newevent.net.id = <a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>(i);
+0014     newevent.net.route = [];
+0015     newevent.net.metric = 0;
+0016     newevent.pkt.tx=i; <span class="comment">% or event.net.src</span>
+0017     newevent.pkt.rv=0;
+0018     newevent.pkt.type=<span class="string">'data'</span>;
+0019     newevent.pkt.size=event.net.size;   <span class="comment">% assume no header in network layer</span>
+0020     <span class="comment">%             if event.pkt.ttl &lt;= 0, newevent.pkt.ttl = default_ttl; end</span>
+0021     <span class="comment">%             if event.pkt.rate &lt;= 0, newevent.pkt.rate=default_rate; end</span>
+0022     <span class="comment">%             if event.pkt.power &lt;= 0, newevent.pkt.power=default_power; end</span>
+0023     <span class="keyword">if</span> event.app.castmethod==<span class="string">'block_broadcast'</span>
+0024         newevent.pkt.ttl = 1;<span class="comment">%default_ttl;</span>
+0025     <span class="keyword">else</span>
+0026         newevent.pkt.ttl = default_ttl;
+0027     <span class="keyword">end</span>
+0028     newevent.pkt.rate=default_rate;
+0029     newevent.pkt.power=default_power;
+0030     newevent.pkt.id=0;
+0031     newevent.pkt.navcommu=0;
+0032     NewEvents = [NewEvents; newevent]; clear newevent;
+0033 <span class="keyword">else</span>
+0034     <span class="keyword">if</span> event.app.neighbours == <span class="string">'with_knowledge'</span>
+0035         newevent = event;
+0036         newevent.instant = t;
+0037         newevent.type = <span class="string">'send_mac'</span>;
+0038         newevent.node = i;
+0039         newevent.net.type = <span class="string">'data'</span>;
+0040         newevent.net.src = i;
+0041         newevent.net.dst = j;
+0042         <span class="comment">%define net.route</span>
+0043         newevent.net.route = [i j];
+0044         newevent.net.metric = 0;    <span class="comment">% no use for now</span>
+0045         newevent.pkt.tx=i;
+0046         newevent.pkt.rv=j;
+0047         newevent.pkt.type=<span class="string">'data'</span>;
+0048         <span class="comment">% keep net.size</span>
+0049         newevent.pkt.size=event.net.size;
+0050         newevent.pkt.ttl = 1;
+0051         newevent.pkt.rate=default_rate;
+0052         newevent.pkt.power=default_power;
+0053         newevent.pkt.id=0;  <span class="comment">% will be updated in 'send_phy'</span>
+0054         newevent.pkt.navcommu=0; <span class="comment">% will be updated in lower layer</span>
+0055         
+0056 <span class="comment">%         aux_tmp=node(i, 3);</span>
+0057 <span class="comment">%         node(i, 3) = newevent.pkt.power;</span>
+0058 <span class="comment">%         for k=1:size(node,1)</span>
+0059 <span class="comment">%             if i==k, continue, end;</span>
+0060 <span class="comment">%             [pr, snr] = recv_phy(i, k, rmodel);</span>
+0061 <span class="comment">%             % disp(['recv_phy: node ' num2str(i) ' to node ' num2str(j) ' with snr= ' num2str(snr) ' and distance=' num2str(topo_dist(i, j))]);</span>
+0062 <span class="comment">%             t1 = rv_threshold_delta;</span>
+0063 <span class="comment">%             if snr &gt;= (rv_threshold+t1)</span>
+0064 <span class="comment">%                 probability_receive = 1;</span>
+0065 <span class="comment">%             elseif snr &lt; (rv_threshold-t1)</span>
+0066 <span class="comment">%                 probability_receive = 0;</span>
+0067 <span class="comment">%             elseif rand &lt;= (snr-(rv_threshold-t1))/(t1+t1)</span>
+0068 <span class="comment">%                 probability_receive = 1;</span>
+0069 <span class="comment">%             else</span>
+0070 <span class="comment">%                 probability_receive = 0;</span>
+0071 <span class="comment">%             end</span>
+0072 <span class="comment">%             if probability_receive</span>
+0073 <span class="comment">%                 disp(['neighbour:' num2str(k)] );</span>
+0074 <span class="comment">%             end</span>
+0075 <span class="comment">%         end</span>
+0076 <span class="comment">%         node(i, 3)=aux_tmp;</span>
+0077         NewEvents = [NewEvents; newevent];
+0078         clear newevent;
+0079         
+0080     <span class="keyword">elseif</span> event.app.neighbours == <span class="string">'no___knowledge'</span>
+0081         <span class="comment">% unicast: find the route by RREP-RREQ</span>
+0082         <span class="comment">% assume no neighbor table, find route even dst. is in the neighborhood</span>
+0083         <span class="comment">% assume no routing table, RREP will contain whole route</span>
+0084         newevent = event;
+0085         newevent.instant = t;
+0086         newevent.type = <span class="string">'send_mac'</span>;
+0087         newevent.node = i;
+0088         newevent.net.type = <span class="string">'rreq'</span>;
+0089         rreq_out(i) = rreq_out(i) + 1;
+0090         <span class="keyword">if</span> strcmp(newevent.app.type, <span class="string">'crosslayer_searching'</span>)
+0091             rreq_out_crosslayer(i) = rreq_out_crosslayer(i) + 1;
+0092         <span class="keyword">end</span>
+0093         <span class="comment">% if ddebug, disp(['rreq_out(' num2str(i) ')=' num2str(rreq_out(i))]); end</span>
+0094         newevent.net.id = <a href="new_id.html" class="code" title="function [newid] = new_id(i);">new_id</a>(i);
+0095         newevent.net.route = [i];
+0096         newevent.net.metric = 0;    <span class="comment">% no use for now</span>
+0097         newevent.pkt.tx=i;  <span class="comment">% or event.net.src</span>
+0098         newevent.pkt.rv=0;  <span class="comment">% broadcast RREQ</span>
+0099         newevent.pkt.type=<span class="string">'data'</span>;
+0100         newevent.pkt.size=size_rreq;
+0101         <span class="comment">%             if event.pkt.ttl &lt;= 0, newevent.pkt.ttl = default_ttl; end</span>
+0102         <span class="comment">%             if event.pkt.rate &lt;= 0, newevent.pkt.rate=default_rate; end</span>
+0103         <span class="comment">%             if event.pkt.power &lt;= 0, newevent.pkt.power=default_power; end</span>
+0104         newevent.pkt.ttl = default_ttl;
+0105         newevent.pkt.rate=default_rate;
+0106         newevent.pkt.power=default_power;
+0107         newevent.pkt.id=0;
+0108         newevent.pkt.navcommu=0;
+0109         NewEvents = [NewEvents; newevent];
+0110         <span class="comment">% set timeout timer for RREQ</span>
+0111         newevent.instant = t + rreq_timeout;   <span class="comment">% question: how large should this timeout be?</span>
+0112         newevent.type = <span class="string">'timeout_rreq'</span>;
+0113         NewEvents = [NewEvents; newevent];
+0114         net_pending(i).id = [net_pending(i).id newevent.net.id];   <span class="comment">% save the id of pending RREQ</span>
+0115         net_pending(i).retransmit = [net_pending(i).retransmit 0];
+0116         clear newevent;
+0117     <span class="keyword">end</span>
+0118 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

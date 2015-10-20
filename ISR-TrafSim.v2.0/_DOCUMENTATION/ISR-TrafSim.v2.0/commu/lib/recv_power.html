@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of recv_power</title>
+  <meta name="keywords" content="recv_power">
+  <meta name="description" content="send packet at PHY layer">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>recv_power
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>send packet at PHY layer</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [Pr] = recv_power(tx, rv, rmodel) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> send packet at PHY layer
+dbstop at 4 in recv_power.m</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="friis.html" class="code" title="function Pr = friis(Pt, Gt, Gr, lambdacommu, Lcommu, Dcommu)">friis</a>	Friis free space propagation model:</li><li><a href="log_normal_shadowing.html" class="code" title="function Pr = log_normal_shadowing(Pt, Gt, Gr, lambdacommu, Lcommu, pathlossExp, std_db, D0commu, Dcommu)">log_normal_shadowing</a>	log normal shadowing radio propagation model:</li><li><a href="tworay.html" class="code" title="function [Pr, crossover_dist] = tworay(Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, Dcommu)">tworay</a>	if Dcommu < crossover_dist, use Friis free space model</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="carrier_sense.html" class="code" title="function busy = carrier_sense(rv)">carrier_sense</a>	check if the channel is busy</li><li><a href="recv_phy.html" class="code" title="function [Pr0, SNR] = recv_phy(tx, rv, rmodel)">recv_phy</a>	send packet at PHY layer</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Pr] = recv_power(tx, rv, rmodel)</a>
+0002 <span class="comment">% send packet at PHY layer</span>
+0003 <span class="comment">%dbstop at 4 in recv_power.m</span>
+0004 <span class="keyword">global</span> node Gt Gr freq Lcommu ht hr pathLossExp std_db D0commu;
+0005 <span class="keyword">global</span> cs_threshold;
+0006 
+0007 lambdacommu = 3e8 / freq;
+0008 Pt = node(tx, 3);
+0009 <span class="keyword">if</span> Pt &lt;= 0
+0010     disp([<span class="string">'In function recv_power: the transmission power of node '</span> num2str(tx) <span class="string">' is zero'</span>]);
+0011 <span class="keyword">end</span>
+0012 <span class="comment">% Pt</span>
+0013 
+0014 <span class="comment">% Update the position before calculating distance and received power</span>
+0015 <span class="comment">%position_update;</span>
+0016 
+0017 Dcommu = sqrt((node(tx, 1)-node(rv, 1))^2+(node(tx, 2)-node(rv, 2))^2);
+0018 
+0019 <span class="keyword">switch</span> rmodel
+0020     <span class="keyword">case</span> <span class="string">'friis'</span>
+0021         Pr = <a href="friis.html" class="code" title="function Pr = friis(Pt, Gt, Gr, lambdacommu, Lcommu, Dcommu)">friis</a>(Pt, Gt, Gr, lambdacommu, Lcommu, Dcommu);
+0022     <span class="keyword">case</span> <span class="string">'tworay'</span>
+0023         [Pr, crossover_dist] = <a href="tworay.html" class="code" title="function [Pr, crossover_dist] = tworay(Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, Dcommu)">tworay</a>(Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, Dcommu);
+0024     <span class="keyword">case</span> <span class="string">'shadowing'</span>
+0025         Pr = <a href="log_normal_shadowing.html" class="code" title="function Pr = log_normal_shadowing(Pt, Gt, Gr, lambdacommu, Lcommu, pathlossExp, std_db, D0commu, Dcommu)">log_normal_shadowing</a>(Pt, Gt, Gr, lambdacommu, Lcommu, pathLossExp, std_db, D0commu, Dcommu);
+0026 <span class="keyword">end</span>
+0027 
+0028 <span class="comment">% if Pr &lt;= cs_threshold</span>
+0029 <span class="comment">%     Pr = 0;</span>
+0030 <span class="comment">% end</span>
+0031 
+0032 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

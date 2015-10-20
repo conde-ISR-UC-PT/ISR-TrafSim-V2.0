@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_send_phy_finish</title>
+  <meta name="keywords" content="script_send_phy_finish">
+  <meta name="description" content="script_send_phy_finish">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_send_phy_finish
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_send_phy_finish</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> script_send_phy_finish</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% script_send_phy_finish</span>
+0002 t = event.instant;
+0003 i = event.node;
+0004 j = event.pkt.rv;
+0005 <span class="keyword">if</span> bdebug, disp([<span class="string">'send_phy_finish @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0006 <span class="keyword">if</span> node(i, 4) ~= 1
+0007     error([<span class="string">'send_phy_finish: node '</span> num2str(i) <span class="string">' should be in transmission mode'</span>]);
+0008 <span class="keyword">end</span>
+0009 node(i, 4) = 0; <span class="comment">% after all receivings, go back to idle</span>
+0010 node(i, 3) = 0;
+0011 <span class="keyword">if</span> j==0 <span class="comment">% | strcmp(event.pkt.type, 'ack')</span>
+0012     <span class="comment">% finished broadcast % or finished RTS-CTS-DATA-ACK for unicast</span>
+0013     <span class="keyword">if</span> ~isempty(mac_queue(i).list)
+0014         <span class="comment">% more packets are waiting to be sent</span>
+0015         mac_status(i) = 1;
+0016         newevent = mac_queue(i).list(1);
+0017         mac_queue(i).list(1) = [];
+0018         newevent.instant = t + cca_time;   <span class="comment">% question: should cca_time or other be used here?</span>
+0019         newevent.type = <span class="string">'wait_for_channel'</span>;
+0020         newevent.node = i;
+0021         NewEvents = [NewEvents; newevent]; clear newevent;
+0022     <span class="keyword">else</span>
+0023         mac_status(i) = 0;
+0024     <span class="keyword">end</span>
+0025 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

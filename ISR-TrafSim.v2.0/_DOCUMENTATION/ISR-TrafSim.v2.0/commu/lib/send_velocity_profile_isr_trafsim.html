@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of send_velocity_profile_isr_trafsim</title>
+  <meta name="keywords" content="send_velocity_profile_isr_trafsim">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>send_velocity_profile_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [res] = send_velocity_profile(n,aux,id,vel_prof,rafter,interssection_type) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../ISR-TrafSim.v2.0/cross_gest_isr_trafsim.html" class="code" title="function [] = cross_gest_isr_trafsim()">cross_gest_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../../ISR-TrafSim.v2.0/round_gest_isr_trafsim.html" class="code" title="function [] = round_gest_isr_trafsim()">round_gest_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [res] = send_velocity_profile(n,aux,id,vel_prof,rafter,interssection_type)</a>
+0002 <span class="keyword">global</span> s c
+0003 
+0004     <span class="keyword">if</span>(strcmp(interssection_type,<span class="string">'round'</span>))
+0005         c.car(n).vel_prof=vel_prof;
+0006         c.car(n).vpn=size(vel_prof,2);
+0007         <a href="../../../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>([90 id s.time],<span class="string">'vel_prof'</span>);   <span class="comment">% Send velocity profile</span>
+0008 
+0009         <span class="comment">% Add car to list already reserved</span>
+0010         <span class="keyword">if</span>(isempty(find(s.list_round_already_reserve==id)))
+0011             [ll cc]=find(s.list_round_already_reserve(1,:)==s.round_notify_list(12,aux));
+0012             s.list_round_already_reserve(end+1,cc)=id;
+0013         <span class="keyword">end</span>
+0014         <span class="comment">% Actualizes table that will count how many cars are sent to a particular output</span>
+0015         <span class="keyword">if</span>( ~isnan(vel_prof) )
+0016             col=find(s.rg_count_tab(1,:)==rafter);
+0017             s.rg_count_tab(2,col)=s.rg_count_tab(2,col)+1;  <span class="comment">%[road sumatory IDcar1 IDcar2 ...]</span>
+0018             <span class="keyword">for</span> i=3:10
+0019                 <span class="keyword">if</span>(s.rg_count_tab(i,col)==0)
+0020                     s.rg_count_tab(i,col)=id;       <span class="comment">% Write carID on table on first free space</span>
+0021                     <span class="keyword">break</span>
+0022                 <span class="keyword">end</span>
+0023             <span class="keyword">end</span>
+0024         <span class="keyword">end</span>
+0025         <span class="comment">% Delete notification</span>
+0026         s.round_notify_list(:,aux)=[];
+0027 
+0028     <span class="keyword">elseif</span>(strcmp(interssection_type,<span class="string">'cross'</span>))
+0029         c.car(n).vel_prof2=vel_prof;
+0030         c.car(n).vpn2=size(vel_prof,2);
+0031         <a href="../../../ISR-TrafSim.v2.0/commu/ota_commu_isr_trafsim.html" class="code" title="function [out] = ota_commu_isr_trafsim(arg,aux)">ota_commu_isr_trafsim</a>([90 id s.time],<span class="string">'vel_prof2'</span>);   <span class="comment">% Send velocity profile</span>
+0032         
+0033         <span class="comment">% Add car to list already reserved</span>
+0034         <span class="keyword">if</span>(isempty(find(s.list_cross_already_reserve==id)))
+0035             [ll cc]=find(s.list_cross_already_reserve(1,:)==s.cross_notify_list(12,aux));
+0036             s.list_cross_already_reserve(end+1,cc)=id;
+0037         <span class="keyword">end</span>
+0038         <span class="comment">% Actualizes table that will count how many cars are sent to a particular output</span>
+0039         <span class="keyword">if</span>( ~isnan(vel_prof) )
+0040             col=find(s.rg_count_tab2(1,:)==rafter);
+0041             s.rg_count_tab2(2,col)=s.rg_count_tab2(2,col)+1;  <span class="comment">%[road sumatory IDcar1 IDcar2 ...]</span>
+0042             <span class="keyword">for</span> i=3:10
+0043                 <span class="keyword">if</span>(s.rg_count_tab2(i,col)==0)
+0044                     s.rg_count_tab2(i,col)=id;       <span class="comment">% Write carID on table on first free space</span>
+0045                     <span class="keyword">break</span>
+0046                 <span class="keyword">end</span>
+0047             <span class="keyword">end</span>
+0048         <span class="keyword">end</span>
+0049         <span class="comment">% Delete notification</span>
+0050         s.cross_notify_list(:,aux)=[];
+0051     <span class="keyword">end</span>
+0052 <span class="keyword">end</span>
+0053</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of print_isr_trafsim</title>
+  <meta name="keywords" content="print_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html graphic -->
+<h1>print_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [] = print_isr_trafsim(arg,n) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Print vehicles/ghost on simulator window (only online mode) and the
+ selected information
+
+-USE----------------------------------------------------------------------
+
+ -&gt; Input(s)
+   » arg   -   Option
+       car         -   Print selected car
+       time        -   Print updated time
+       timeinit    -   Print time = 0 seconds
+   » n     -   Position of vehicle on the structure
+   » data  -   Not used
+
+ -&gt; Output(s)
+   » None
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [] = pcar(n)</a></li><li><a href="#_sub2" class="code">function [] = ptime(mode)</a></li><li><a href="#_sub3" class="code">function [] = pinfo(mode)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Print vehicles/ghost on simulator window (only online mode) and the</span>
+0027 <span class="comment">% selected information</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% -&gt; Input(s)</span>
+0032 <span class="comment">%   » arg   -   Option</span>
+0033 <span class="comment">%       car         -   Print selected car</span>
+0034 <span class="comment">%       time        -   Print updated time</span>
+0035 <span class="comment">%       timeinit    -   Print time = 0 seconds</span>
+0036 <span class="comment">%   » n     -   Position of vehicle on the structure</span>
+0037 <span class="comment">%   » data  -   Not used</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% -&gt; Output(s)</span>
+0040 <span class="comment">%   » None</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0043 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0044 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0045 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0046 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0047 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0050 <span class="comment">%   Urbano Nunes*</span>
+0051 <span class="comment">%   Luis Conde Bento**</span>
+0052 <span class="comment">%   Ricardo Parafita*</span>
+0053 <span class="comment">%   Sergio Santos*</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0056 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0057 <span class="comment">%--------------------------------------------------------------------------</span>
+0058 
+0059 <a name="_sub0" href="#_subfunctions" class="code">function [] = print_isr_trafsim(arg,n)</a>
+0060 
+0061 <span class="keyword">if</span>(strcmp(arg,<span class="string">'car'</span>))
+0062     <a href="#_sub1" class="code" title="subfunction [] = pcar(n)">pcar</a>(n);
+0063 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'time'</span>))
+0064     <a href="#_sub2" class="code" title="subfunction [] = ptime(mode)">ptime</a>(1);
+0065 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'info'</span>))
+0066     <a href="#_sub3" class="code" title="subfunction [] = pinfo(mode)">pinfo</a>(1);
+0067 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'timeinit'</span>))
+0068     <a href="#_sub2" class="code" title="subfunction [] = ptime(mode)">ptime</a>(0);
+0069 <span class="keyword">elseif</span>(strcmp(arg,<span class="string">'infoinit'</span>))
+0070     <a href="#_sub3" class="code" title="subfunction [] = pinfo(mode)">pinfo</a>(0);
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0076 <span class="comment">% Print car/info ang ghosts (on-line)</span>
+0077 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0078 <a name="_sub1" href="#_subfunctions" class="code">function [] = pcar(n)</a>
+0079 <span class="keyword">global</span> s c
+0080 
+0081 <span class="comment">% Delete handlers if are needed</span>
+0082 <span class="keyword">if</span>(~isempty(c.car(n).aux))
+0083     delete(c.car(n).aux);
+0084     c.car(n).aux=[];
+0085 <span class="keyword">end</span>
+0086 
+0087 <span class="comment">% Make array to rotation matrix</span>
+0088 widht=c.car(n).width; length=c.car(n).length;
+0089 cpry=[-widht/2 widht/2 widht/2 -widht/2];
+0090 cprx=[length/2 length/2 -length/2 -length/2];
+0091 
+0092 <span class="comment">% Startup patches</span>
+0093 <span class="keyword">if</span>(c.car(n).hcar==-1),c.car(n).hcar=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,c.car(n).dri.color);<span class="keyword">end</span>
+0094 <span class="keyword">if</span>(s.gps&gt;1),<span class="keyword">if</span>(c.car(n).hgpspos==-1),c.car(n).hgpspos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'b'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0095 <span class="keyword">if</span>(s.ins&gt;1),<span class="keyword">if</span>(c.car(n).hinspos==-1),c.car(n).hinspos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'g'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0096 <span class="keyword">if</span>(s.fus&gt;1),<span class="keyword">if</span>(c.car(n).hfuspos==-1),c.car(n).hfuspos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'r'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0097 <span class="keyword">if</span>(s.fus2&gt;1),<span class="keyword">if</span>(c.car(n).hfus2pos==-1),c.car(n).hfus2pos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0098 <span class="keyword">if</span>(s.fus3&gt;1),<span class="keyword">if</span>(c.car(n).hfus3pos==-1),c.car(n).hfus3pos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'c'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0099 <span class="keyword">if</span>(s.fus4&gt;1),<span class="keyword">if</span>(c.car(n).hfus4pos==-1),c.car(n).hfus4pos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'m'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0100 <span class="keyword">if</span>(s.odo&gt;1),<span class="keyword">if</span>(c.car(n).hodopos==-1),c.car(n).hodopos=patch(<span class="string">'XData'</span>,s.cprx-300,<span class="string">'YData'</span>,s.cpry-300,<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'y'</span>);<span class="keyword">end</span>,<span class="keyword">end</span>
+0101 
+0102 <span class="comment">% Move patch to a new position</span>
+0103 set(c.car(n).hcar,<span class="string">'XData'</span>,c.car(n).cornX+c.car(n).pos.x,<span class="string">'YData'</span>,c.car(n).cornY+c.car(n).pos.y,<span class="string">'FaceColor'</span>,c.car(n).dri.color);
+0104 
+0105 <span class="comment">% Print security vectors</span>
+0106 <span class="keyword">if</span>(s.printsecurity==1)
+0107     <span class="comment">%             dbstop at 107 in isr_tfs_print.m</span>
+0108     <span class="keyword">if</span>(c.car(n).hcarsec~=-1)
+0109         delete(c.car(n).hcarsec);
+0110     <span class="keyword">end</span>
+0111     <span class="keyword">if</span>(c.car(n).hcarsecl~=-1)
+0112         delete(c.car(n).hcarsecl);
+0113     <span class="keyword">end</span>
+0114     c.car(n).hcarsec=plot([c.car(n).pos.x c.car(n).pos.x+s.sd*cos(c.car(n).pos.t+2*c.car(n).steerval)],[c.car(n).pos.y c.car(n).pos.y+s.sd*sin(c.car(n).pos.t+2*c.car(n).steerval)]);
+0115     c.car(n).hcarsecl=plot([c.car(n).pos.x+s.lsd*cos(c.car(n).pos.t+pi/2) c.car(n).pos.x+s.lsd*cos(c.car(n).pos.t-pi/2)],[ c.car(n).pos.y+s.lsd*sin(c.car(n).pos.t+pi/2) c.car(n).pos.y+s.lsd*sin(c.car(n).pos.t-pi/2) ]);
+0116 <span class="keyword">end</span>
+0117 
+0118 <span class="comment">% Move GPS patch to a new position</span>
+0119 <span class="keyword">if</span>(s.gps&gt;1)
+0120     set(c.car(n).hgpspos,<span class="string">'XData'</span>,c.car(n).cornX+c.car(n).gps(1,1),<span class="string">'YData'</span>,c.car(n).cornY+c.car(n).gps(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'b'</span>);
+0121 <span class="keyword">end</span>
+0122 
+0123 <span class="comment">% Move INS patch to a new position</span>
+0124 <span class="keyword">if</span>(s.ins&gt;1)
+0125     m_rot=[cos(c.car(n).ins(1,3)) -sin(c.car(n).ins(1,3)) 0; sin(c.car(n).ins(1,3)) cos(c.car(n).ins(1,3)) 0; 0 0 1];
+0126     <span class="keyword">if</span>(c.car(n).type==1)
+0127         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0128     <span class="keyword">elseif</span>(c.car(n).type==2)
+0129         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0130     <span class="keyword">end</span>
+0131     set(c.car(n).hinspos,<span class="string">'XData'</span>,[p1t(1) p2t(1) p3t(1) p4t(1)]+c.car(n).ins(1,1),<span class="string">'YData'</span>,[p1t(2) p2t(2) p3t(2) p4t(2)]+c.car(n).ins(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'g'</span>);
+0132 <span class="keyword">end</span>
+0133 
+0134 <span class="comment">% Move Fusion patch to a new position</span>
+0135 <span class="keyword">if</span>(s.fus&gt;1)
+0136     m_rot=[cos(c.car(n).fus(1,3)) -sin(c.car(n).fus(1,3)) 0; sin(c.car(n).fus(1,3)) cos(c.car(n).fus(1,3)) 0; 0 0 1];
+0137     <span class="keyword">if</span>(c.car(n).type==1)
+0138         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0139     <span class="keyword">elseif</span>(c.car(n).type==2)
+0140         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0141     <span class="keyword">end</span>
+0142     set(c.car(n).hfuspos,<span class="string">'XData'</span>,[p1t(1) p2t(1) p3t(1) p4t(1)]+c.car(n).fus(1,1),<span class="string">'YData'</span>,[p1t(2) p2t(2) p3t(2) p4t(2)]+c.car(n).fus(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'r'</span>);
+0143 <span class="keyword">end</span>
+0144 
+0145 <span class="comment">% Move Fusion 2 patch to a new position</span>
+0146 <span class="keyword">if</span>(s.fus2&gt;1)
+0147     m_rot=[cos(c.car(n).fus2(1,3)) -sin(c.car(n).fus2(1,3)) 0; sin(c.car(n).fus2(1,3)) cos(c.car(n).fus2(1,3)) 0; 0 0 1];
+0148     <span class="keyword">if</span>(c.car(n).type==1)
+0149         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0150     <span class="keyword">elseif</span>(c.car(n).type==2)
+0151         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0152     <span class="keyword">end</span>
+0153     set(c.car(n).hfus2pos,<span class="string">'XData'</span>,[p1t(1) p2t(1) p3t(1) p4t(1)]+c.car(n).fus2(1,1),<span class="string">'YData'</span>,[p1t(2) p2t(2) p3t(2) p4t(2)]+c.car(n).fus2(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'w'</span>);
+0154 <span class="keyword">end</span>
+0155 
+0156 <span class="comment">% Move Fusion 3 patch to a new position</span>
+0157 <span class="keyword">if</span>(s.fus3&gt;1)
+0158     m_rot=[cos(c.car(n).fus3(1,3)) -sin(c.car(n).fus3(1,3)) 0; sin(c.car(n).fus3(1,3)) cos(c.car(n).fus3(1,3)) 0; 0 0 1];
+0159     <span class="keyword">if</span>(c.car(n).type==1)
+0160         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0161     <span class="keyword">elseif</span>(c.car(n).type==2)
+0162         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0163     <span class="keyword">end</span>
+0164     set(c.car(n).hfus3pos,<span class="string">'XData'</span>,[p1t(1) p2t(1) p3t(1) p4t(1)]+c.car(n).fus3(1,1),<span class="string">'YData'</span>,[p1t(2) p2t(2) p3t(2) p4t(2)]+c.car(n).fus3(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'c'</span>);
+0165 <span class="keyword">end</span>
+0166 
+0167 <span class="comment">% Move Fusion 4 patch to a new position</span>
+0168 <span class="keyword">if</span>(s.fus4&gt;1)
+0169     m_rot=[cos(c.car(n).fus4(1,3)) -sin(c.car(n).fus4(1,3)) 0; sin(c.car(n).fus4(1,3)) cos(c.car(n).fus4(1,3)) 0; 0 0 1];
+0170     <span class="keyword">if</span>(c.car(n).type==1)
+0171         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0172     <span class="keyword">elseif</span>(c.car(n).type==2)
+0173         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0174     <span class="keyword">end</span>
+0175     set(c.car(n).hfus4pos,<span class="string">'XData'</span>,[p1t(1) p2t(1) p3t(1) p4t(1)]+c.car(n).fus4(1,1),<span class="string">'YData'</span>,[p1t(2) p2t(2) p3t(2) p4t(2)]+c.car(n).fus4(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'m'</span>);
+0176 <span class="keyword">end</span>
+0177 
+0178 <span class="comment">% Move Odometry patch to a new position</span>
+0179 <span class="keyword">if</span>(s.odo&gt;1)
+0180     m_rot=[cos(c.car(n).odo(1,3)) -sin(c.car(n).odo(1,3)) 0; sin(c.car(n).odo(1,3)) cos(c.car(n).odo(1,3)) 0; 0 0 1];
+0181     <span class="keyword">if</span>(c.car(n).type==1)
+0182         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0183     <span class="keyword">elseif</span>(c.car(n).type==2)
+0184         p1t=m_rot*[cprx(1);cpry(1);1]; p2t=m_rot*[cprx(2);cpry(2);1]; p3t=m_rot*[cprx(3);cpry(3);1]; p4t=m_rot*[cprx(4);cpry(4);1];
+0185     <span class="keyword">end</span>
+0186     set(c.car(n).hodopos,<span class="string">'XData'</span>,[p1t(1) p2t(1) p3t(1) p4t(1)]+c.car(n).odo(1,1),<span class="string">'YData'</span>,[p1t(2) p2t(2) p3t(2) p4t(2)]+c.car(n).odo(1,2),<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'y'</span>);
+0187 <span class="keyword">end</span>
+0188 
+0189 <span class="comment">% To print car info</span>
+0190 <span class="keyword">if</span>(s.printinfo==1)
+0191     <span class="keyword">if</span>(c.car(n).hinfo~=-1)
+0192         delete(c.car(n).hinfo)  <span class="comment">% Delete handler if exist</span>
+0193     <span class="keyword">end</span>
+0194     
+0195     <span class="keyword">if</span>(s.infotype==1)           <span class="comment">% Origin and Destination</span>
+0196         str=sprintf(<span class="string">'%d,%d'</span>,c.car(n).roadori,c.car(n).roaddes);
+0197     <span class="keyword">elseif</span>(s.infotype==2)       <span class="comment">% Car ID</span>
+0198         str=sprintf(<span class="string">'%d'</span>,c.car(n).id);
+0199     <span class="keyword">elseif</span>(s.infotype==3)       <span class="comment">% Car linear speed (m/s)</span>
+0200         str=sprintf(<span class="string">'%2.0f Km/h'</span>,c.car(n).dyn(1)*3.6);
+0201     <span class="keyword">elseif</span>(s.infotype==4)       <span class="comment">% (v,w) Linear Speed and Angular Speed</span>
+0202         str=sprintf(<span class="string">'%d,%d'</span>,c.car(n).dyn(1),c.car(n).dyn(2));
+0203     <span class="keyword">elseif</span>(s.infotype==5)       <span class="comment">% Steering Angle (Deg)</span>
+0204         str=sprintf(<span class="string">'%2.0f Deg'</span>,c.car(n).steerval*180/pi);
+0205     <span class="keyword">elseif</span>(s.infotype==6)       <span class="comment">% GPS HDOP</span>
+0206         str=sprintf(<span class="string">'HDOP= %2.0f'</span>,c.car(n).gps(1,3));
+0207     <span class="keyword">elseif</span>(s.infotype==7)
+0208         str=sprintf(<span class="string">' %s (%1.0f) - %s'</span>,num2str(c.car(n).id), c.car(n).cmdacc, num2str(c.car(n).list));
+0209     <span class="keyword">elseif</span>(s.infotype==8)
+0210         str=sprintf(<span class="string">'%2.0f Km/h %1.0f'</span>,c.car(n).dyn(1)*3.6,c.car(n).cmdacc);
+0211     <span class="keyword">elseif</span>(s.infotype==9)
+0212         str=sprintf(<span class="string">'%1.0f'</span>,c.car(n).cmdacc);
+0213     <span class="keyword">elseif</span>(s.infotype==10)
+0214         str=sprintf(<span class="string">'ID-%d, %s'</span>,c.car(n).id,num2str(c.car(n).list));
+0215     <span class="keyword">elseif</span>(s.infotype==11)
+0216         str=sprintf(<span class="string">'%d'</span>,c.car(n).traj(3,c.car(n).setp));
+0217     <span class="keyword">elseif</span>(s.infotype==12)
+0218         str=sprintf(<span class="string">'(%1.0f) %d - %s '</span>,c.car(n).cmdacc,c.car(n).id,num2str(c.car(n).list));
+0219     <span class="keyword">elseif</span>(s.infotype==13)
+0220         str=sprintf(<span class="string">'%d (%1.0f)'</span>,c.car(n).id,c.car(n).cmdacc);
+0221     <span class="keyword">elseif</span>(s.infotype==14)
+0222         <span class="keyword">if</span>(isnan(c.car(n).vel_prof) )
+0223             str1=sprintf(<span class="string">'W'</span>);
+0224         <span class="keyword">elseif</span>(isempty(c.car(n).vel_prof))
+0225             str1=sprintf(<span class="string">'D'</span>);
+0226         <span class="keyword">else</span>
+0227             str1=sprintf(<span class="string">'M'</span>);
+0228         <span class="keyword">end</span>
+0229         <span class="keyword">if</span>(isnan(c.car(n).vel_prof2) )
+0230             str2=sprintf(<span class="string">'/W '</span>);
+0231         <span class="keyword">elseif</span>(isempty(c.car(n).vel_prof2))
+0232             str2=sprintf(<span class="string">'/D '</span>);
+0233         <span class="keyword">else</span>
+0234             str2=sprintf(<span class="string">'/M '</span>);
+0235         <span class="keyword">end</span>
+0236         str=[str1 str2 num2str(c.car(n).id)];
+0237     <span class="keyword">elseif</span>(s.infotype==15)
+0238         <span class="keyword">if</span>(isnan(c.car(n).vel_prof) )
+0239             str=sprintf(<span class="string">'W'</span>);
+0240         <span class="keyword">elseif</span>(isempty(c.car(n).vel_prof))
+0241             str=sprintf(<span class="string">'D'</span>);
+0242         <span class="keyword">else</span>
+0243             str=sprintf(<span class="string">'M'</span>);
+0244         <span class="keyword">end</span>
+0245     <span class="keyword">elseif</span>(s.infotype==16)
+0246         str=sprintf(<span class="string">'NC-%d'</span>,find(s.otalist==c.car(n).id));
+0247     <span class="keyword">elseif</span>(s.infotype==17)
+0248         str=sprintf(<span class="string">'(%d) %d'</span>,c.car(n).id,c.car(n).cause);
+0249     <span class="keyword">elseif</span>(s.infotype==18)  <span class="comment">% ( 18 - ID/(Mode-&gt;D/W/M)/(causeID)/v(Km/h))</span>
+0250         str1=num2str(c.car(n).id);
+0251         <span class="keyword">if</span>(isnan(c.car(n).vel_prof))
+0252             str2=sprintf(<span class="string">'W'</span>);
+0253         <span class="keyword">elseif</span>(isempty(c.car(n).vel_prof))
+0254             str2=sprintf(<span class="string">'D'</span>);
+0255         <span class="keyword">else</span>
+0256             str2=sprintf(<span class="string">'M'</span>);
+0257         <span class="keyword">end</span>
+0258         
+0259         <span class="keyword">if</span>(isnan(c.car(n).vel_prof2))
+0260             str3=sprintf(<span class="string">'/W '</span>);
+0261         <span class="keyword">elseif</span>(isempty(c.car(n).vel_prof2))
+0262             str3=sprintf(<span class="string">'/D '</span>);
+0263         <span class="keyword">else</span>
+0264             str3=sprintf(<span class="string">'/M '</span>);
+0265         <span class="keyword">end</span>
+0266         <span class="keyword">if</span>(c.car(n).cause==0),str4=<span class="string">'       '</span>; <span class="keyword">else</span>, str4=sprintf(<span class="string">'%03d '</span>,c.car(n).cause); <span class="keyword">end</span>
+0267         str5=sprintf(<span class="string">'%2.0f Km/h'</span>,c.car(n).dyn(1)*3.6);
+0268         str=[str1 <span class="string">' '</span> str2 str3 str4 str5];
+0269     <span class="keyword">end</span>
+0270     
+0271     
+0272     c.car(n).hinfo=text(c.car(n).pos.x+1,c.car(n).pos.y+1,str,<span class="string">'color'</span>,<span class="string">'k'</span>,<span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="string">'Fontsize'</span>,5);
+0273 <span class="keyword">end</span>
+0274 
+0275 <span class="keyword">end</span>
+0276 
+0277 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0278 <span class="comment">% Print online time</span>
+0279 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0280 <a name="_sub2" href="#_subfunctions" class="code">function [] = ptime(mode)</a>
+0281 <span class="keyword">global</span> s c
+0282 <span class="keyword">if</span>(mode==1)
+0283     delete(s.hott)
+0284     s.hott=text(147,90,num2str(s.time),<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc,<span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>);
+0285 <span class="keyword">else</span>
+0286     text(128,90,<span class="string">'Time '</span>,<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc);
+0287     s.hott=text(145,90,num2str(s.time),<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc,<span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>);
+0288 <span class="keyword">end</span>
+0289 <span class="keyword">end</span>
+0290 
+0291 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0292 <span class="comment">% Print online information</span>
+0293 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0294 <a name="_sub3" href="#_subfunctions" class="code">function [] = pinfo(mode)</a>
+0295 <span class="keyword">global</span> s c
+0296 <span class="comment">% dbstop at 275 in isr_tfs_print.m</span>
+0297 <span class="keyword">if</span>(mode==0)     <span class="comment">% Initialize handlers</span>
+0298     s.hoinfo=[];
+0299     fill([127 127 150 150],[93 65 65 93],<span class="string">'k'</span>)
+0300     text(128,85,<span class="string">'Simulated '</span>,<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc);
+0301     text(128,80,<span class="string">'Waiting '</span>,<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc);
+0302 <span class="keyword">else</span>            <span class="comment">% Refresh information</span>
+0303     delete(s.hoinfo)
+0304     h1=text(147,85,num2str(size(c.listactive,2)),<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc,<span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>);
+0305     h2=text(147,80,num2str(sum(s.rl(2,:))),<span class="string">'color'</span>,s.otc,<span class="string">'BackgroundColor'</span>,s.obtc,<span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>);
+0306     s.hoinfo=[h1 h2];
+0307 <span class="keyword">end</span>
+0308 
+0309 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

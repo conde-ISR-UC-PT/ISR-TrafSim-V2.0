@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of parameter</title>
+  <meta name="keywords" content="parameter">
+  <meta name="description" content="clear;">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>parameter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>clear;</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> clear;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="friis.html" class="code" title="function Pr = friis(Pt, Gt, Gr, lambdacommu, Lcommu, Dcommu)">friis</a>	Friis free space propagation model:</li><li><a href="log_normal_shadowing.html" class="code" title="function Pr = log_normal_shadowing(Pt, Gt, Gr, lambdacommu, Lcommu, pathlossExp, std_db, D0commu, Dcommu)">log_normal_shadowing</a>	log normal shadowing radio propagation model:</li><li><a href="tworay.html" class="code" title="function [Pr, crossover_dist] = tworay(Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, Dcommu)">tworay</a>	if Dcommu < crossover_dist, use Friis free space model</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="script_init.html" class="code" title="">script_init</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% clear;</span>
+0002 
+0003 <span class="comment">%=======================================</span>
+0004 <span class="comment">% Global parameters</span>
+0005 <span class="keyword">global</span> s
+0006 <span class="keyword">global</span> Nnodes node;
+0007 <span class="keyword">global</span> Gt Gr freq Lcommu ht hr pathLossExp std_db D0commu;
+0008 <span class="keyword">global</span> cs_threshold;
+0009 <span class="keyword">global</span> white_noise_variance;
+0010 <span class="keyword">global</span> rmodel;
+0011 <span class="keyword">global</span> rv_threshold;
+0012 <span class="keyword">global</span> slot_time CW_min CW_max turnaround_time max_retries;
+0013 <span class="keyword">global</span> packet_id retransmit pending_id;
+0014 <span class="keyword">global</span> mac_queue;
+0015 <span class="keyword">global</span> SIFS DIFS;
+0016 <span class="keyword">global</span> backoff_attmpt;
+0017 <span class="keyword">global</span> size_mac_header;
+0018 <span class="keyword">global</span> default_power;
+0019 <span class="keyword">global</span> cca_time;
+0020 <span class="keyword">global</span> backoff_counter backoff_attempt;
+0021 <span class="keyword">global</span> max_size_mac_body size_mac_header size_rts size_cts size_ack size_plcp;
+0022 <span class="keyword">global</span> basic_rate;
+0023 <span class="keyword">global</span> navcommu;
+0024 <span class="keyword">global</span> ack_tx_time cts_tx_time rts_tx_time;
+0025 <span class="keyword">global</span> default_rate default_ttl;
+0026 <span class="keyword">global</span> size_rreq size_rrep;
+0027 <span class="keyword">global</span> net_queue;
+0028 <span class="keyword">global</span> rreq_timeout net_pending net_max_retries;
+0029 <span class="keyword">global</span> rrep_table;
+0030 <span class="keyword">global</span> bcast_table;
+0031 <span class="keyword">global</span> mac_status;
+0032 <span class="keyword">global</span> adebug bdebug cdebug ddebug edebug fdebug;
+0033 <span class="keyword">global</span> rv_threshold_delta;
+0034 <span class="keyword">global</span> rreq_out rreq_in rreq_forward;
+0035 <span class="keyword">global</span> rreq_out_crosslayer rreq_in_crosslayer rreq_forward_crosslayer;
+0036 <span class="keyword">global</span> rrep_out rrep_in rrep_forward;
+0037 <span class="keyword">global</span> rrep_out_crosslayer rrep_in_crosslayer rrep_forward_crosslayer rrep_destination_crosslayer;
+0038 <span class="keyword">global</span> mobility_model poscommu maxspeedcommu maxpause;
+0039 <span class="comment">%=======================================</span>
+0040 
+0041 Nnodes=0;
+0042 
+0043 <span class="comment">%=======================================</span>
+0044 <span class="comment">% Debug parameters</span>
+0045 <span class="comment">% adebug = 1;</span>
+0046 <span class="comment">% bdebug = 1;</span>
+0047 <span class="comment">% cdebug = 1;</span>
+0048 <span class="comment">% ddebug = 1;</span>
+0049 <span class="comment">%   edebug = 1;</span>
+0050 <span class="comment">%  fdebug = 1;</span>
+0051 <span class="comment">%  gdebug = 1;</span>
+0052 <span class="comment">%=======================================</span>
+0053 
+0054 
+0055 <span class="comment">%=======================================</span>
+0056 <span class="comment">% MAC and PHY parameters of IEEE 802.11x</span>
+0057 <span class="comment">% --------------------------------------</span>
+0058 <span class="comment">% MAC layer packet size</span>
+0059 max_size_mac_body = 2312*8;
+0060 size_mac_header = (2+2+6+6+6+2+6+4)*8;  <span class="comment">% FC+duration+a1+a2+a3+sequence+a4+fcs</span>
+0061 size_rts = (2+2+6+6+4)*8;   <span class="comment">% FC+duration+ar+at+fcs</span>
+0062 size_cts = (2+2+6+4)*8;     <span class="comment">% FC+duration+ar+fcs</span>
+0063 size_ack = size_cts;
+0064 <span class="comment">%---------------------------------------</span>
+0065 <span class="comment">% FHSS PHY: old: may not be correct, not used</span>
+0066 <span class="comment">% size_plcp_fhss = 96+32; % PLCP preamble + PLCP header</span>
+0067 <span class="comment">% fhss_turnaround_time = 19*1e-6;</span>
+0068 <span class="comment">% fhss_slot_time = 50*1e-6;</span>
+0069 <span class="comment">% fhss_cca_time = 27*1e-6;    % clear channel assessment time?</span>
+0070 <span class="comment">% fhss_SIFS = 28*1e-6;</span>
+0071 <span class="comment">% --------------------------------------</span>
+0072 <span class="comment">% DSSS PHY and HR/DSSS (IEEE 802.11b, 1999, section 15.3.3)</span>
+0073 size_plcp_dsss = 144+48;
+0074 dsss_turnaround_time = 5*1e-6;
+0075 dsss_slot_time = 20*1e-6;
+0076 dsss_cca_time = 15*1e-6;
+0077 dsss_SIFS = 10*1e-6;
+0078 <span class="comment">% --------------------------------------</span>
+0079 <span class="comment">% OFDM 2.4 GHz: IEEE 802.11g (section 19.8.4)</span>
+0080 size_plcp_g = 20+4;     <span class="comment">% if rate is 1 Mbps</span>
+0081 g_RxTxturnaround_time = 5*1e-6;
+0082 g_TxRxturnaround_time = 10*1e-6;
+0083 g_slot_time = 20*1e-6;   <span class="comment">% short is 9 us</span>
+0084 g_cca_time = 15*1e-6;   <span class="comment">% short is 4 us</span>
+0085 g_SIFS = 10*1e-6;
+0086 <span class="comment">% --------------------------------------</span>
+0087 <span class="comment">% OFDM 5 GHz: IEEE 802.11a (section 17.5.2)</span>
+0088 size_plcp_g = 20+4;     <span class="comment">% if rate is 1 Mbps</span>
+0089 a_RxTxturnaround_time = 2*1e-6;
+0090 a_slot_time = 9*1e-6;
+0091 a_cca_time = 4*1e-6;   <span class="comment">% short is 4 us</span>
+0092 a_SIFS = 16*1e-6;
+0093 a_CW_min = 4;           <span class="comment">% 16=2^4-1</span>
+0094 <span class="comment">%===========================================</span>
+0095 <span class="comment">% IEEE 802.11x (b/g/a)</span>
+0096 <span class="keyword">if</span>(s.commu_norm==<span class="string">'b'</span>)
+0097     size_plcp = size_plcp_dsss;
+0098     turnaround_time = dsss_turnaround_time;
+0099     slot_time = dsss_slot_time;
+0100     cca_time = dsss_cca_time;
+0101     SIFS = dsss_SIFS;
+0102     DIFS = SIFS + 2*slot_time;
+0103     freq=2.4e9;
+0104 <span class="keyword">elseif</span>(s.commu_norm==<span class="string">'g'</span>)
+0105     size_plcp = size_plcp_g;
+0106     turnaround_time = g_RxTxturnaround_time;
+0107    <span class="comment">% g_TxRxturnaround_time = 10*1e-6;</span>
+0108     slot_time = g_slot_time;
+0109     cca_time = g_cca_time;
+0110     SIFS = g_SIFS;
+0111     DIFS = SIFS + 2*slot_time;
+0112     freq=2.4e9;
+0113 <span class="keyword">elseif</span>(s.commu_norm==<span class="string">'a'</span>)
+0114     size_plcp = size_plcp_g;
+0115     turnaround_time = a_RxTxturnaround_time;
+0116     slot_time = a_slot_time;
+0117     cca_time = a_cca_time;
+0118     SIFS = a_SIFS;
+0119     DIFS = SIFS + 2*slot_time;
+0120     freq=5e9;
+0121 <span class="keyword">end</span>
+0122 
+0123 <span class="comment">%=======================================</span>
+0124 <span class="comment">% Radio propagation parameters</span>
+0125 <span class="keyword">if</span>(s.radiopropagmodel==1)
+0126     rmodel=<span class="string">'friis'</span>;
+0127 <span class="keyword">elseif</span>(s.radiopropagmodel==2)
+0128     rmodel=<span class="string">'tworay'</span>;
+0129 <span class="keyword">elseif</span>(s.radiopropagmodel==3)   
+0130     rmodel = <span class="string">'shadowing'</span>;
+0131 <span class="keyword">end</span>
+0132 default_power = s.default_power;
+0133 Gt=1;
+0134 Gr=1;
+0135 Lcommu=1;
+0136 ht=1;
+0137 hr=1;
+0138 pathLossExp=2;
+0139 std_db=0.1; <span class="comment">% variance used in shadowing (approximately: 10^(std_db/10) = 2%)</span>
+0140 D0commu=1;       <span class="comment">% reference distance used in shadowing</span>
+0141 <span class="comment">% Find N0</span>
+0142 <span class="comment">% Note: for all three radio propagation models, they are almost the same</span>
+0143 <span class="comment">% when Dcommu is not too large or the log-normal fading is not large.</span>
+0144 <span class="comment">% when Gt=Gr=Lcommu=ht=hr=1 and freq=2.4 GHz, Pr=Pt*(lambdacommu/4/pi/Dcommu)^2</span>
+0145 <span class="comment">% so when Dcommu=D0commu=1, Pr=Pt*1e-6/Dcommu^2</span>
+0146 <span class="comment">% so we choose background noise N0=Pt*1e10 in order to achieve SNR=40 dB</span>
+0147 <span class="comment">% so we should choose rv_threshold be somewhere below 40 dB</span>
+0148 lambdacommu = 3e8 / freq;
+0149 Dcommu=D0commu;
+0150 <span class="keyword">switch</span> rmodel
+0151     <span class="keyword">case</span> <span class="string">'friis'</span>
+0152         Pr = <a href="friis.html" class="code" title="function Pr = friis(Pt, Gt, Gr, lambdacommu, Lcommu, Dcommu)">friis</a>(default_power, Gt, Gr, lambdacommu, Lcommu, Dcommu);
+0153     <span class="keyword">case</span> <span class="string">'tworay'</span>
+0154         [Pr, crossover_dist] = <a href="tworay.html" class="code" title="function [Pr, crossover_dist] = tworay(Pt, Gt, Gr, lambdacommu, Lcommu, ht, hr, Dcommu)">tworay</a>(default_power, Gt, Gr, lambdacommu, Lcommu, ht, hr, Dcommu);
+0155     <span class="keyword">case</span> <span class="string">'shadowing'</span>
+0156         Pr = <a href="log_normal_shadowing.html" class="code" title="function Pr = log_normal_shadowing(Pt, Gt, Gr, lambdacommu, Lcommu, pathlossExp, std_db, D0commu, Dcommu)">log_normal_shadowing</a>(default_power, Gt, Gr, lambdacommu, Lcommu, pathLossExp, std_db, D0commu, Dcommu);
+0157 <span class="keyword">end</span>
+0158 <span class="comment">% white_noise_variance is used as N0 when calculating SNR</span>
+0159 white_noise_variance = Pr / 1e6;    <span class="comment">% SNR will be upper-bounded by 60 dB when Dcommu &gt;= D0commu</span>
+0160 max_SNR=db(Pr/white_noise_variance, <span class="string">'power'</span>);
+0161 <span class="comment">% receive threshold is used to determine if a reception with SNR is above</span>
+0162 <span class="comment">% this threshold so that the packet can be correctly received.</span>
+0163 rv_threshold = s.snr_threshold;      <span class="comment">% db</span>
+0164 rv_threshold_delta = 0.1;   <span class="comment">% around rv_threshold possible packet loss</span>
+0165 <span class="comment">% carrier sense threthold is used to check if the channel is free to be taken for transmission</span>
+0166 <span class="comment">% we use Pr(when Dcommu=D0commu)+N0 so if there is a transmitter in distance D0commu or multiple transmitter in longer distance,</span>
+0167 <span class="comment">% the channel will be regarded as busy.</span>
+0168 cs_threshold=Pr+white_noise_variance;   <span class="comment">% 0.1</span>
+0169 <span class="comment">%=======================================</span>
+0170 
+0171 
+0172 <span class="comment">%=======================================</span>
+0173 <span class="comment">% MAC and PHY parameters</span>
+0174 <span class="comment">%---------------------------------------</span>
+0175 
+0176 
+0177 basic_rate = 1e6;
+0178 ack_tx_time = (size_ack + size_plcp) / basic_rate;
+0179 cts_tx_time = (size_cts + size_plcp) / basic_rate;
+0180 rts_tx_time = (size_rts + size_plcp) / basic_rate;
+0181 <span class="comment">% we use IEEE 802.11 MAC and IEEE802.11 DSSS PHY parameters</span>
+0182 <span class="comment">% size_plcp = size_plcp_dsss;</span>
+0183 <span class="comment">% turnaround_time = dsss_turnaround_time;</span>
+0184 <span class="comment">% slot_time = dsss_slot_time;</span>
+0185 <span class="comment">% cca_time = dsss_cca_time;</span>
+0186 <span class="comment">% SIFS = dsss_SIFS;</span>
+0187 <span class="comment">% DIFS = SIFS + 2*slot_time;</span>
+0188 <span class="comment">% basic_rate = 1e6;</span>
+0189 <span class="comment">% ack_tx_time = (size_ack + size_plcp) / basic_rate;</span>
+0190 <span class="comment">% cts_tx_time = (size_cts + size_plcp) / basic_rate;</span>
+0191 <span class="comment">% rts_tx_time = (size_rts + size_plcp) / basic_rate;</span>
+0192 <span class="comment">%---------------------------------------</span>
+0193 <span class="comment">% other MAC and PHY parameters</span>
+0194 default_rate = 5e6;         <span class="comment">% question: how much fixed rate should we choose?</span>
+0195 CW_min = 5;                 <span class="comment">% 31 = 2^5-1</span>
+0196 CW_max = 10;                <span class="comment">% 1023 = 2^10-1</span>
+0197 <span class="comment">%backoff_counter = zeros(Nnodes, 1);</span>
+0198 <span class="comment">%backoff_attempt = zeros(Nnodes, 1);</span>
+0199 <span class="comment">%packet_id = zeros(Nnodes, 1);    % id for next MAC or NET packet</span>
+0200 <span class="comment">%pending_id = zeros(Nnodes, 1);   % id of current transmitting MAC packet, used for timeout</span>
+0201 max_retries = s.max_retries;      <span class="comment">% for RTS</span>
+0202 <span class="comment">%retransmit = zeros(Nnodes, 1);   % retransmit times for a pending mac packet, &lt;= max_retries</span>
+0203 navcommu = []; 
+0204 <span class="comment">% for i=1:Nnodes,</span>
+0205 <span class="comment">%     navcommu(i).start=0;</span>
+0206 <span class="comment">%     navcommu(i).end=0;</span>
+0207 <span class="comment">% end</span>
+0208 mac_queue = []; 
+0209 <span class="comment">% for i=1:Nnodes,</span>
+0210 <span class="comment">%     mac_queue(i).list=[];</span>
+0211 <span class="comment">% end</span>
+0212 mac_status = []; 
+0213 <span class="comment">% for i=1:Nnodes,</span>
+0214 <span class="comment">%     mac_status(i)=0;</span>
+0215 <span class="comment">% end</span>
+0216 <span class="comment">%=======================================</span>
+0217 
+0218 
+0219 <span class="comment">%=======================================</span>
+0220 <span class="comment">% NET parameters</span>
+0221 default_ttl = 7;
+0222 rreq_timeout = 0.2;   <span class="comment">% question</span>
+0223 size_rreq = 22*8;
+0224 size_rrep = 22*8;
+0225 net_max_retries = 3;
+0226 net_pending = []; 
+0227 <span class="comment">% for i=1:Nnodes,</span>
+0228 <span class="comment">%     net_pending(i).id=[];</span>
+0229 <span class="comment">%     net_pending(i).retransmit=[];</span>
+0230 <span class="comment">% end</span>
+0231 net_queue = []; 
+0232 <span class="comment">% for i=1:Nnodes,</span>
+0233 <span class="comment">%     net_queue(i).list=[];</span>
+0234 <span class="comment">% end</span>
+0235 rrep_table = []; 
+0236 <span class="comment">% for i=1:Nnodes,</span>
+0237 <span class="comment">%     rrep_table(i).list=[];</span>
+0238 <span class="comment">% end</span>
+0239 <span class="comment">% record of sent RREP</span>
+0240 <span class="comment">%bcast_table = zeros(Nnodes, Nnodes);              % record of broadcast id</span>
+0241 bcast_table=[];
+0242 <span class="comment">%rreq_out = zeros(Nnodes, 1);</span>
+0243 <span class="comment">%rreq_in = zeros(Nnodes, 1);</span>
+0244 <span class="comment">%rreq_forward = zeros(Nnodes, 1);</span>
+0245 <span class="comment">%rreq_out_crosslayer = zeros(Nnodes, 1);</span>
+0246 <span class="comment">%rreq_in_crosslayer = zeros(Nnodes, 1);</span>
+0247 <span class="comment">%rreq_forward_crosslayer = zeros(Nnodes, 1);</span>
+0248 <span class="comment">%rep_out = zeros(Nnodes, 1);</span>
+0249 <span class="comment">%rrep_in = zeros(Nnodes, 1);</span>
+0250 <span class="comment">%rrep_forward = zeros(Nnodes, 1);</span>
+0251 <span class="comment">%rrep_out_crosslayer = zeros(Nnodes, 1);</span>
+0252 <span class="comment">%rrep_in_crosslayer = zeros(Nnodes, 1);</span>
+0253 <span class="comment">%rrep_forward_crosslayer = zeros(Nnodes, 1);</span>
+0254 <span class="comment">%rrep_destination_crosslayer = zeros(Nnodes, 1);</span>
+0255 <span class="comment">%=======================================</span>
+0256 
+0257 
+0258 <span class="comment">%=======================================</span>
+0259 <span class="comment">% Mobility parameters</span>
+0260 mobility_model = <span class="string">'none'</span>; <span class="comment">% or 'random_waypoint'</span>
+0261 poscommu=[];
+0262 <span class="comment">%poscommu = zeros(Nnodes, 6);</span>
+0263 maxspeedcommu = 0;
+0264 maxpause = 0;
+0265 <span class="comment">%=======================================</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

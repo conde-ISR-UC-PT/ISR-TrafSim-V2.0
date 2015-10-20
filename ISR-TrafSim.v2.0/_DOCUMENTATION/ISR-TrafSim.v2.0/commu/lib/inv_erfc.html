@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of inv_erfc</title>
+  <meta name="keywords" content="inv_erfc">
+  <meta name="description" content="inverse of complementary error function">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>inv_erfc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>inverse of complementary error function</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function x = inv_erfc(y) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> inverse of complementary error function
+ y = erfc(x) --&gt; x = inv_erfc(y)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="inv_q.html" class="code" title="function x = inv_q(y)">inv_q</a>	Inverse of Q-function</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function x = inv_erfc(y)</a>
+0002 <span class="comment">% inverse of complementary error function</span>
+0003 <span class="comment">% y = erfc(x) --&gt; x = inv_erfc(y)</span>
+0004 
+0005 z = y;
+0006 <span class="keyword">if</span> (y &gt; 1) 
+0007     z = 2 - y;
+0008 <span class="keyword">end</span>
+0009 w = 0.916461398268964 - log(z);
+0010 u = sqrt(w);
+0011 s = (log(u) + 0.488826640273108) / w;
+0012 t = 1 / (u + 0.231729200323405);
+0013 x = u * (1 - s * (s * 0.124610454613712 + 0.5)) - <span class="keyword">...</span>
+0014     ((((-0.0728846765585675 * t + 0.269999308670029) * t + <span class="keyword">...</span>
+0015     0.150689047360223) * t + 0.116065025341614) * t + <span class="keyword">...</span>
+0016     0.499999303439796) * t;
+0017 t = 3.97886080735226 / (x + 3.97886080735226);
+0018 u = t - 0.5;
+0019 s = (((((((((0.00112648096188977922 * u + <span class="keyword">...</span>
+0020     1.05739299623423047e-4) * u - 0.00351287146129100025) * u - <span class="keyword">...</span>
+0021     7.71708358954120939e-4) * u + 0.00685649426074558612) * u + <span class="keyword">...</span>
+0022     0.00339721910367775861) * u - 0.011274916933250487) * u - <span class="keyword">...</span>
+0023     0.0118598117047771104) * u + 0.0142961988697898018) * u + <span class="keyword">...</span>
+0024     0.0346494207789099922) * u + 0.00220995927012179067;
+0025 s = ((((((((((((s * u - 0.0743424357241784861) * u - <span class="keyword">...</span>
+0026     0.105872177941595488) * u + 0.0147297938331485121) * u + <span class="keyword">...</span>
+0027     0.316847638520135944) * u + 0.713657635868730364) * u + <span class="keyword">...</span>
+0028     1.05375024970847138) * u + 1.21448730779995237) * u + <span class="keyword">...</span>
+0029     1.16374581931560831) * u + 0.956464974744799006) * u + <span class="keyword">...</span>
+0030     0.686265948274097816) * u + 0.434397492331430115) * u + <span class="keyword">...</span>
+0031     0.244044510593190935) * t - <span class="keyword">...</span>
+0032     z * exp(x * x - 0.120782237635245222);
+0033 x = x + s * (x * s + 1);
+0034 <span class="keyword">if</span> (y &gt; 1)
+0035     x = -x;
+0036 <span class="keyword">end</span>
+0037 
+0038 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

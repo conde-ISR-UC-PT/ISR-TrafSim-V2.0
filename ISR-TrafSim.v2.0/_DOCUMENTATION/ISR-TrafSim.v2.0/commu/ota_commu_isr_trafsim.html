@@ -1,0 +1,549 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ota_commu_isr_trafsim</title>
+  <meta name="keywords" content="ota_commu_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html commu -->
+<h1>ota_commu_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [out] = ota_commu_isr_trafsim(arg,aux) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+ Manage the nodes list, update that list (nodes position) and schedule the
+ the sending of packets
+
+-USE----------------------------------------------------------------------
+
+ -&gt; Input(s)
+   » 'arg'
+       refresh     -   Actualize number of nodes and nodes position
+       add_node    -   Add a communication node
+       del_node    -   Delete a communication node
+       [senderID, receiverID, type_of_MSG]
+                   -   Send information from one node to other
+
+ -&gt; Output(s)
+   » None
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/commu/lib/send_velocity_profile_isr_trafsim.html" class="code" title="function [res] = send_velocity_profile(n,aux,id,vel_prof,rafter,interssection_type)">send_velocity_profile_isr_trafsim</a>	</li><li><a href="rxtx_module_isr_trafsim.html" class="code" title="function [] = rxtx_module_isr_trafsim(n)">rxtx_module_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/func/add_car_notify_round_isr_trafsim.html" class="code" title="function [  ] = add_car_notify_round_isr_trafsim(  )">add_car_notify_round_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/func/launch_car_isr_trafsim.html" class="code" title="function [id,n] = launch_car_isr_trafsim(r,~)">launch_car_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [] = commu_add_node(id)</a></li><li><a href="#_sub2" class="code">function [] = commu_del_node(id)</a></li><li><a href="#_sub3" class="code">function [] = commu_send(arg,aux)</a></li><li><a href="#_sub4" class="code">function [] = commu_refresh()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Manage the nodes list, update that list (nodes position) and schedule the</span>
+0027 <span class="comment">% the sending of packets</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% -&gt; Input(s)</span>
+0032 <span class="comment">%   » 'arg'</span>
+0033 <span class="comment">%       refresh     -   Actualize number of nodes and nodes position</span>
+0034 <span class="comment">%       add_node    -   Add a communication node</span>
+0035 <span class="comment">%       del_node    -   Delete a communication node</span>
+0036 <span class="comment">%       [senderID, receiverID, type_of_MSG]</span>
+0037 <span class="comment">%                   -   Send information from one node to other</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% -&gt; Output(s)</span>
+0040 <span class="comment">%   » None</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0043 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0044 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0045 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0046 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0047 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0050 <span class="comment">%   Urbano Nunes*</span>
+0051 <span class="comment">%   Luis Conde Bento**</span>
+0052 <span class="comment">%   Ricardo Parafita*</span>
+0053 <span class="comment">%   Sergio Santos*</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0056 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0057 <span class="comment">%--------------------------------------------------------------------------</span>
+0058 
+0059 <a name="_sub0" href="#_subfunctions" class="code">function [out] = ota_commu_isr_trafsim(arg,aux)</a>
+0060 out=0;
+0061 [~, c]=size(arg);
+0062 
+0063 <span class="keyword">if</span>(c==7)                            <span class="comment">% 'refresh' positions of the nodes</span>
+0064     <a href="#_sub4" class="code" title="subfunction [] = commu_refresh()">commu_refresh</a>();
+0065 <span class="keyword">elseif</span>(c==8 &amp;&amp; strcmp(arg,<span class="string">'add_node'</span>))      <span class="comment">% 'add_node'</span>
+0066     <a href="#_sub1" class="code" title="subfunction [] = commu_add_node(id)">commu_add_node</a>(aux);
+0067 <span class="keyword">elseif</span>(c==8 &amp;&amp; strcmp(arg,<span class="string">'del_node'</span>))      <span class="comment">% 'del_node</span>
+0068     <a href="#_sub2" class="code" title="subfunction [] = commu_del_node(id)">commu_del_node</a>(aux);
+0069 <span class="keyword">else</span>
+0070     <a href="#_sub3" class="code" title="subfunction [] = commu_send(arg,aux)">commu_send</a>(arg,aux);                <span class="comment">% send a package arg=3, [senderID, receiverID, type_of_MSG]</span>
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0076 <span class="comment">% Add a new node</span>
+0077 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0078 <a name="_sub1" href="#_subfunctions" class="code">function [] = commu_add_node(id)</a>
+0079 <span class="keyword">global</span> s
+0080 <span class="keyword">global</span> Nnodes navcommu mac_status mac_queue net_pending net_queue rrep_table retransmit pending_id packet_id backoff_attempt backoff_counter rrep_in_crosslayer rrep_forward_crosslayer rrep_destination_crosslayer bcast_table rreq_out  rreq_in rreq_forward rreq_out_crosslayer rreq_in_crosslayer rreq_forward_crosslayer rrep_out rrep_in rrep_forward rrep_out_crosslayer
+0081 
+0082 <span class="comment">% Verify if id is not on the the nodes list (s.otalist)</span>
+0083 pos=find(s.otalist==id, 1);
+0084 <span class="keyword">if</span>(isempty(pos))
+0085     s.otalist=[s.otalist id];
+0086 <span class="keyword">else</span>
+0087     disp(<span class="string">'OTA Commu ERROR'</span>)
+0088 <span class="keyword">end</span>
+0089 
+0090 <span class="comment">% Add new space on necessary lists</span>
+0091 i=find(s.otalist==id);
+0092 navcommu(i).start=0;
+0093 navcommu(i).end=0;
+0094 mac_queue(i).list=[];
+0095 mac_status(i)=0;
+0096 net_pending(i).id=[];
+0097 net_pending(i).retransmit=[];
+0098 net_queue(i).list=[];
+0099 rrep_table(i).list=[];
+0100 backoff_counter(i,1) = 0;
+0101 backoff_attempt(i,1) = 0;
+0102 packet_id(i,1) = 0;
+0103 pending_id(i,1) = 0;
+0104 retransmit(i,1) = 0;
+0105 rreq_out(i,1) = 0;
+0106 rreq_in(i,1) = 0;
+0107 rreq_forward(i,1) = 0;
+0108 rreq_out_crosslayer(i,1) = 0;
+0109 rreq_in_crosslayer(i,1) = 0;
+0110 rreq_forward_crosslayer(i,1) = 0;
+0111 rrep_out(i,1) = 0;
+0112 rrep_in(i,1) = 0;
+0113 rrep_forward(i,1) = 0;
+0114 rrep_out_crosslayer(i,1) = 0;
+0115 rrep_in_crosslayer(i,1) = 0;
+0116 rrep_forward_crosslayer(i,1) = 0;
+0117 rrep_destination_crosslayer(i,1) = 0;
+0118 
+0119 <span class="comment">% Refresh number of nodes</span>
+0120 Nnodes=Nnodes+1;
+0121 
+0122 <span class="comment">% Refresh broadcast table</span>
+0123 bcast_table = zeros(Nnodes , Nnodes);
+0124 
+0125 <span class="comment">% Refresh mobility parameters</span>
+0126 <span class="comment">%poscommu = zeros(Nnodes, 6);</span>
+0127 
+0128 <span class="keyword">end</span>
+0129 
+0130 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0131 <span class="comment">% Delete a node</span>
+0132 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0133 <a name="_sub2" href="#_subfunctions" class="code">function [] = commu_del_node(id)</a>
+0134 <span class="keyword">global</span> s
+0135 <span class="keyword">global</span> Nnodes navcommu mac_status mac_queue net_pending net_queue rrep_table retransmit pending_id packet_id backoff_attempt backoff_counter rrep_in_crosslayer rrep_forward_crosslayer rrep_destination_crosslayer bcast_table rreq_out  rreq_in rreq_forward rreq_out_crosslayer rreq_in_crosslayer rreq_forward_crosslayer rrep_out rrep_in rrep_forward rrep_out_crosslayer
+0136 
+0137 <span class="comment">% Verify if id is on the nodes list (s.otalist)</span>
+0138 i=find(s.otalist==id);
+0139 <span class="keyword">if</span>(isempty(i))
+0140     disp(<span class="string">'OTA Commu ERROR'</span>)
+0141 <span class="keyword">end</span>
+0142 
+0143 <span class="comment">% Delete space on necessary lists</span>
+0144 s.otalist(i)=[];
+0145 navcommu(i)=[];
+0146 mac_queue(i)=[];
+0147 mac_status(i)=[];
+0148 net_pending(i)=[];
+0149 net_queue(i)=[];
+0150 rrep_table(i)=[];
+0151 backoff_counter(i,:)=[];
+0152 backoff_attempt(i,:)=[];
+0153 packet_id(i,:)=[];
+0154 pending_id(i,:)=[];
+0155 retransmit(i,:)=[];
+0156 rreq_out(i,:)=[];
+0157 rreq_in(i,:)=[];
+0158 rreq_forward(i,:)=[];
+0159 rreq_out_crosslayer(i,:)=[];
+0160 rreq_in_crosslayer(i,:)=[];
+0161 rreq_forward_crosslayer(i,:)=[];
+0162 rrep_out(i,:)=[];
+0163 rrep_in(i,:)=[];
+0164 rrep_forward(i,:)=[];
+0165 rrep_out_crosslayer(i,:)=[];
+0166 rrep_in_crosslayer(i,:)=[];
+0167 rrep_forward_crosslayer(i,:)=[];
+0168 rrep_destination_crosslayer(i,:)=[];
+0169 
+0170 <span class="comment">% Refresh number of nodes</span>
+0171 Nnodes=Nnodes-1;
+0172 
+0173 <span class="comment">% Refresh broadcast table</span>
+0174 bcast_table = zeros(Nnodes , Nnodes);
+0175 
+0176 <span class="comment">% Refresh mobility parameters</span>
+0177 <span class="comment">%poscommu = zeros(Nnodes, 6);</span>
+0178 
+0179 <span class="keyword">end</span>
+0180 
+0181 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0182 <span class="comment">% Send information from one node to other</span>
+0183 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0184 <a name="_sub3" href="#_subfunctions" class="code">function [] = commu_send(arg,aux)</a>
+0185 <span class="comment">% dbstop at 250 in commu_send</span>
+0186 <span class="keyword">global</span> s c
+0187 <span class="keyword">global</span> Event_list;
+0188 <span class="keyword">global</span> Nnodes ;
+0189 
+0190 <span class="keyword">if</span>(s.otacommuemulation==0)
+0191     rid=arg(2);
+0192     sid=arg(1);
+0193     info=aux;
+0194     <span class="keyword">if</span>(strcmp(info,<span class="string">'notify_round'</span>))
+0195         n=find(c.listactive==sid);
+0196         <span class="keyword">if</span>(~isempty(intersect(c.car(n).traj(3,c.car(n).setp),s.roundlist)) )
+0197             <span class="comment">% Inside the Roundabout</span>
+0198             r=dist_isr_trafsim(s.refposxRound,s.refposyRound,c.car(n).pos.x,c.car(n).pos.y);
+0199             <span class="keyword">if</span>(r&lt;=s.otarangeround)
+0200                 <span class="keyword">if</span>(s.cartxpos==0)       <span class="comment">% True Position</span>
+0201                     pos = [c.car(n).pos.x c.car(n).pos.y];
+0202                 <span class="keyword">elseif</span>(s.cartxpos==1)   <span class="comment">% Fusion Position</span>
+0203                     pos = [c.car(n).fus(1,1) c.car(n).fus(1,2)];
+0204                 <span class="keyword">elseif</span>(s.cartxpos==2)   <span class="comment">% GPS position</span>
+0205                     pos = [c.car(n).gps(1,1) c.car(n).gps(1,2)];
+0206                 <span class="keyword">end</span>
+0207                 track = [c.car(n).roadori c.car(n).roaddes];
+0208                 curvel = c.car(n).dyn(1);
+0209                 maxvel = c.car(n).dri.velmax;
+0210                 cartype = c.car(n).type;
+0211                 road=c.car(n).traj(3,c.car(n).setp);
+0212                 
+0213                 
+0214                 ppp=find(s.round_notify_list(12,:)==road);
+0215                 <span class="keyword">if</span>(~isempty(find(s.round_notify_list(1,:)==sid, 1)))
+0216                     col=find(s.round_notify_list(1,:)==sid);
+0217                     aux=s.round_notify_list(4,col);
+0218                     s.round_notify_list(:,col)=[];
+0219                     
+0220                     s.round_notify_list=[s.round_notify_list [sid ; 0 ; -1 ; aux ; pos(1) ; pos(2) ; track(1) ; track(2) ; curvel; maxvel; cartype ; road; s.time] ];
+0221                 <span class="keyword">elseif</span>(isempty(ppp))
+0222                     s.round_notify_list=[s.round_notify_list [sid ; 0 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001) ; pos(1) ; pos(2) ; track(1) ; track(2) ; curvel; maxvel; cartype ; road; s.time] ];
+0223                 <span class="keyword">else</span>
+0224                     
+0225                     dist1=dist_isr_trafsim(s.refposxRound,s.refposyRound,pos(1),pos(2));
+0226                     dist2=dist_isr_trafsim(s.refposxRound,s.refposyRound,s.round_notify_list(5,ppp),s.round_notify_list(6,ppp));
+0227                     <span class="keyword">if</span>(dist1&lt;dist2)
+0228                         s.round_notify_list(:,ppp)=[];
+0229                         s.round_notify_list=[s.round_notify_list [sid ; 0 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001) ; pos(1) ; pos(2) ; track(1) ; track(2) ; curvel; maxvel; cartype ; road; s.time] ];
+0230                     <span class="keyword">end</span>
+0231                 <span class="keyword">end</span>
+0232                 
+0233                 <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0234                     paux=find(c.listactive==sid);
+0235                     plot(c.car(paux).pos.x,c.car(paux).pos.y,<span class="string">'w^'</span>)
+0236                 <span class="keyword">end</span>
+0237             <span class="keyword">else</span>
+0238                 <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0239                     paux=find(c.listactive==sid);
+0240                     plot(c.car(paux).pos.x,c.car(paux).pos.y,<span class="string">'b^'</span>)
+0241                 <span class="keyword">end</span>
+0242             <span class="keyword">end</span>
+0243         <span class="keyword">end</span>
+0244     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'notify_cross'</span>))
+0245         n=find(c.listactive==sid);
+0246         <span class="keyword">if</span>(~isempty(intersect(c.car(n).traj(3,c.car(n).setp),s.crosslist)))
+0247             <span class="comment">% Inside the Crossroad</span>
+0248             r=dist_isr_trafsim(s.refposxCross,s.refposyCross,c.car(n).pos.x,c.car(n).pos.y);
+0249             <span class="keyword">if</span>(r&lt;=s.otarangecross)
+0250                 <span class="keyword">if</span>(s.cartxpos==0)       <span class="comment">% True Position</span>
+0251                     pos = [c.car(n).pos.x c.car(n).pos.y];
+0252                 <span class="keyword">elseif</span>(s.cartxpos==1)   <span class="comment">% Fusion Position</span>
+0253                     pos = [c.car(n).fus(1,1) c.car(n).fus(1,2)];
+0254                 <span class="keyword">elseif</span>(s.cartxpos==2)   <span class="comment">% GPS position</span>
+0255                     pos = [c.car(n).gps(1,1) c.car(n).gps(1,2)];
+0256                 <span class="keyword">end</span>
+0257                 track = [c.car(n).roadori c.car(n).roaddes];
+0258                 curvel = c.car(n).dyn(1);
+0259                 maxvel = c.car(n).dri.velmax;
+0260                 cartype = c.car(n).type;
+0261                 road=c.car(n).traj(3,c.car(n).setp);
+0262                 
+0263                 ppp=find(s.cross_notify_list(12,:)==road);
+0264                 
+0265                 <span class="comment">% Refresh notification list</span>
+0266                 <span class="keyword">if</span>(~isempty(find(s.cross_notify_list(1,:)==sid, 1)))
+0267                     col=find(s.cross_notify_list(1,:)==sid);
+0268                     aux=s.cross_notify_list(4,col);
+0269                     s.cross_notify_list(:,col)=[];
+0270                     
+0271                     s.cross_notify_list=[s.cross_notify_list [sid ; 0 ; -1 ; aux ; pos(1) ; pos(2) ; track(1) ; track(2) ; curvel; maxvel; cartype ; road; s.time] ];
+0272                     <span class="comment">% If is not on notification list</span>
+0273                 <span class="keyword">elseif</span>(isempty(ppp))
+0274                     s.cross_notify_list=[s.cross_notify_list [sid ; 0 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001) ; pos(1) ; pos(2) ; track(1) ; track(2) ; curvel; maxvel; cartype ; road; s.time] ];
+0275                 <span class="keyword">else</span>
+0276                     <span class="comment">%keyboard</span>
+0277                     dist1=dist_isr_trafsim(s.refposxCross,s.refposyCross,pos(1),pos(2));
+0278                     dist2=dist_isr_trafsim(s.refposxCross,s.refposyCross,s.cross_notify_list(5,ppp),s.cross_notify_list(6,ppp));
+0279                     <span class="keyword">if</span>(dist1&lt;dist2)
+0280                         s.cross_notify_list(:,ppp)=[];
+0281                         s.cross_notify_list=[s.cross_notify_list [sid ; 0 ; -1 ; <a href="../../ISR-TrafSim.v2.0/func/round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(s.time,0.001) ; pos(1) ; pos(2) ; track(1) ; track(2) ; curvel; maxvel; cartype ; road; s.time] ];
+0282                     <span class="keyword">end</span>
+0283                 <span class="keyword">end</span>
+0284                 
+0285                 <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0286                     paux=find(c.listactive==sid);
+0287                     plot(c.car(paux).pos.x,c.car(paux).pos.y,<span class="string">'w^'</span>)
+0288                 <span class="keyword">end</span>
+0289             <span class="keyword">else</span>
+0290                 <span class="keyword">if</span>(s.printcommunotify==1 &amp;&amp; s.mode==1)
+0291                     paux=find(c.listactive==sid);
+0292                     plot(c.car(paux).pos.x,c.car(paux).pos.y,<span class="string">'b^'</span>)
+0293                 <span class="keyword">end</span>
+0294             <span class="keyword">end</span>
+0295         <span class="keyword">end</span>
+0296         
+0297     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'gps_info'</span>))
+0298         <span class="keyword">if</span>(rid==0)
+0299             <span class="keyword">for</span> n=1:size(c.listactive,2)
+0300                 r=dist_isr_trafsim(s.refposxRound,s.refposyRound,c.car(n).pos.x,c.car(n).pos.y);
+0301                 <span class="keyword">if</span>(r&lt;=s.otarangeGPS)
+0302                     c.car(n).gps_time=s.time;
+0303                     <span class="keyword">if</span>(s.printcommugpsinfo==1 &amp;&amp; s.mode==1)
+0304                         plot(c.car(n).pos.x,c.car(n).pos.y,<span class="string">'w+'</span>)
+0305                     <span class="keyword">end</span>
+0306                 <span class="keyword">else</span>
+0307                     <span class="keyword">if</span>(s.printcommugpsinfo==1 &amp;&amp; s.mode==1)
+0308                         plot(c.car(n).pos.x,c.car(n).pos.y,<span class="string">'b+'</span>)
+0309                     <span class="keyword">end</span>
+0310                 <span class="keyword">end</span>
+0311             <span class="keyword">end</span>
+0312         <span class="keyword">end</span>
+0313     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'vel_prof'</span>))
+0314         n=find(c.listactive==rid);
+0315         
+0316         r=dist_isr_trafsim(s.refposxRound,s.refposyRound,c.car(n).pos.x,c.car(n).pos.y);
+0317         <span class="keyword">if</span>(r&lt;=s.otarangeround)
+0318             c.car(n).commu_vel_prof=1;
+0319             <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0320                 plot(c.car(n).pos.x,c.car(n).pos.y,<span class="string">'wo'</span>)
+0321             <span class="keyword">end</span>
+0322         <span class="keyword">else</span>
+0323             <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0324                 plot(c.car(n).pos.x,c.car(n).pos.y,<span class="string">'bo'</span>)
+0325             <span class="keyword">end</span>
+0326         <span class="keyword">end</span>
+0327     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'vel_prof2'</span>))
+0328         n=find(c.listactive==rid);
+0329         
+0330         r=dist_isr_trafsim(s.refposxCross,s.refposyCross,c.car(n).pos.x,c.car(n).pos.y);
+0331         <span class="keyword">if</span>(r&lt;=s.otarangecross)
+0332             c.car(n).commu_vel_prof2=1;
+0333             <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0334                 plot(c.car(n).pos.x,c.car(n).pos.y,<span class="string">'wo'</span>)
+0335             <span class="keyword">end</span>
+0336         <span class="keyword">else</span>
+0337             <span class="keyword">if</span>(s.printcommuvelprof==1 &amp;&amp; s.mode==1)
+0338                 plot(c.car(n).pos.x,c.car(n).pos.y,<span class="string">'bo'</span>)
+0339             <span class="keyword">end</span>
+0340         <span class="keyword">end</span>
+0341     <span class="keyword">end</span>
+0342     
+0343 <span class="keyword">else</span>
+0344     <span class="comment">% sender ID</span>
+0345     snode=find(s.otalist==arg(1));
+0346     
+0347     <span class="comment">% receiver ID</span>
+0348     <span class="keyword">if</span>(arg(2)==0)
+0349         rnode=0;        <span class="comment">% Broadcast</span>
+0350     <span class="keyword">else</span>
+0351         rnode=find(s.otalist==arg(2));
+0352     <span class="keyword">end</span>
+0353     
+0354     <span class="keyword">if</span>( isempty(snode) || isempty(rnode) )
+0355         disp(<span class="string">'OTA Commu ERROR'</span>);
+0356     <span class="keyword">end</span>
+0357     
+0358     <span class="comment">% Type of message</span>
+0359     apptype = <span class="string">'traffic_simulator'</span>;
+0360     msg=<span class="string">'send_app'</span>;
+0361     info=aux;
+0362     
+0363     k=1+length(Event_list);
+0364     
+0365     Event_list(k).instant = arg(3);
+0366     Event_list(k).type = msg;
+0367     Event_list(k).node = snode;
+0368     Event_list(k).app.type = apptype;
+0369     Event_list(k).app.key = Nnodes+1-k;
+0370     Event_list(k).app.id1 = 0;
+0371     Event_list(k).app.id2 = 0;
+0372     Event_list(k).app.id3 = rnode;
+0373     Event_list(k).app.id4 = snode;
+0374     Event_list(k).app.info = info;
+0375     Event_list(k).app.route = [];
+0376     Event_list(k).app.hopcount = 0;
+0377     Event_list(k).app.castmethod = <span class="string">'block_broadcast'</span>;
+0378     Event_list(k).app.neighbours = <span class="string">'with_knowledge'</span>;
+0379     Event_list(k).net = [];
+0380     Event_list(k).pkt = [];
+0381     
+0382     
+0383     <span class="keyword">if</span>(strcmp(info,<span class="string">'notify_round'</span>))
+0384         n=find(c.listactive==s.otalist(snode));
+0385         <span class="keyword">if</span>(s.cartxpos==0)       <span class="comment">% True Position</span>
+0386             Event_list(k).app.pos = [c.car(n).pos.x c.car(n).pos.y];
+0387         <span class="keyword">elseif</span>(s.cartxpos==1)   <span class="comment">% Fusion Position</span>
+0388             Event_list(k).app.pos = [c.car(n).fus(1,1) c.car(n).fus(1,2)];
+0389         <span class="keyword">elseif</span>(s.cartxpos==2)   <span class="comment">% GPS position</span>
+0390             Event_list(k).app.pos = [c.car(n).gps(1,1) c.car(n).gps(1,2)];
+0391         <span class="keyword">end</span>
+0392         Event_list(k).app.track = [c.car(n).roadori c.car(n).roaddes];
+0393         Event_list(k).app.curvel = c.car(n).dyn(1);
+0394         Event_list(k).app.maxvel = c.car(n).dri.velmax;
+0395         Event_list(k).app.cartype = c.car(n).type;
+0396         Event_list(k).app.road = c.car(n).traj(3,c.car(n).setp);
+0397     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'notify_cross'</span>))
+0398         n=find(c.listactive==s.otalist(snode));
+0399         <span class="keyword">if</span>(s.cartxpos==0)       <span class="comment">% True Position</span>
+0400             Event_list(k).app.pos = [c.car(n).pos.x c.car(n).pos.y];
+0401         <span class="keyword">elseif</span>(s.cartxpos==1)   <span class="comment">% Fusion Position</span>
+0402             Event_list(k).app.pos = [c.car(n).fus(1,1) c.car(n).fus(1,2)];
+0403         <span class="keyword">elseif</span>(s.cartxpos==2)   <span class="comment">% GPS position</span>
+0404             Event_list(k).app.pos = [c.car(n).gps(1,1) c.car(n).gps(1,2)];
+0405         <span class="keyword">end</span>
+0406         Event_list(k).app.track = [c.car(n).roadori c.car(n).roaddes];
+0407         Event_list(k).app.curvel = c.car(n).dyn(1);
+0408         Event_list(k).app.maxvel = c.car(n).dri.velmax;
+0409         Event_list(k).app.cartype = c.car(n).type;
+0410         Event_list(k).app.road = c.car(n).traj(3,c.car(n).setp);
+0411     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'gps_info'</span>))
+0412         
+0413         
+0414     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'vel_prof'</span>))
+0415         
+0416     <span class="keyword">elseif</span>(strcmp(info,<span class="string">'vel_prof2'</span>))
+0417         
+0418     <span class="keyword">end</span>
+0419 <span class="keyword">end</span>
+0420 
+0421 <span class="keyword">end</span>
+0422 
+0423 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0424 <span class="comment">% Actualize number of nodes and nodes position</span>
+0425 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0426 <a name="_sub4" href="#_subfunctions" class="code">function [] = commu_refresh()</a>
+0427 <span class="keyword">global</span> c s gps_data Nnodes node;
+0428 
+0429 <span class="comment">% Refresh number of nodes</span>
+0430 Nnodes=length(s.otalist);
+0431 
+0432 <span class="comment">% Reference station</span>
+0433 node=[];
+0434 <span class="keyword">for</span> i=1:Nnodes
+0435     id=s.otalist(i);
+0436     <span class="keyword">if</span>(id==90)
+0437         pos=xyz2enu(gps_data.xyz_origin_ref,s.xyz_origin);
+0438         node(i,:)=[pos(1) pos(2) 0 0 0 0];
+0439     <span class="keyword">else</span>
+0440         pos=find(c.listactive==id);
+0441         node(i,:)=[c.car(pos).pos.x c.car(pos).pos.y 0 0 0 0];
+0442     <span class="keyword">end</span>
+0443 <span class="keyword">end</span>
+0444 
+0445 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

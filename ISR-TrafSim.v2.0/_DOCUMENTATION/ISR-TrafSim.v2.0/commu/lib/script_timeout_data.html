@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_timeout_data</title>
+  <meta name="keywords" content="script_timeout_data">
+  <meta name="description" content="script_timeout_data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_timeout_data
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_timeout_data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> script_timeout_data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% script_timeout_data</span>
+0002 t = event.instant;
+0003 i = event.node;
+0004 j = event.pkt.rv;
+0005 <span class="keyword">if</span> adebug, disp([<span class="string">'timeout_data @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0006 <span class="comment">%         if pending_id(i) == event.pkt.id % not acknowledged yet</span>
+0007 <span class="comment">%             if adebug, disp(['timeout_data: node ' num2str(i) ' failed to transmit DATA, go back to transmit RTS']); end</span>
+0008 <span class="comment">%             % remove the pending id for DATA</span>
+0009 <span class="comment">%             pending_id(i) = 0;</span>
+0010 <span class="comment">%             retransmit(i) = 0;</span>
+0011 <span class="comment">%             % go back to send RTS</span>
+0012 <span class="comment">%             newevent = event;</span>
+0013 <span class="comment">%             newevent.instant = t + cca_time;    % check channel status</span>
+0014 <span class="comment">%             newevent.type = 'wait_for_channel';</span>
+0015 <span class="comment">%             newevent.node = i;</span>
+0016 <span class="comment">%             newevent.pkt.type = 'data';</span>
+0017 <span class="comment">%             newevent.pkt.navcommu = SIFS + cts_tx_time + SIFS + tx_time(newevent.pkt) + SIFS + ack_tx_time;</span>
+0018 <span class="comment">%             newevent.pkt.type = 'rts';</span>
+0019 <span class="comment">%             % create a new id for the new RTS</span>
+0020 <span class="comment">%             newevent.pkt.id = new_id(i);</span>
+0021 <span class="comment">%             NewEvents = [NewEvents; newevent]; clear newevent;</span>
+0022 <span class="comment">%         end</span>
+0023 <span class="keyword">if</span> pending_id(i) == event.pkt.id <span class="comment">% not acknowledged yet</span>
+0024     <span class="keyword">if</span> cdebug, disp([<span class="string">'timeout_data: node '</span> num2str(i) <span class="string">' pending_id='</span> num2str(pending_id(i)) <span class="string">' event_id='</span> num2str(event.pkt.id)]); <span class="keyword">end</span>
+0025     retransmit(i) = retransmit(i) + 1;
+0026     <span class="keyword">if</span> retransmit(i) &gt; max_retries
+0027         <span class="comment">% so many retries, drop the data packet</span>
+0028         <span class="keyword">if</span> cdebug, disp([<span class="string">'timeout_data: node '</span> num2str(i) <span class="string">' has retried so many times to transmit DATA'</span>]); <span class="keyword">end</span>
+0029         retransmit(i) = 0;
+0030         pending_id(i) = 0;
+0031         <span class="keyword">if</span> ~isempty(mac_queue(i).list)
+0032             <span class="comment">% more packets are waiting to be sent</span>
+0033             mac_status(i) = 1;
+0034             newevent = mac_queue(i).list(1);
+0035             mac_queue(i).list(1) = [];
+0036             newevent.instant = t + cca_time;    <span class="comment">% question: cca_time or other</span>
+0037             newevent.type = <span class="string">'wait_for_channel'</span>;
+0038             newevent.node = i;
+0039             NewEvents = [NewEvents; newevent]; clear newevent;
+0040         <span class="keyword">else</span>
+0041             <span class="comment">% Cannot send DATA successfully, reset MAC layer</span>
+0042             mac_status(i) = 0;
+0043         <span class="keyword">end</span>
+0044         <span class="keyword">return</span>;
+0045     <span class="keyword">end</span>
+0046     <span class="keyword">if</span> adebug, disp([<span class="string">'timeout_data: node '</span> num2str(i) <span class="string">' to retransmit DATA'</span>]); <span class="keyword">end</span>
+0047     <span class="comment">% retransmit the DATA</span>
+0048     newevent = event;
+0049     newevent.instant = t + cca_time;    <span class="comment">% check channel status</span>
+0050     newevent.type = <span class="string">'wait_for_channel'</span>;
+0051     newevent.node = i;
+0052     <span class="comment">% newevent.pkt.type = 'data';</span>
+0053     newevent.pkt.navcommu = SIFS + ack_tx_time; <span class="comment">% necessary for retransmission because the initial DATA has navcommu=0</span>
+0054     NewEvents = [NewEvents; newevent]; clear newevent;
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

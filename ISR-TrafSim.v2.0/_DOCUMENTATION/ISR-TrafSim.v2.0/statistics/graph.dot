@@ -1,0 +1,6 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+
+  analyse_vel_prof_isr_trafsim [URL="analyse_vel_prof_isr_trafsim.html"];
+  compute_stats_isr_trafsim [URL="compute_stats_isr_trafsim.html"];
+}

@@ -1,0 +1,514 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of traffic_gestion_isr_trafsim</title>
+  <meta name="keywords" content="traffic_gestion_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html ISR-TrafSim.v2.0 -->
+<h1>traffic_gestion_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [cmdacc cause] = traffic_gestion_isr_trafsim(n) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Simulate driver behaviour and manage cross traffic lights according
+ selected option (normal/intelligent)
+
+-USE----------------------------------------------------------------------
+
+ -&gt; Input(s)
+   » n         -   Position of vehicle on the structure
+
+ -&gt; Output(s)
+   » acccmd    -   Acceleration command
+   » cause     -   ID of stoping cause
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sérgio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/check/check_next_road_isr_trafsim.html" class="code" title="function [nextroad] = check_next_road_isr_trafsim(n,road)">check_next_road_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="../ISR-TrafSim.v2.0/check/check_road_free_isr_trafsim.html" class="code" title="function [out] = check_road_free_isr_trafsim(r,d)">check_road_free_isr_trafsim</a>	--------------------------------------------------------------------------</li><li><a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [] = cross_gestion_normal(n)</a></li><li><a href="#_sub2" class="code">function [] = cross_gestion_advanced(n)</a></li><li><a href="#_sub3" class="code">function [nextroad] = view_road_ahead(n,road)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Simulate driver behaviour and manage cross traffic lights according</span>
+0027 <span class="comment">% selected option (normal/intelligent)</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%-USE----------------------------------------------------------------------</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% -&gt; Input(s)</span>
+0032 <span class="comment">%   » n         -   Position of vehicle on the structure</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% -&gt; Output(s)</span>
+0035 <span class="comment">%   » acccmd    -   Acceleration command</span>
+0036 <span class="comment">%   » cause     -   ID of stoping cause</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0039 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0040 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0041 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0042 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0043 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0046 <span class="comment">%   Urbano Nunes*</span>
+0047 <span class="comment">%   Luis Conde Bento**</span>
+0048 <span class="comment">%   Ricardo Parafita*</span>
+0049 <span class="comment">%   Sérgio Santos*</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0052 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0053 <span class="comment">%--------------------------------------------------------------------------</span>
+0054 
+0055 <a name="_sub0" href="#_subfunctions" class="code">function [cmdacc cause] = traffic_gestion_isr_trafsim(n)</a>
+0056 <span class="keyword">global</span> c s
+0057 cmdacc=1;
+0058 cause=0;
+0059 danger=0;
+0060 
+0061 
+0062 <span class="comment">% Read current car road</span>
+0063 road=c.car(n).traj(3,c.car(n).setp);
+0064 carid=c.car(n).id;
+0065 
+0066 <span class="comment">%    if(carid==104 &amp;&amp; ~isempty(find(5==c.car(n).list)))</span>
+0067 <span class="comment">%         dbstop at 64 in isr_tfs_traffic_gestion.m</span>
+0068 <span class="comment">%         a=1;</span>
+0069 <span class="comment">%end</span>
+0070 <span class="comment">% Cross gestion</span>
+0071 <span class="keyword">if</span>(s.cross_mode==1)
+0072     <a href="#_sub2" class="code" title="subfunction [] = cross_gestion_advanced(n)">cross_gestion_advanced</a>(n);
+0073 <span class="keyword">elseif</span>(s.cross_mode==0)
+0074     <a href="#_sub1" class="code" title="subfunction [] = cross_gestion_normal(n)">cross_gestion_normal</a>(n);
+0075 <span class="keyword">end</span>
+0076 
+0077 
+0078 
+0079 <span class="comment">% If the car is stopped</span>
+0080 <span class="keyword">if</span>(c.car(n).cmdacc==-999)
+0081     cmdacc=-999;
+0082 <span class="keyword">else</span>
+0083     <span class="comment">% If driver not see other cars</span>
+0084     <span class="keyword">if</span>(isempty(c.car(n).list))
+0085         <span class="comment">%cmdacc=1;</span>
+0086     <span class="keyword">else</span>                 <span class="comment">% If driver see other cars</span>
+0087         <span class="keyword">for</span> cc=1:length( c.car(n).list )
+0088             <span class="comment">%dbstop at 84 in isr_tfs_traffic_gestion.m</span>
+0089             <span class="comment">% Car close</span>
+0090             ccid=c.car(n).list(cc);
+0091             
+0092             <span class="keyword">if</span>(ccid&lt;100)
+0093                 
+0094                 <span class="keyword">if</span>( ccid==road &amp;&amp; isempty(find(c.car(n).nostop==ccid)) )  <span class="comment">% The number corresponds to the obstacle</span>
+0095                     
+0096                     <span class="comment">% Add new entry to the table</span>
+0097                     <span class="keyword">if</span>(isempty(find(s.table_gest0(1,:)==carid)) &amp;&amp; isempty(find(s.table_gest0(3,:)==road)) &amp;&amp; isempty(intersect(ccid,s.crosslist))==0)
+0098                         dd=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(n,road);
+0099                         auxx=[0 0 0];
+0100                         <span class="keyword">if</span>(dd&lt;25)
+0101                             <span class="keyword">for</span> i=1:length(c.listactive)    <span class="comment">% Search for a car that is still closest he is</span>
+0102                                 <span class="keyword">if</span>(n~=i)
+0103                                     <span class="keyword">if</span>(c.car(i).traj(3,c.car(i).setp)==road)
+0104                                         ddd=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(i,road);
+0105                                         <span class="keyword">if</span>(ddd&lt;dd)
+0106                                             auxx=[1 c.car(i).id c.car(i).traj(3,c.car(i).setp)];
+0107                                             dd=ddd;
+0108                                         <span class="keyword">end</span>
+0109                                     <span class="keyword">end</span>
+0110                                 <span class="keyword">end</span>
+0111                             <span class="keyword">end</span>
+0112                             
+0113                             <span class="keyword">if</span>(auxx(1,1)==1 &amp;&amp; isempty(find(s.table_gest0(1,:)==auxx(1,2))))
+0114                                 s.table_gest0=[s.table_gest0 [auxx(1,2) ; s.time ; auxx(1,3)] ];
+0115                                 <span class="comment">%                                     if(auxx(1,3)==15 || auxx(1,3)==16)</span>
+0116                                 <span class="comment">%                                         col=find(s.rg_count_tab(1,:)==auxx(1,3));</span>
+0117                                 <span class="comment">%                                         s.rg_count_tab(2,col)=s.rg_count_tab(2,col)-1;</span>
+0118                                 <span class="comment">%                                     end</span>
+0119                             <span class="keyword">else</span>
+0120                                 s.table_gest0=[s.table_gest0 [carid ; s.time ; road] ];
+0121                                 <span class="comment">%                                     if(road==15 || road==16)</span>
+0122                                 <span class="comment">%                                         col=find(s.rg_count_tab(1,:)==road);   s.rg_count_tab(2,col)=s.rg_count_tab(2,col)-1;</span>
+0123                                 <span class="comment">%                                     end</span>
+0124                             <span class="keyword">end</span>
+0125                         <span class="keyword">end</span>
+0126                     <span class="keyword">end</span>
+0127                     
+0128                     
+0129                     <span class="comment">% Approaching the stop</span>
+0130                     dist=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(n,road);
+0131                     <span class="keyword">if</span>(dist&lt;c.car(n).dist2light)
+0132                         cmdacc=-1; cause=ccid;
+0133                         ind=find(c.car(n).list&gt;=100);
+0134                         <span class="keyword">if</span>(~isempty(ind))  <span class="comment">% If exist vehicles in the detection list</span>
+0135                             aux=0;
+0136                             <span class="keyword">for</span> car=ind
+0137                                 id=c.car(n).list(car);
+0138                                 car_pos=find(c.listactive==id);
+0139                                 <span class="keyword">if</span>(c.car(n).road==c.car(car_pos).road)
+0140                                     dist_n=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(n,c.car(n).road);
+0141                                     dist_car=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(car_pos,c.car(car_pos).road);
+0142                                     <span class="keyword">if</span>(dist_n&gt;dist_car) <span class="comment">% if exist car in front</span>
+0143                                         aux=1;
+0144                                     <span class="keyword">end</span>
+0145                                 <span class="keyword">end</span>
+0146                             <span class="keyword">end</span>
+0147                             <span class="keyword">if</span>(aux==0)
+0148                                 <span class="keyword">return</span>
+0149                             <span class="keyword">end</span>
+0150                         <span class="keyword">else</span>
+0151                             <span class="keyword">return</span>;
+0152                         <span class="keyword">end</span>
+0153                         
+0154                         
+0155                         <span class="keyword">return</span>;
+0156                         
+0157                     <span class="keyword">elseif</span>(dist&gt;c.car(n).dist2light)
+0158                         <span class="comment">%velmax=4+c.car(n).rand1*dist;</span>
+0159                         velmax=dist;
+0160                         <span class="keyword">if</span>( (c.car(n).dyn(1)*3.6) &gt; velmax)
+0161                             cmdacc=-1; cause=ccid;
+0162                             <span class="comment">% If exist other cars in front, the car doesn't stop because semaphore</span>
+0163                             ind=find(c.car(n).list&gt;=100);
+0164                             <span class="keyword">if</span>(~isempty(ind))  <span class="comment">% If exist vehicles in the detection list</span>
+0165                                 aux=0;
+0166                                 <span class="keyword">for</span> car=ind
+0167                                     id=c.car(n).list(car);
+0168                                     car_pos=find(c.listactive==id);
+0169                                     <span class="keyword">if</span>(c.car(n).road==c.car(car_pos).road)
+0170                                         dist_n=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(n,c.car(n).road);
+0171                                         dist_car=<a href="../ISR-TrafSim.v2.0/check/check_dist_end_road_isr_trafsim.html" class="code" title="function [dist] = check_dist_end_road_isr_trafsim(n,road)">check_dist_end_road_isr_trafsim</a>(car_pos,c.car(car_pos).road);
+0172                                         <span class="keyword">if</span>(dist_n&gt;dist_car) <span class="comment">% if exist car in front (don't stop because semaphore)</span>
+0173                                             aux=1; cause=0;
+0174                                         <span class="keyword">end</span>
+0175                                     <span class="keyword">end</span>
+0176                                 <span class="keyword">end</span>
+0177                                 <span class="keyword">if</span>(aux==0)
+0178                                     <span class="keyword">return</span>
+0179                                 <span class="keyword">end</span>
+0180                             <span class="keyword">else</span>
+0181                                 <span class="keyword">return</span>;
+0182                             <span class="keyword">end</span>
+0183                         <span class="keyword">end</span>
+0184                     <span class="keyword">end</span>
+0185                 <span class="keyword">end</span>
+0186             <span class="keyword">elseif</span>(ccid&gt;=100)
+0187                 pos=find(c.listactive==ccid);                 <span class="comment">% Position of close car in the list</span>
+0188                 <span class="comment">%                     dbstop at 130 in isr_tfs_traffic_gestion.m</span>
+0189                 <span class="keyword">if</span>(isempty(pos)==0)
+0190                     ccroad=c.car(pos).traj(3,c.car(pos).setp);  <span class="comment">% Road of the car that is close</span>
+0191                     nextroad=<a href="../ISR-TrafSim.v2.0/check/check_next_road_isr_trafsim.html" class="code" title="function [nextroad] = check_next_road_isr_trafsim(n,road)">check_next_road_isr_trafsim</a>(n,road);
+0192                     <span class="keyword">if</span>(road&gt;=30 &amp;&amp; road~=40 &amp;&amp; ccroad&lt;30)
+0193                         <span class="comment">% Car is inside of roundabout and detects a car outside offside of roundabout</span>
+0194                         danger=1;   <span class="comment">% Detected car can obstruct exit road</span>
+0195                         [decision motive]=<a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>(n,pos,road,ccroad,danger,carid,ccid,0);
+0196                     <span class="keyword">elseif</span>(road&lt;30 &amp;&amp; ccroad&gt;=30 &amp;&amp; ccroad~=40)
+0197                         <span class="comment">% Car is outside of roundabout and detect car inside of roundabout</span>
+0198                         danger=2; <span class="comment">% dbstop at 143 in isr_tfs_traffic_gestion.m</span>
+0199                         [decision motive]=<a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>(n,pos,road,ccroad,danger,carid,ccid,0);
+0200                     <span class="keyword">elseif</span>(road&gt;=30 &amp;&amp; road~=40 &amp;&amp; ccroad&gt;=30 &amp;&amp; ccroad~=40)
+0201                         <span class="comment">% The 2 cars is inside of roundabout</span>
+0202                         danger=3; <span class="comment">% dbstop at 151 in isr_tfs_traffic_gestion.m</span>
+0203                         [decision motive]=<a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>(n,pos,road,ccroad,danger,carid,ccid,0);
+0204                     <span class="keyword">elseif</span>(road&lt;30 &amp;&amp; road~=40 &amp;&amp; ccroad&lt;30 &amp;&amp; ccroad~=40 &amp;&amp; road~=ccroad)
+0205                         <span class="comment">% The car see another car in other straight lane</span>
+0206                         danger=4; <span class="comment">% The cars can be in neighboor lanes</span>
+0207                         [decision motive]=<a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>(n,pos,road,ccroad,danger,carid,ccid,0);
+0208                     <span class="keyword">elseif</span>(road==40 &amp;&amp; ccroad&lt;30)
+0209                         <span class="comment">% If car is in crossroad and detects car outside crossroad is not his decision</span>
+0210                     <span class="keyword">elseif</span>(road&lt;30 &amp;&amp; ccroad==40)
+0211                         <span class="comment">% If car see car inside of crossroads</span>
+0212                         danger=6;
+0213                         [decision motive]=<a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>(n,pos,road,ccroad,danger,carid,ccid,0);
+0214                     <span class="keyword">elseif</span>(road==40 &amp;&amp; ccroad==40)
+0215                         <span class="comment">% If car is in crossroad and detects car outside crossroad is not his decision</span>
+0216                     <span class="keyword">elseif</span>(road==ccroad &amp;&amp; road&lt;30 &amp;&amp; ccroad&lt;30)
+0217                         danger=5; <span class="comment">% Cars in same straight lane</span>
+0218                         [decision motive]=<a href="conflict_decision_isr_trafsim.html" class="code" title="function [decision motive] = conflict_decision_isr_trafsim(n,pos,road,ccroad,danger,carid,ccid,aux)">conflict_decision_isr_trafsim</a>(n,pos,road,ccroad,danger,carid,ccid,0);
+0219                     <span class="keyword">elseif</span>(road==40)
+0220                         
+0221                         
+0222                     <span class="keyword">else</span>
+0223                         disp(<span class="string">'traffic_gestion'</span>)
+0224                         [carid road]
+0225                         [ccid ccroad]
+0226                         keyboard
+0227                     <span class="keyword">end</span>
+0228                     <span class="comment">% If exist danger the car will brake</span>
+0229                     <span class="keyword">if</span>(danger&gt;0)
+0230                         <span class="keyword">if</span>(decision), cmdacc=-1; cause=motive; <span class="keyword">return</span>; <span class="keyword">end</span>
+0231                         
+0232                     <span class="keyword">end</span>
+0233                     
+0234                 <span class="keyword">end</span>
+0235             <span class="keyword">end</span>
+0236         <span class="keyword">end</span>
+0237     <span class="keyword">end</span>
+0238 <span class="keyword">end</span>
+0239 
+0240 
+0241 <span class="keyword">end</span>
+0242 
+0243 
+0244 
+0245 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0246 <span class="comment">% Cross normal</span>
+0247 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0248 <a name="_sub1" href="#_subfunctions" class="code">function [] = cross_gestion_normal(n)</a>
+0249 <span class="keyword">global</span> s c
+0250 
+0251 <span class="comment">% Turn on the light of changing direction</span>
+0252 <span class="keyword">if</span>(isempty(find(s.table_gest0(1,:)==c.car(n).id))==0)
+0253     
+0254     <span class="comment">% Turn on the light of changing direction</span>
+0255     <span class="keyword">if</span>(c.car(n).hsidelight~=-1)
+0256         delete(c.car(n).hsidelight);
+0257         c.car(n).hsidelight=-1;
+0258     <span class="keyword">end</span>
+0259     <span class="keyword">if</span>(c.car(n).lightdirection==1 &amp;&amp; s.mode==1)
+0260         <span class="comment">%             str=sprintf('R');</span>
+0261         <span class="comment">%             c.car(n).hsidelight=text(c.car(n).pos.x,c.car(n).pos.y,str,'color','k','BackgroundColor','w','Fontsize',4);</span>
+0262     <span class="keyword">elseif</span>(c.car(n).lightdirection==2 &amp;&amp; s.mode==1)
+0263         <span class="comment">%             str=sprintf('L');</span>
+0264         <span class="comment">%             c.car(n).hsidelight=text(c.car(n).pos.x,c.car(n).pos.y,str,'color','k','BackgroundColor','w','Fontsize',4);</span>
+0265     <span class="keyword">end</span>
+0266 <span class="keyword">end</span>
+0267 
+0268 <span class="comment">% Give permission to car advance</span>
+0269 <span class="keyword">if</span>(~isempty(find(s.table_gest0(1,:)==c.car(n).id)) &amp;&amp; isempty(find(s.crosscar==c.car(n).id)) )
+0270     road=c.car(n).traj(3,c.car(n).setp);
+0271     <span class="keyword">if</span>(s.lights(2,road)&gt;0)
+0272         out=<a href="../ISR-TrafSim.v2.0/check/check_road_free_isr_trafsim.html" class="code" title="function [out] = check_road_free_isr_trafsim(r,d)">check_road_free_isr_trafsim</a>(c.car(n).rac,12);
+0273         <span class="keyword">if</span>(out)
+0274             aux=0;
+0275             <span class="keyword">for</span> j=2:length(s.crosscar)
+0276                 pos=find(c.listactive==s.crosscar(1,j));
+0277                 <span class="keyword">if</span>( isempty(intersect(c.car(pos).crosscels,c.car(n).crosscels))==0 )
+0278                     aux=1;
+0279                     <span class="keyword">break</span>
+0280                 <span class="keyword">end</span>
+0281             <span class="keyword">end</span>
+0282             <span class="keyword">if</span>(aux==0)
+0283                 c.car(n).nostop=[c.car(n).nostop c.car(n).traj(3,c.car(n).setp)];
+0284                 s.crosscar=[s.crosscar c.car(n).id];
+0285             <span class="keyword">end</span>
+0286         <span class="keyword">end</span>
+0287     <span class="keyword">end</span>
+0288 <span class="keyword">end</span>
+0289 
+0290 <span class="comment">% Delete car from the list</span>
+0291 <span class="keyword">if</span>(isempty(find(s.table_gest0(1,:)==c.car(n).id))==0)
+0292     <span class="keyword">if</span>(c.car(n).traj(3,c.car(n).setp)~=40 &amp;&amp; c.car(n).traj(3,c.car(n).prevsetp)==40)
+0293         pos=find(s.crosscar==c.car(n).id);
+0294         s.crosscar(:,pos)=[];
+0295         pos=find(s.table_gest0(1,:)==c.car(n).id);
+0296         s.table_gest0(:,pos)=[];
+0297         <span class="keyword">if</span>(c.car(n).hsidelight~=-1)
+0298             delete(c.car(n).hsidelight);
+0299         <span class="keyword">end</span>
+0300     <span class="keyword">end</span>
+0301 <span class="keyword">end</span>
+0302 <span class="keyword">end</span>
+0303 
+0304 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0305 <span class="comment">% Cross intelligent</span>
+0306 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0307 <a name="_sub2" href="#_subfunctions" class="code">function [] = cross_gestion_advanced(n)</a>
+0308 <span class="keyword">global</span> c s
+0309 
+0310 
+0311 <span class="comment">% Turn on the light of changing direction</span>
+0312 <span class="keyword">if</span>(isempty(find(s.table_gest0(1,:)==c.car(n).id))==0)
+0313     
+0314     <span class="comment">% Turn on the light of changing direction</span>
+0315     <span class="keyword">if</span>(c.car(n).hsidelight~=-1)
+0316         delete(c.car(n).hsidelight);
+0317         c.car(n).hsidelight=-1;
+0318     <span class="keyword">end</span>
+0319     <span class="keyword">if</span>(c.car(n).lightdirection==1 &amp;&amp; s.mode==1)
+0320         <span class="comment">%             str=sprintf('R');</span>
+0321         <span class="comment">%             c.car(n).hsidelight=text(c.car(n).pos.x,c.car(n).pos.y,str,'color','k','BackgroundColor','w','Fontsize',4);</span>
+0322     <span class="keyword">elseif</span>(c.car(n).lightdirection==2 &amp;&amp; s.mode==1)
+0323         <span class="comment">%             str=sprintf('L');</span>
+0324         <span class="comment">%             c.car(n).hsidelight=text(c.car(n).pos.x,c.car(n).pos.y,str,'color','k','BackgroundColor','w','Fontsize',4);</span>
+0325     <span class="keyword">end</span>
+0326 <span class="keyword">end</span>
+0327 
+0328 <span class="comment">% Manage the crossroad</span>
+0329 <span class="keyword">if</span>( isempty(intersect(c.car(n).traj(3,c.car(n).setp),s.crosslist))==0 )
+0330     <span class="keyword">if</span>(size(s.table_gest0,2)&gt;1)
+0331         <span class="keyword">if</span>(isempty(find(s.table_gest0(1,:)==c.car(n).id))==0)
+0332             
+0333             <span class="comment">% Add car to the cross list if is possible</span>
+0334             <span class="keyword">if</span>(isempty(find(s.crosscar(1,:)==c.car(n).id)))
+0335                 <span class="keyword">if</span>(size(s.crosscar,2)==1)
+0336                     out=<a href="../ISR-TrafSim.v2.0/check/check_road_free_isr_trafsim.html" class="code" title="function [out] = check_road_free_isr_trafsim(r,d)">check_road_free_isr_trafsim</a>(c.car(n).rac,12);
+0337                     <span class="keyword">if</span>(out)
+0338                         
+0339                         <span class="comment">% Add nostop to the car list</span>
+0340                         c.car(n).nostop=[c.car(n).nostop c.car(n).traj(3,c.car(n).setp)];
+0341                         s.crosscar=[s.crosscar c.car(n).id];
+0342                         s.lights(2,c.car(n).traj(3,c.car(n).setp))=s.tgreen;
+0343                         s.lights(3,c.car(n).traj(3,c.car(n).setp))=s.tyello;
+0344                         
+0345                     <span class="keyword">end</span>
+0346                 <span class="keyword">else</span>
+0347                     out=<a href="../ISR-TrafSim.v2.0/check/check_road_free_isr_trafsim.html" class="code" title="function [out] = check_road_free_isr_trafsim(r,d)">check_road_free_isr_trafsim</a>(c.car(n).rac,12);
+0348                     <span class="keyword">if</span>(out)
+0349                         aux=0;
+0350                         <span class="keyword">for</span> j=2:length(s.crosscar)
+0351                             pos=find(c.listactive==s.crosscar(1,j));
+0352                             <span class="keyword">if</span>( isempty(intersect(c.car(pos).crosscels,c.car(n).crosscels))==0 )
+0353                                 aux=1;
+0354                                 <span class="keyword">break</span>
+0355                             <span class="keyword">end</span>
+0356                         <span class="keyword">end</span>
+0357                         <span class="keyword">if</span>(aux==0)
+0358                             
+0359                             <span class="comment">% Add nostop to the car list</span>
+0360                             c.car(n).nostop=[c.car(n).nostop c.car(n).traj(3,c.car(n).setp)];
+0361                             s.crosscar=[s.crosscar c.car(n).id];
+0362                             s.lights(2,c.car(n).traj(3,c.car(n).setp))=s.tgreen;
+0363                             s.lights(3,c.car(n).traj(3,c.car(n).setp))=s.tyello;
+0364                             
+0365                         <span class="keyword">end</span>
+0366                     <span class="keyword">end</span>
+0367                 <span class="keyword">end</span>
+0368             <span class="keyword">end</span>
+0369         <span class="keyword">end</span>
+0370     <span class="keyword">end</span>
+0371 <span class="keyword">end</span>
+0372 
+0373 <span class="comment">% Delete car from the list</span>
+0374 <span class="keyword">if</span>(~isempty(find(s.table_gest0(1,:)==c.car(n).id)))
+0375     <span class="keyword">if</span>(c.car(n).traj(3,c.car(n).setp)~=40 &amp;&amp; c.car(n).traj(3,c.car(n).prevsetp)==40)
+0376         pos=find(s.crosscar==c.car(n).id);
+0377         s.crosscar(:,pos)=[];
+0378         pos=find(s.table_gest0(1,:)==c.car(n).id);
+0379         s.table_gest0(:,pos)=[];
+0380         <span class="keyword">if</span>(c.car(n).hsidelight~=-1)
+0381             delete(c.car(n).hsidelight);
+0382         <span class="keyword">end</span>
+0383     <span class="keyword">end</span>
+0384 <span class="keyword">end</span>
+0385 <span class="keyword">end</span>
+0386 
+0387 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0388 <span class="comment">% View next road (cross)</span>
+0389 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0390 <a name="_sub3" href="#_subfunctions" class="code">function [nextroad] = view_road_ahead(n,road)</a>
+0391 <span class="keyword">global</span> c s
+0392 
+0393 dcross=20;
+0394 nextroad=0;
+0395 <span class="keyword">if</span>(road&gt;=5 &amp;&amp; road&lt;=10 || road==40 || road==15 || road==16)
+0396     caution=0;
+0397     cursetp=c.car(n).setp;
+0398     curdist=c.car(n).traj(4,c.car(n).setp);
+0399     <span class="keyword">while</span>(curdist&lt;c.car(n).traj(4,c.car(n).setp)+dcross)
+0400         curdist=c.car(n).traj(4,cursetp);
+0401         cursetp=cursetp+1;
+0402         <span class="keyword">if</span>(cursetp==c.car(n).trajn)
+0403             caution=1;
+0404             <span class="keyword">break</span>
+0405         <span class="keyword">end</span>
+0406     <span class="keyword">end</span>
+0407     <span class="keyword">if</span>(caution)
+0408         cursetp=c.car(n).trajn;
+0409     <span class="keyword">end</span>
+0410     nextroad=max(c.car(n).traj(3,[c.car(n).setp:cursetp]));
+0411 <span class="keyword">end</span>
+0412 <span class="keyword">end</span>
+0413 
+0414</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

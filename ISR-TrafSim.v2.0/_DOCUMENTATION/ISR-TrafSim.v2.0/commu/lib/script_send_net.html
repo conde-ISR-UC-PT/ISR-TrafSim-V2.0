@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_send_net</title>
+  <meta name="keywords" content="script_send_net">
+  <meta name="description" content="script_send_net;">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_send_net
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_send_net;</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">script_send_net;
+ event provides net.dst, net.src, net.size</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%script_send_net;</span>
+0002 <span class="comment">% event provides net.dst, net.src, net.size</span>
+0003 t = event.instant;
+0004 i = event.node;
+0005 j = event.net.dst;
+0006 <span class="keyword">if</span> adebug, disp([<span class="string">'send_net @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0007 <span class="comment">% net_queue</span>
+0008 <span class="comment">% Original</span>
+0009 <span class="keyword">if</span> ~isempty(net_queue(i).list)
+0010     <span class="comment">% this is redundant; net_queue is always empty</span>
+0011     <span class="comment">% old packets are waiting to be sent, just wait behind them</span>
+0012     <span class="comment">% if cdebug, disp(['time ' num2str(t) ' node ' num2str(i) ' queue a packet to node ' num2str(j)]); end</span>
+0013     net_queue(i).list = [net_queue(i).list event];
+0014 <span class="keyword">else</span>
+0015     newevent = event;
+0016     newevent.type = <span class="string">'send_net2'</span>;
+0017     NewEvents = [NewEvents; newevent]; clear newevent;
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%mod</span>
+0021 <span class="comment">% if ~isempty(net_queue)</span>
+0022 <span class="comment">%     if ~isempty(net_queue(i).list)</span>
+0023 <span class="comment">%         % this is redundant; net_queue is always empty</span>
+0024 <span class="comment">%         % old packets are waiting to be sent, just wait behind them</span>
+0025 <span class="comment">%         % if cdebug, disp(['time ' num2str(t) ' node ' num2str(i) ' queue a packet to node ' num2str(j)]); end</span>
+0026 <span class="comment">%         net_queue(i).list = [net_queue(i).list event];</span>
+0027 <span class="comment">%     end</span>
+0028 <span class="comment">% else</span>
+0029 <span class="comment">%     newevent = event;</span>
+0030 <span class="comment">%     newevent.type = 'send_net2';</span>
+0031 <span class="comment">%     NewEvents = [NewEvents; newevent]; clear newevent;</span>
+0032 <span class="comment">% end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

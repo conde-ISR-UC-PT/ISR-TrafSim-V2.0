@@ -1,0 +1,577 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of configsim_isr_trafsim</title>
+  <meta name="keywords" content="configsim_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html ISR-TrafSim.v2.0 -->
+<h1>configsim_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [out] = configsim_isr_trafsim(arg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Return a structure with initial configurations
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ISR_TRAFSIM.html" class="code" title="">ISR_TRAFSIM</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [out] = sim_init()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Return a structure with initial configurations</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [out] = configsim_isr_trafsim(arg)</a>
+0046 
+0047 <span class="keyword">if</span>(strcmp(arg,<span class="string">'init'</span>))
+0048     out=<a href="#_sub1" class="code" title="subfunction [out] = sim_init()">sim_init</a>();
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="keyword">end</span>
+0052 
+0053 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0054 <span class="comment">% Initializes all the variables necessary for the simulator</span>
+0055 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0056 <a name="_sub1" href="#_subfunctions" class="code">function [out] = sim_init()</a>
+0057 
+0058 out=struct<span class="keyword">...</span>
+0059     (<span class="keyword">...</span>
+0060     <span class="string">'mode'</span>,1,<span class="keyword">...</span><span class="comment">                % (1-Online, 0-Offline, 2-C++)</span>
+0061     <span class="string">'time'</span>,0,<span class="keyword">...</span><span class="comment">                % Initial time (not change)</span>
+0062     <span class="string">'step_time'</span>,0.01,<span class="keyword">...</span><span class="comment">        % Step Time for each interaction of simulator (not change)</span>
+0063     <span class="keyword">...</span><span class="comment">     % Basic options</span>
+0064     <span class="string">'duration'</span>,50,<span class="keyword">...</span><span class="comment">           % Duration of simulation in seconds</span>
+0065     <span class="string">'tlaunch'</span>,3600/100,<span class="keyword">...</span><span class="comment">      % 3600/20,...     % Time between launchs in every road (seconds). Ex: 3600/150 -&gt; 150 cars/hour</span>
+0066     <span class="string">'tlaunchr'</span>,3600/100/12,<span class="keyword">...</span><span class="comment">  % 3600/20/12,...  % Launch time beetween roads (seconds). Ex: 3600/150/12 -&gt; Divide 150 cars/hour per 12 lanes</span>
+0067     <span class="string">'round_gest'</span>,1,<span class="keyword">...</span><span class="comment">          % 0-System OFF, 1-System ON</span>
+0068     <span class="string">'round_method'</span>,2,<span class="keyword">...</span><span class="comment">        % Select desired algorithm (1-Basic, 2-Advanced)</span>
+0069     <span class="string">'cross_mode'</span>,2,<span class="keyword">...</span><span class="comment">          % 0-Normal mode , 1-Semi-Vision, 2-Spacio-Temporal Reserve</span>
+0070     <span class="string">'cross_method'</span>,2,<span class="keyword">...</span><span class="comment">        % Select desired algorithm (1-Basic, 2-Advanced)</span>
+0071     <span class="keyword">...</span><span class="comment">     % Launch Options</span>
+0072     <span class="string">'ncars'</span>,Inf,<span class="keyword">...</span><span class="comment">               % Limit of cars</span>
+0073     <span class="string">'cars_same'</span>,1,<span class="keyword">...</span><span class="comment">             % All cars/drivers be the same type(1-ON,2-OFF)</span>
+0074     <span class="string">'cars_rate_no_V2I'</span>,[0 0],<span class="keyword">...</span><span class="comment">  % 0.1-&gt;10% Rate of cars without communications [rate cars_without];</span>
+0075     <span class="string">'curNcars'</span>,0,<span class="keyword">...</span><span class="comment">                    % Current cars launched</span>
+0076     <span class="string">'distlaunch'</span>,22,<span class="keyword">...</span><span class="comment">                 % Distance that has to be free to launch car in simulator</span>
+0077     <span class="string">'nspeed'</span>,2,<span class="keyword">...</span><span class="comment">                      % Noise speed that will be added to the maximum speed in km/h (velmax=velmax +- nspeed)</span>
+0078     <span class="string">'run_before'</span>,0,<span class="keyword">...</span><span class="comment">                  % The cars will use position methods before entry in simulator</span>
+0079     <span class="keyword">...</span><span class="comment">     % Aditional Options</span>
+0080     <span class="string">'overtake'</span>,0,<span class="keyword">...</span><span class="comment">            % If cars can overtake</span>
+0081     <span class="string">'overtake_n'</span>,0,<span class="keyword">...</span><span class="comment">          % Number of overtakes</span>
+0082     <span class="string">'make_video'</span>,1,<span class="keyword">...</span><span class="comment">          % Make video</span>
+0083     <span class="string">'makeVideo_Reserve'</span>,1,<span class="keyword">...</span>
+0084     <span class="string">'followcar'</span>,0,<span class="keyword">...</span><span class="comment">           % (0-Off, else the car with ID is followed if exists)</span>
+0085     <span class="string">'nframes'</span>,0,<span class="keyword">...</span><span class="comment">             % Number of frames stored to offline visualization</span>
+0086     <span class="string">'save_data'</span>,1,<span class="keyword">...</span><span class="comment">           % Enable save data in 'file.mat'. file-&gt;[year_month_day_hour_minute.mat]</span>
+0087     <span class="string">'save_car'</span>,1,<span class="keyword">...</span><span class="comment">            % Enable save individual data from every car</span>
+0088     <span class="string">'pack_time'</span>,100,<span class="keyword">...</span><span class="comment">         % To avoid out of memory errors</span>
+0089     <span class="string">'pause'</span>,0,<span class="keyword">...</span><span class="comment">               % to pause simulation</span>
+0090     <span class="keyword">...</span><span class="comment">     % Display options</span>
+0091     <span class="string">'lateral_errors'</span>,1,<span class="keyword">...</span><span class="comment">      % Compute lateral errors</span>
+0092     <span class="string">'ocmap_accum'</span>,1,<span class="keyword">...</span><span class="comment">         % Plot occupation map accumulator at end of simulation</span>
+0093     <span class="string">'ocmap_accum_graph'</span>,1,<span class="keyword">...</span><span class="comment">   % Plot occupation map graph at the end of simulator</span>
+0094     <span class="string">'disp_res'</span>,1,<span class="keyword">...</span><span class="comment">            % Adquire data to display global results</span>
+0095     <span class="string">'disp_car_res'</span>,1,<span class="keyword">...</span><span class="comment">        % Adquire data to display car results (Position methods errors)</span>
+0096     <span class="string">'fres'</span>,10,<span class="keyword">...</span><span class="comment">                % Frequency of data acquisition</span>
+0097     <span class="string">'disp_res2'</span>,1,<span class="keyword">...</span><span class="comment">           % Adquire data to display paths velocity</span>
+0098     <span class="string">'fres2'</span>,10,<span class="keyword">...</span><span class="comment">              % Frequency of acquisition</span>
+0099     <span class="string">'ocmap4'</span>,[],<span class="keyword">...</span><span class="comment">             % To store path velocity</span>
+0100     <span class="string">'disp_fus2_res'</span>,1,<span class="keyword">...</span><span class="comment">       % To display filter errors (fusion 4)</span>
+0101     <span class="string">'disp_fus4_res'</span>,1,<span class="keyword">...</span><span class="comment">       % To display filter errors (fusion 4)</span>
+0102     <span class="string">'disp_fus3_res'</span>,1,<span class="keyword">...</span><span class="comment">       % To display results from fusion 3</span>
+0103     <span class="string">'view_gps_errors'</span>,1,<span class="keyword">...</span><span class="comment">     % To view gps erros for the 3 types in simulation init</span>
+0104     <span class="string">'view_3D_Matrix'</span>,1,<span class="keyword">...</span><span class="comment">      % To view 3D matrix from crossroads and roundabout</span>
+0105     <span class="keyword">...</span><span class="comment">     % Localization methods</span>
+0106     <span class="string">'ins'</span>,0,<span class="keyword">...</span><span class="comment">     % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)</span>
+0107     <span class="string">'fus'</span>,0,<span class="keyword">...</span><span class="comment">     % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)     GPS+INS (+MAG)</span>
+0108     <span class="string">'fus2'</span>,0,<span class="keyword">...</span><span class="comment">    % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)     GPS+LASER</span>
+0109     <span class="string">'fus3'</span>,0,<span class="keyword">...</span><span class="comment">    % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)     GPS+INS+KF</span>
+0110     <span class="string">'fus4'</span>,0,<span class="keyword">...</span><span class="comment">    % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)     ODO w/ EKF (+MAG)</span>
+0111     <span class="string">'odo'</span>,0,<span class="keyword">...</span><span class="comment">     % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)</span>
+0112     <span class="string">'gps'</span>,1,<span class="keyword">...</span><span class="comment">     % (0-No, 1-Yes, 2-Yes &amp; PrintGhost)</span>
+0113     <span class="string">'las'</span>,0,<span class="keyword">...</span><span class="comment">     % (0-No, 1-Yes)</span>
+0114     <span class="string">'mag'</span>,0,<span class="keyword">...</span><span class="comment">     % (0-No, 1-Yes)</span>
+0115     <span class="keyword">...</span><span class="comment">     % GPS</span>
+0116     <span class="string">'gps_type'</span>,2,<span class="keyword">...</span><span class="comment">                    % 1-SatNav / 2-gps</span>
+0117     <span class="string">'gps_C'</span>,0,<span class="keyword">...</span><span class="comment">                       % gps variable</span>
+0118     <span class="string">'gps_F'</span>,0,<span class="keyword">...</span><span class="comment">                       % gps variable</span>
+0119     <span class="string">'gps_T_amb'</span>,0,<span class="keyword">...</span><span class="comment">                   % gps variable</span>
+0120     <span class="string">'gps_P_amp'</span>,0,<span class="keyword">...</span><span class="comment">                   % gps variable</span>
+0121     <span class="string">'gps_P_vap'</span>,0,<span class="keyword">...</span><span class="comment">                   % gps variable</span>
+0122     <span class="string">'gps_eph'</span>,0,<span class="keyword">...</span><span class="comment">                     % gps variable</span>
+0123     <span class="string">'gps_iono'</span>,0,<span class="keyword">...</span><span class="comment">                    % gps variable</span>
+0124     <span class="string">'gps_pr'</span>,0,<span class="keyword">...</span><span class="comment">                      % gps variable</span>
+0125     <span class="string">'gps_Beta'</span>,0,<span class="keyword">...</span><span class="comment">                    % gps variable</span>
+0126     <span class="string">'gps_GPS_Time'</span>,0,<span class="keyword">...</span><span class="comment">                % gps variable</span>
+0127     <span class="string">'gps_Alpha'</span>,0,<span class="keyword">...</span><span class="comment">                   % gps variable</span>
+0128     <span class="string">'gps_af'</span>,0,<span class="keyword">...</span><span class="comment">                      % gps variable</span>
+0129     <span class="string">'gps_Toc'</span>,0,<span class="keyword">...</span><span class="comment">                     % gps variable</span>
+0130     <span class="string">'gps_Ttr'</span>,0,<span class="keyword">...</span><span class="comment">                     % gps variable</span>
+0131     <span class="string">'gps_ec'</span>,0,<span class="keyword">...</span><span class="comment">                      % gps variable</span>
+0132     <span class="string">'gps_A'</span>,0,<span class="keyword">...</span><span class="comment">                       % gps variable</span>
+0133     <span class="string">'gps_Tgd'</span>,0,<span class="keyword">...</span><span class="comment">                     % gps variable</span>
+0134     <span class="string">'gps_Rho_0'</span>,0,<span class="keyword">...</span><span class="comment">                   % gps variable</span>
+0135     <span class="string">'gps_Pos_xyz_Mat'</span>,0,<span class="keyword">...</span><span class="comment">             % gps variable</span>
+0136     <span class="string">'gps_orbit_parameter'</span>,0,<span class="keyword">...</span><span class="comment">         % gps variable</span>
+0137     <span class="string">'gps_Pos_SV'</span>,0,<span class="keyword">...</span><span class="comment">                  % gps variable</span>
+0138     <span class="string">'gps_Ec'</span>,0,<span class="keyword">...</span><span class="comment">                      % gps variable</span>
+0139     <span class="string">'gps_Inc'</span>,0,<span class="keyword">...</span><span class="comment">                     % gps variable</span>
+0140     <span class="string">'gps_Omega'</span>,0,<span class="keyword">...</span><span class="comment">                   % gps variable</span>
+0141     <span class="string">'gps_v'</span>,0,<span class="keyword">...</span><span class="comment">                       % gps variable</span>
+0142     <span class="string">'gps_Dim'</span>,0,<span class="keyword">...</span><span class="comment">                     % gps variable</span>
+0143     <span class="string">'gps_n'</span>,0,<span class="keyword">...</span><span class="comment">                       % gps variable</span>
+0144     <span class="string">'gps_trop_error'</span>,1,<span class="keyword">...</span><span class="comment">              % 1-On / 2-off</span>
+0145     <span class="string">'gps_ion_error'</span>,1,<span class="keyword">...</span><span class="comment">               % 1-On / 2-off</span>
+0146     <span class="string">'gps_clock_offset'</span>,1,<span class="keyword">...</span><span class="comment">            % 1-On / 2-off</span>
+0147     <span class="string">'gps_clock_rel'</span>,1,<span class="keyword">...</span><span class="comment">               % 1-On / 2-off</span>
+0148     <span class="keyword">...</span><span class="comment">     % Methods frequency [Hz]</span>
+0149     <span class="string">'frqgps'</span>,10,<span class="keyword">...</span><span class="comment">                     % GPS</span>
+0150     <span class="string">'frqrtkgps'</span>,100,<span class="keyword">...</span><span class="comment">                  % RTK-GPS</span>
+0151     <span class="string">'frqins'</span>,100,<span class="keyword">...</span><span class="comment">                    % INS</span>
+0152     <span class="string">'frqfus'</span>,50,<span class="keyword">...</span><span class="comment">                     % Sensorial Fusion</span>
+0153     <span class="string">'frqfus2'</span>,100,<span class="keyword">...</span><span class="comment">                     % Sensorial Fusion 2</span>
+0154     <span class="string">'frqfus3'</span>,100,<span class="keyword">...</span><span class="comment">                     % Sensorial Fusion 3</span>
+0155     <span class="string">'frqfus4'</span>,100,<span class="keyword">...</span><span class="comment">                     % Sensorial Fusion 4</span>
+0156     <span class="string">'frqodo'</span>,100,<span class="keyword">...</span><span class="comment">                    % Odometry</span>
+0157     <span class="string">'fmag'</span>,100,<span class="keyword">...</span><span class="comment">                      % Magnets</span>
+0158     <span class="string">'flas'</span>,100,<span class="keyword">...</span><span class="comment">                      % Laser</span>
+0159     <span class="keyword">...</span><span class="comment">     % Map properties</span>
+0160     <span class="string">'dimx'</span>,160,<span class="keyword">...</span><span class="comment">                      % Dimensions of the map in meters</span>
+0161     <span class="string">'dimy'</span>,100,<span class="keyword">...</span><span class="comment">                      % Dimensions of the map in meters</span>
+0162     <span class="keyword">...</span><span class="comment">     % OTA Communication properties</span>
+0163     <span class="string">'otacommu'</span>,1,<span class="keyword">...</span><span class="comment">                    % Communication over-the-air (1-On , 0-off)</span>
+0164     <span class="string">'otacommuemulation'</span>,0,<span class="keyword">...</span><span class="comment">           % Emulation of OTA communication</span>
+0165     <span class="string">'otarangeGPS'</span>,1000,<span class="keyword">...</span><span class="comment">              % Range of broadcasting GPS info</span>
+0166     <span class="string">'otarangeround'</span>,35,<span class="keyword">...</span><span class="comment">              % Range used when communication are not emulated - Round</span>
+0167     <span class="string">'otarangecross'</span>,25,<span class="keyword">...</span><span class="comment">              % Range used when communication are not emulated - Cross</span>
+0168     <span class="string">'otagps'</span>,1,<span class="keyword">...</span><span class="comment">                      % RTK-GPS (0-OFF, 1-ON)</span>
+0169     <span class="string">'otafgps'</span>,100,<span class="keyword">...</span><span class="comment">                   % Frequency of transmission of GPS information I2C (infrastructure to car)</span>
+0170     <span class="string">'use_gps_time'</span>,0,<span class="keyword">...</span><span class="comment">                % 1 for use 'gpstime' in rtk-gps</span>
+0171     <span class="string">'otalist'</span>,[],<span class="keyword">...</span><span class="comment">                    % List of cars that are already nodes (90 is the ID of gestion system)</span>
+0172     <span class="string">'radiopropagmodel'</span>,1,<span class="keyword">...</span><span class="comment">            % Radio Propagation model (1-'friis'; 2-'tworay'; 3-'shadowing')</span>
+0173     <span class="string">'default_power'</span>,10,<span class="keyword">...</span><span class="comment">              % Radio defaul power (0.2)</span>
+0174     <span class="string">'commu_norm'</span>,<span class="string">'a'</span>,<span class="keyword">...</span><span class="comment">                % IEEE 802.11x (b/g/a)</span>
+0175     <span class="string">'max_retries'</span>,1,<span class="keyword">...</span><span class="comment">                 % Maximum retries for RTS</span>
+0176     <span class="string">'otashow'</span>,0,<span class="keyword">...</span><span class="comment">                     % Show information on online simulation</span>
+0177     <span class="string">'snr_threshold'</span>,10,<span class="keyword">...</span><span class="comment">              % Receive threshold is used to determine if a reception with SNR is abov this threshold so that the packet can be correctly received.</span>
+0178     <span class="keyword">...</span><span class="comment">     % Gestion Methods</span>
+0179     <span class="string">'f_traffic_gest'</span>,10,<span class="keyword">...</span><span class="comment">                 % Frequency of the method</span>
+0180     <span class="string">'layer'</span>,[],<span class="keyword">...</span><span class="comment">                          % List of layers        Ex:[0.51s 0.52s 0.53s]</span>
+0181     <span class="string">'ocmap2'</span>,logical([]),<span class="keyword">...</span><span class="comment">            % Occupation map (layers) to resevation algorithms</span>
+0182     <span class="string">'ocmap_3D'</span>,[],<span class="keyword">...</span><span class="comment">                   % Occupation map (layers) to display 3D resevation</span>
+0183     <span class="string">'flag_view_3D'</span>,0,<span class="keyword">...</span><span class="comment">                % Occupation map reservation</span>
+0184     <span class="string">'flag_view_3D_'</span>,0,<span class="keyword">...</span><span class="comment">               % Occupation map reservation (help)</span>
+0185     <span class="string">'occup_res2'</span>,1,<span class="keyword">...</span><span class="comment">                  % Resolution of the grid (EX: 2 is a resolution of 0.5m)</span>
+0186     <span class="string">'occup_size2'</span>,0,<span class="keyword">...</span><span class="comment">                 % (0=Auto) Half the size analyzed locally for writing a car in the map (EX: 2 is a square with 4m side)</span>
+0187     <span class="string">'layer_w'</span>,2,<span class="keyword">...</span><span class="comment">                     % Safety margin (width) used in drawing on layered map</span>
+0188     <span class="string">'layer_l'</span>,10,<span class="keyword">...</span><span class="comment">                     % Safety margin (length) used in drawing on layered map</span>
+0189     <span class="string">'max_tries'</span>,20,<span class="keyword">...</span><span class="comment">                  % Number maximum of tries on method 2 to resolve a conflit</span>
+0190     <span class="string">'basic_method'</span>,0,<span class="keyword">...</span><span class="comment">                % Number of times that basic method was used</span>
+0191     <span class="string">'sd'</span>,20,<span class="keyword">...</span><span class="comment">                         % Security distance in front</span>
+0192     <span class="string">'lsd'</span>,4,<span class="keyword">...</span><span class="comment">                         % Lateral security distance</span>
+0193     <span class="keyword">...</span><span class="comment">     % Roundabout gestion system</span>
+0194     <span class="string">'control_radius_round'</span>,35,<span class="keyword">...</span><span class="comment">                 % Control radius of system</span>
+0195     <span class="string">'cartxf'</span>,10,<span class="keyword">...</span><span class="comment">                         % Frequency with which the car attempts to notify the roundabout of his presence</span>
+0196     <span class="string">'cartxpos'</span>,2,<span class="keyword">...</span><span class="comment">                        % 0 -&gt; True position ; 1 -&gt; Fusion ; 2 -&gt; GPS</span>
+0197     <span class="string">'round_notify_list'</span>,zeros(13,1)*NaN,<span class="keyword">...</span><span class="comment"> % List used by roundabout gestion system to manage the cars [id ; node ; state; time; posx; posy; inroad; outroad; currentVel; maxVel; carType, CurrentRoad , timeoflastnotify]</span>
+0198     <span class="string">'cross_notify_list'</span>,zeros(13,1)*NaN,<span class="keyword">...</span><span class="comment"> % List used by crossroad gestion system to manage the cars [id ; node ; state; time; posx; posy; inroad; outroad; currentVel; maxVel; carType, CurrentRoad , timeoflastnotify]</span>
+0199     <span class="string">'rg_count_tab'</span>,[],<span class="keyword">...</span><span class="comment">                   % Table that will count how many cars are sent to a particular output</span>
+0200     <span class="string">'rg_car_limit'</span>,3,<span class="keyword">...</span><span class="comment">                    % Limit of cars that can be routed to a particular output</span>
+0201     <span class="string">'list_ignore_round'</span>,[],<span class="keyword">...</span><span class="comment">              % List ignore cars on roundabout</span>
+0202     <span class="string">'list_round_proximity'</span>,[],<span class="keyword">...</span><span class="comment">       % List of cars ear to the roundabout</span>
+0203     <span class="string">'list_round_already_reserve'</span>,[],<span class="keyword">...</span><span class="comment"> % List of cars that reserve velocity profile</span>
+0204     <span class="string">'amplitudeRoundControl'</span>,[10 -2],<span class="keyword">...</span><span class="comment"> % Radius control for cars withou communication</span>
+0205     <span class="string">'hsema_round'</span>,[],<span class="keyword">...</span><span class="comment">                % Handler to semaphores from roundabout</span>
+0206     <span class="string">'list_round_without_commu'</span>,[],<span class="keyword">...</span><span class="comment">   % List of cars without commu already reserved and their time</span>
+0207     <span class="string">'time_round_without_commu'</span>,-1,<span class="keyword">...</span><span class="comment">   % Time where car without communication will left the roundabout</span>
+0208     <span class="string">'car_round_without_commu'</span>,[],<span class="keyword">...</span><span class="comment">    % Car ID that leaves roundabout withou communication</span>
+0209     <span class="string">'round_last_time_used'</span>,0,<span class="keyword">...</span><span class="comment">        % Last time layer used for the roundabout</span>
+0210     <span class="keyword">...</span><span class="comment">     % Cross Gestion</span>
+0211     <span class="string">'hsema_cross'</span>,[],<span class="keyword">...</span><span class="comment">                % Handler to semaphores from crossroads</span>
+0212     <span class="string">'list_cross_proximity'</span>,[],<span class="keyword">...</span><span class="comment">       % List of cars ear to the crossroads</span>
+0213     <span class="string">'list_cross_already_reserve'</span>,[],<span class="keyword">...</span><span class="comment"> % List of cars that reserve velocity profile</span>
+0214     <span class="string">'list_ignore_cross'</span>,[],<span class="keyword">...</span><span class="comment">              % List ignore cars on roundabout</span>
+0215     <span class="string">'amplitudeCrossControl'</span>,[10 -2],<span class="keyword">...</span><span class="comment"> % Radius control for cars withou communication</span>
+0216     <span class="string">'list_cross_without_commu'</span>,[],<span class="keyword">...</span><span class="comment">   % List of cars without commu already reserved and their time</span>
+0217     <span class="string">'car_cross_without_commu'</span>,[],<span class="keyword">...</span><span class="comment">    % Car ID that leaves crossroads withou communication</span>
+0218     <span class="string">'time_cross_without_commu'</span>,-1,<span class="keyword">...</span><span class="comment">   % Time where car without communication will left the crossroads</span>
+0219     <span class="string">'distcrossextra'</span>,4,<span class="keyword">...</span><span class="comment">              % Extra distance added to cross zone</span>
+0220     <span class="string">'crosszone'</span>,[],<span class="keyword">...</span><span class="comment">                  % Points of corners of cross zone</span>
+0221     <span class="string">'cross_last_time_used'</span>,0,<span class="keyword">...</span><span class="comment">        % Last time layer used for the crossroads</span>
+0222     <span class="keyword">...</span><span class="comment">         -&gt; Normal Mode</span>
+0223     <span class="string">'cross_trigger'</span>,[20 0 5 6],<span class="keyword">...</span><span class="comment">      % Trigger to change lights state on cross</span>
+0224     <span class="string">'ntgreen'</span>,15,<span class="keyword">...</span><span class="comment">                    % Time of normal traffic lights stay green</span>
+0225     <span class="string">'ntyello'</span>,5,<span class="keyword">...</span><span class="comment">                     % Time of normal traffic lights stay yellow</span>
+0226     <span class="keyword">...</span><span class="comment">         -&gt; Inteligent Mode</span>
+0227     <span class="string">'table_gest0'</span>,zeros(3,1)*NaN,<span class="keyword">...</span><span class="comment">    % Table for cross manegement [ID; roadincoming; arrivetime; nextroad]</span>
+0228     <span class="string">'crosscar'</span>,NaN,<span class="keyword">...</span><span class="comment">                  % Current car on the cross</span>
+0229     <span class="string">'lights'</span>,[],<span class="keyword">...</span><span class="comment">                     % Table with tyraffic lights (road)[active greentimeleft orangetimeleft]</span>
+0230     <span class="string">'tgreen'</span>,2,<span class="keyword">...</span><span class="comment">                      % Time of intelligent traffic lights stay green</span>
+0231     <span class="string">'tyello'</span>,2,<span class="keyword">...</span><span class="comment">                      % Time of intelligent traffic lights stay yellow</span>
+0232     <span class="keyword">...</span><span class="comment">         -&gt; Reservation Mode</span>
+0233     <span class="string">'rg_count_tab2'</span>,[],<span class="keyword">...</span><span class="comment">                   % Table that will count how many cars are sent to a particular output</span>
+0234     <span class="string">'rg_car_limit2'</span>,3,<span class="keyword">...</span><span class="comment">                    % Limit of cars that can be routed to a particular output</span>
+0235     <span class="string">'control_radius_cross'</span>,30,<span class="keyword">...</span><span class="comment">            % Control radius of system</span>
+0236     <span class="keyword">...</span><span class="comment">     % Stop system</span>
+0237     <span class="string">'lighttable'</span>,[],<span class="keyword">...</span><span class="comment">                     % Table of changing lights</span>
+0238     <span class="string">'stoplist'</span>,[],<span class="keyword">...</span><span class="comment">                       % List of stops active</span>
+0239     <span class="string">'crosslist'</span>,[15 16 5 6 7 8 9 10],<span class="keyword">...</span>
+0240     <span class="string">'roundlist'</span>,[1 2 3 4 13 14 12 11],<span class="keyword">...</span>
+0241     <span class="keyword">...</span><span class="comment">     % Magnets</span>
+0242     <span class="string">'mag_list'</span>,[],<span class="keyword">...</span><span class="comment">                   % List of magnets</span>
+0243     <span class="string">'nmag'</span>,2,<span class="keyword">...</span><span class="comment">                        % Number of magnets by road (min=1)</span>
+0244     <span class="string">'rule_length'</span>,1,<span class="keyword">...</span><span class="comment">                 % Length of rule (m) (NOTE: Maximum length is the car width)</span>
+0245     <span class="string">'mag_threshold'</span>,0.1,<span class="keyword">...</span><span class="comment">             % Distance threshold for magnet can be detected</span>
+0246     <span class="string">'mag_Br'</span>,0.38,<span class="keyword">...</span><span class="comment">                   % Inducao magnetica residual do magneto(T)</span>
+0247     <span class="string">'mag_niu'</span>,4*pi*10^(-7),<span class="keyword">...</span><span class="comment">          % Permeabilidade do vazio</span>
+0248     <span class="string">'mag_dia'</span>,0.033,<span class="keyword">...</span><span class="comment">                 % Diâmetro do magneto (m)</span>
+0249     <span class="string">'mag_hi'</span>,0.0155,<span class="keyword">...</span><span class="comment">                 % Altura do magneto</span>
+0250     <span class="keyword">...</span><span class="comment">     % Odometry</span>
+0251     <span class="string">'front_noise'</span>,2,<span class="keyword">...</span><span class="comment">                 % Standart deviation of white noise in front wheel encoder</span>
+0252     <span class="string">'rear_noise'</span>,1,<span class="keyword">...</span><span class="comment">                  % Standart deviation of white noise in rear wheel encoder</span>
+0253     <span class="keyword">...</span><span class="comment">     % Collisions</span>
+0254     <span class="string">'collision_detect'</span>,1,<span class="keyword">...</span>
+0255     <span class="string">'collisions'</span>,0,<span class="keyword">...</span><span class="comment">                  % List of active collisions (colision)[car1 car2]</span>
+0256     <span class="keyword">...</span><span class="comment">     % Car properties</span>
+0257     <span class="string">'CarDim'</span>,[1 2],<span class="keyword">...</span><span class="comment">                     % car=[widht length]</span>
+0258     <span class="string">'cprx'</span>,0,<span class="keyword">...</span>
+0259     <span class="string">'cpry'</span>,0,<span class="keyword">...</span>
+0260     <span class="string">'TruDim'</span>,[1.5 3],<span class="keyword">...</span><span class="comment">                   % truck=[widht length]</span>
+0261     <span class="string">'tprx'</span>,0,<span class="keyword">...</span>
+0262     <span class="string">'tpry'</span>,0,<span class="keyword">...</span>
+0263     <span class="string">'wheel_diam'</span>,((205*0.55*2)+16*25.4)/1000,<span class="keyword">...</span><span class="comment">    % Wheel diameter</span>
+0264     <span class="string">'wheel_radius'</span>,0,<span class="keyword">...</span><span class="comment">                % Wheel radius of cars</span>
+0265     <span class="string">'pulses_per_rev'</span>,500,<span class="keyword">...</span><span class="comment">            % Pulses per revolution of encoder</span>
+0266     <span class="keyword">...</span><span class="comment">     % Driver vision</span>
+0267     <span class="string">'zone_type'</span>,4,<span class="keyword">...</span><span class="comment">                   % Type of area to be examined in the search for other cars</span>
+0268     <span class="keyword">...</span><span class="comment">                                 % (1-Elipse, 2-Circle, 3- Rectangle, 4-Fast method(with circle_r))</span>
+0269     <span class="string">'elipse_M'</span>,25,<span class="keyword">...</span><span class="comment">                   % Elipse major axis</span>
+0270     <span class="string">'elipse_m'</span>,10,<span class="keyword">...</span><span class="comment">                   % Elipse minor axis</span>
+0271     <span class="string">'circle_r'</span>,30,<span class="keyword">...</span><span class="comment">                   % Circle radius</span>
+0272     <span class="string">'rect_half_length'</span>,4,<span class="keyword">...</span><span class="comment">            % Half the length of the rectangle</span>
+0273     <span class="string">'rect_half_width'</span>,3,<span class="keyword">...</span><span class="comment">             % Half the width of the rectangle</span>
+0274     <span class="string">'lmax'</span>,0,<span class="keyword">...</span><span class="comment">                        % Half the side of the square wich will be analyzed locally (for reading)</span>
+0275     <span class="string">'xg'</span>,0,<span class="keyword">...</span><span class="comment">                          % Points of area to be examined without rotation</span>
+0276     <span class="string">'yg'</span>,0,<span class="keyword">...</span><span class="comment">                          % Points of area to be examined without rotation</span>
+0277     <span class="string">'npoints'</span>,0,<span class="keyword">...</span><span class="comment">                     % Number of points of area to be examine</span>
+0278     <span class="keyword">...</span><span class="comment">     % Driver options</span>
+0279     <span class="string">'change_lane'</span>,[10 20],<span class="keyword">...</span><span class="comment">           % Gap where driver can overtake</span>
+0280     <span class="keyword">...</span><span class="comment">     % Prints active (0=Off, 1=On)</span>
+0281     <span class="string">'printrsp'</span>,0,<span class="keyword">...</span><span class="comment">                    % Print road setpoints</span>
+0282     <span class="string">'printcurrsp'</span>,0,<span class="keyword">...</span><span class="comment">                 % Print the setpoint that the car is following</span>
+0283     <span class="string">'printrid'</span>,0,<span class="keyword">...</span><span class="comment">                    % Print road ID</span>
+0284     <span class="string">'printcrosszone'</span>,0,<span class="keyword">...</span><span class="comment">              % Print the cross zone</span>
+0285     <span class="string">'printstop'</span>,1,<span class="keyword">...</span><span class="comment">                   % Prints stop points</span>
+0286     <span class="string">'printlaser'</span>,0,<span class="keyword">...</span><span class="comment">                  % Prints laser of selected car</span>
+0287     <span class="string">'printsateliteposition'</span>,0,<span class="keyword">...</span><span class="comment">       % To print satelites position on navigation time</span>
+0288     <span class="string">'printmag'</span>,0,<span class="keyword">...</span><span class="comment">                    % To print magnets in scenary</span>
+0289     <span class="string">'printtime'</span>,0,<span class="keyword">...</span><span class="comment">                   % Print simulation time</span>
+0290     <span class="string">'printonlineinfo'</span>,0,<span class="keyword">...</span><span class="comment">             % Print online information l«such as accumulator state, etc...</span>
+0291     <span class="string">'printslipplace'</span>,0,<span class="keyword">...</span><span class="comment">              % Print slip place if exist</span>
+0292     <span class="string">'printcommulistround'</span>,0,<span class="keyword">...</span><span class="comment">         % Print the list of cars detected by the roundabout</span>
+0293     <span class="string">'printcommulistcross'</span>,0,<span class="keyword">...</span><span class="comment">         % Print the list of cars detected by the cross</span>
+0294     <span class="string">'printcommugpsinfo'</span>,0,<span class="keyword">...</span><span class="comment">           % Print a white '+' in simulator when a car receives a gps informantion and a blue '+' when car cannot receive gps information</span>
+0295     <span class="string">'printcommuvelprof'</span>,0,<span class="keyword">...</span><span class="comment">           % Print a white 'o' in simulator when a car receives a velocity profile and a blue 'o' when car cannot receive</span>
+0296     <span class="string">'printcommunotify'</span>,0,<span class="keyword">...</span><span class="comment">            % Print a white '^' in simulator when a car notification is received successfully and a blue '^' when notification is not received</span>
+0297     <span class="string">'printkinematic'</span>,1,<span class="keyword">...</span><span class="comment">              % Print kinematics points and orientations for the selected followed car</span>
+0298     <span class="string">'printsecurity'</span>,0,<span class="keyword">...</span><span class="comment">               % Print sucurity vectors of each vehicle</span>
+0299     <span class="string">'printchangelane'</span>,1,<span class="keyword">...</span><span class="comment">             % Print the change lane manouver</span>
+0300     <span class="string">'printinfo'</span>,1,<span class="keyword">...</span><span class="comment">                   % Print some info with the car</span>
+0301     <span class="string">'infotype'</span>,18,<span class="keyword">...</span><span class="comment">                   % Type of the info will be ploted</span>
+0302     <span class="keyword">...</span><span class="comment">                                 ( 1-Origin and Destination, 2-Car ID, 3-v(Km/h), 4-(v,w), 5-Steering angle)</span>
+0303     <span class="keyword">...</span><span class="comment">                                 ( 6-GPS HDOP, 7-ID (cmdacc) + Cars sighted, 8- Accelaration comand+v(km/h), 9- Accelaration comand  )</span>
+0304     <span class="keyword">...</span><span class="comment">                                 ( 10-ID + List Communication, 11- Road, 12- [CmdAcc+ID+list], 13- ID + AccCmd)</span>
+0305     <span class="keyword">...</span><span class="comment">                                 ( 14 - Mode + ID (Mode-&gt;D/W/M), 15-Mode (D/W/M), 16- node commu, 17- ID (causeID), )</span>
+0306     <span class="keyword">...</span><span class="comment">                                 ( 18 - ID/(Mode-&gt;D/W/M)/(Mode-&gt;D/W/M)/(causeID)/v(Km/h))</span>
+0307     <span class="keyword">...</span><span class="comment">     % Trajectory setpoints</span>
+0308     <span class="string">'rw'</span>,3,<span class="keyword">...</span><span class="comment">                          % Lane widht</span>
+0309     <span class="string">'rn'</span>,1,<span class="keyword">...</span><span class="comment">                          % Number of roads</span>
+0310     <span class="string">'rd'</span>,4,<span class="keyword">...</span><span class="comment">                          % Distance between setpoints</span>
+0311     <span class="string">'ri'</span>,0,<span class="keyword">...</span><span class="comment">                          % Roads information (road)[1xi 2yi 3xf 4yf 5nsetp 6length 7ang 8intype 9endtype 10nextlaunch 11countdelay]</span>
+0312     <span class="keyword">...</span><span class="comment">                                 % In/EndType (0=End 1-In 2-Roundabout 3-Cross)</span>
+0313     <span class="string">'r'</span>,0,<span class="keyword">...</span><span class="comment">                           % Roads Setpoints  [road setp [x y]]</span>
+0314     <span class="keyword">...</span><span class="comment">     % Roundabout setpoints</span>
+0315     <span class="string">'rrw'</span>,5,<span class="keyword">...</span><span class="comment">                         % Lane widht in roundabout</span>
+0316     <span class="string">'rbd'</span>,[90/10 90/8],<span class="keyword">...</span><span class="comment">              % Distance between setpoints</span>
+0317     <span class="string">'radiusI'</span>,13,<span class="keyword">...</span><span class="comment">                    % Radius of inside lane of roundabout</span>
+0318     <span class="string">'radiusO'</span>,18,<span class="keyword">...</span><span class="comment">                    % Radius of outside lane of roundabout</span>
+0319     <span class="string">'r1i'</span>,0,<span class="keyword">...</span><span class="comment">                         % Outside lane information [1nsetp]</span>
+0320     <span class="string">'r1'</span>,0,<span class="keyword">...</span><span class="comment">                          % Outside lane      [setp [x y]]</span>
+0321     <span class="string">'r2i'</span>,0,<span class="keyword">...</span><span class="comment">                         % Inside lane information</span>
+0322     <span class="string">'r2'</span>,0,<span class="keyword">...</span><span class="comment">                          % Inside lane       [setp [x y]]</span>
+0323     <span class="keyword">...</span><span class="comment">     % Routing/Probabilities Table</span>
+0324     <span class="string">'rtable'</span>,0,<span class="keyword">...</span><span class="comment">                      % Routing Table</span>
+0325     <span class="string">'rp'</span>,0,<span class="keyword">...</span><span class="comment">                          % Roads probability (road)[1exit 2exit ...]</span>
+0326     <span class="string">'rcp'</span>,zeros(28,28,2),<span class="keyword">...</span><span class="comment">            % Roads current probability (road)[ [curpro1 ncars1] [curpro2 ncars2] ]</span>
+0327     <span class="string">'rl'</span>,[],<span class="keyword">...</span><span class="comment">                         % Roads launch table [road; acumulator; next launch; last id; time between launchs; flag]</span>
+0328     <span class="keyword">...</span><span class="comment">     % Figures</span>
+0329     <span class="string">'figmenu'</span>,1,<span class="keyword">...</span>
+0330     <span class="string">'hfigmenu'</span>,-1,<span class="keyword">...</span>
+0331     <span class="string">'figsim'</span>,2,<span class="keyword">...</span>
+0332     <span class="string">'hfigsim'</span>,-1,<span class="keyword">...</span>
+0333     <span class="string">'hsim'</span>,-1,<span class="keyword">...</span>
+0334     <span class="string">'hott'</span>,0,<span class="keyword">...</span><span class="comment">                        % Online text time</span>
+0335     <span class="string">'hoinfo'</span>,0,<span class="keyword">...</span><span class="comment">                      % Online information</span>
+0336     <span class="string">'hbar'</span>,-1,<span class="keyword">...</span><span class="comment">                       % Wait bar if simulation is in mode offline</span>
+0337     <span class="string">'hwaitoff'</span>,-1,<span class="keyword">...</span><span class="comment">                   % Wait box for play simulation offline</span>
+0338     <span class="string">'hcommulistround'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to roundabout list</span>
+0339     <span class="string">'hcommulistcross'</span>,-1,<span class="keyword">...</span><span class="comment">            % Handler to cross list</span>
+0340     <span class="string">'hinterface'</span>,-1,<span class="keyword">...</span><span class="comment">                 % Handler to interface</span>
+0341     <span class="string">'hsema'</span>,[],<span class="keyword">...</span><span class="comment">                      % Handler to plot traffic lights</span>
+0342     <span class="string">'hgraph1'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to plot lateral errors                        (fig3)</span>
+0343     <span class="string">'hgraph2'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to occupation map acumulator                  (fig4)</span>
+0344     <span class="string">'hgraph3'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to occupation map acumulator over the time    (fig5)</span>
+0345     <span class="string">'hgraph4'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to graph with gps and magnets errors          (fig6)</span>
+0346     <span class="string">'hgraph5'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to graph with INS and fusion errors           (fig7)</span>
+0347     <span class="string">'hgraph6'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to graph with odometry errors                 (fig8)</span>
+0348     <span class="string">'hgraph7'</span>,[],<span class="keyword">...</span><span class="comment">                    % Handler to graph with Euclidean distance errors       (fig9)</span>
+0349     <span class="string">'hdisplay'</span>,[],<span class="keyword">...</span><span class="comment">                   % Handler to figure with cars stats                     (fig10)</span>
+0350     <span class="keyword">...</span><span class="comment">     % Occupation grid properties</span>
+0351     <span class="string">'ocmap'</span>,0,<span class="keyword">...</span><span class="comment">                       % Occupation map (uint8)</span>
+0352     <span class="string">'ocmap3'</span>,0,<span class="keyword">...</span><span class="comment">                      % Used only in path extraction</span>
+0353     <span class="string">'occup_res'</span>,1,<span class="keyword">...</span><span class="comment">                   % Resolution of the grid (EX: 2 is a resolution of 0.5m)</span>
+0354     <span class="string">'occup_size'</span>,2,<span class="keyword">...</span><span class="comment">                  % Half the size analyzed locally for writing a car in the map (EX: 2 is a square with 4m side)</span>
+0355     <span class="string">'occup_map_accu'</span>,[],<span class="keyword">...</span><span class="comment">             % Occupation map accumulator</span>
+0356     <span class="string">'ocmap_ind'</span>,[],<span class="keyword">...</span><span class="comment">                  % Indices of cells by road [x,y,road]</span>
+0357     <span class="string">'ocmap_time'</span>,[],<span class="keyword">...</span><span class="comment">                 % Number of cells ocupied and time [time ncells(road1) ncells(road2) ]</span>
+0358     <span class="keyword">...</span><span class="comment">     % Cars stats</span>
+0359     <span class="string">'cars_time_stop'</span>,[],<span class="keyword">...</span><span class="comment">             % Array with stop time of each car</span>
+0360     <span class="string">'cars_time_stop_perc'</span>,[],<span class="keyword">...</span><span class="comment">        % Array with stop time of each car in percentage</span>
+0361     <span class="string">'cars_time_run'</span>,[],<span class="keyword">...</span><span class="comment">              % Array with run time of each car</span>
+0362     <span class="string">'cars_time_run_perc'</span>,[],<span class="keyword">...</span><span class="comment">         % Array with run time of each car in percentage</span>
+0363     <span class="string">'cars_time_insim'</span>,[],<span class="keyword">...</span><span class="comment">            % Average time of cars in simulator by distance traveled</span>
+0364     <span class="string">'cars_mean_vel'</span>,[],<span class="keyword">...</span><span class="comment">              % Array with mean velocity during trajectory</span>
+0365     <span class="string">'cars_mean_run_vel'</span>,[],<span class="keyword">...</span><span class="comment">          % Array with mean velocity (only when car is runing)</span>
+0366     <span class="string">'cars_exit'</span>,0,<span class="keyword">...</span><span class="comment">                   % Cars deleted from simulator</span>
+0367     <span class="keyword">...</span><span class="comment">     % Position Errors</span>
+0368     <span class="string">'dla'</span>,5,<span class="keyword">...</span><span class="comment">                         % Look-ahead distance</span>
+0369     <span class="string">'dlockaheadgain'</span>,15,<span class="keyword">...</span><span class="comment">             % Look-ahead gain distance</span>
+0370     <span class="keyword">...</span><span class="comment">         % Maximum speeds (m/s)</span>
+0371     <span class="string">'velmax1'</span>,30,<span class="keyword">...</span><span class="comment">                    % Km/h (after converted to m/s)</span>
+0372     <span class="string">'velmax2'</span>,40,<span class="keyword">...</span><span class="comment">                    % Km/h (after converted to m/s)</span>
+0373     <span class="string">'velmax3'</span>,50,<span class="keyword">...</span><span class="comment">                    % Km/h (after converted to m/s)</span>
+0374     <span class="keyword">...</span><span class="comment">     % Dynamic of cars</span>
+0375     <span class="string">'dynmaxacc'</span>,[5 -20],<span class="keyword">...</span><span class="comment">                 % [maxVelAcc/s maxVelBrk/s]</span>
+0376     <span class="string">'dynmaxste'</span>,[180*pi/180 40*pi/180],<span class="keyword">...</span><span class="comment">  % [MaxSteer xºRad/s xºRad]</span>
+0377     <span class="string">'velpercent'</span>,[0.5 0.4],<span class="keyword">...</span><span class="comment">              % Percentage of maximum speed at [ roundabout cross ]</span>
+0378     <span class="keyword">...</span><span class="comment">     % Colors</span>
+0379     <span class="string">'obtc'</span>,[0 0 0],<span class="keyword">...</span><span class="comment">                   % Background online text color</span>
+0380     <span class="string">'otc'</span>,[1 1 1],<span class="keyword">...</span><span class="comment">                    % Online text color</span>
+0381     <span class="string">'cd1'</span>,[0.1 0.9 0.1],<span class="keyword">...</span><span class="comment">              % Calm driver</span>
+0382     <span class="string">'cd2'</span>,[0.9 0.9 0],<span class="keyword">...</span><span class="comment">                % Normal driver</span>
+0383     <span class="string">'cd3'</span>,[0.9 0.1 0.1],<span class="keyword">...</span><span class="comment">              % Aggressive driver</span>
+0384     <span class="keyword">...</span>
+0385     <span class="keyword">...</span><span class="comment">     % Fusion 4 Properties</span>
+0386     <span class="string">'fus4_noise_time'</span>,10,<span class="keyword">...</span><span class="comment">            % Duration (in seconds) off noise vectors used in fus4</span>
+0387     <span class="string">'CT_CORR_INOV'</span>,1,<span class="keyword">...</span>
+0388     <span class="string">'CT_CORR'</span>,1,<span class="keyword">...</span>
+0389     <span class="string">'SLIP_WHEEL'</span>,1,<span class="keyword">...</span>
+0390     <span class="string">'CT_threshold'</span>,0.5,<span class="keyword">...</span>
+0391     <span class="string">'ekf_odo_threshold'</span>,[1e-2 4e-4 4e-4 4e-4 4e-4],<span class="keyword">...</span>
+0392     <span class="string">'slip_list'</span>,[],<span class="keyword">...</span><span class="comment">                  % List of places with oil</span>
+0393     <span class="string">'slip_radius'</span>,1,<span class="keyword">...</span><span class="comment">                 % Radius of oil circles</span>
+0394     <span class="keyword">...</span><span class="comment">     % Aux</span>
+0395     <span class="string">'aux1'</span>,[],<span class="keyword">...</span>
+0396     <span class="string">'aux2'</span>,[],<span class="keyword">...</span>
+0397     <span class="string">'offline'</span>,0,<span class="keyword">...</span>
+0398     <span class="keyword">...</span><span class="comment">     % Localization</span>
+0399     <span class="string">'xyz_origin'</span>,0,<span class="keyword">...</span><span class="comment">                   % Local de origem em XYZ</span>
+0400     <span class="string">'round_center'</span>,[50 50],<span class="keyword">...</span><span class="comment">           % Center of roundabout</span>
+0401     <span class="string">'cross_center'</span>,[115 50],<span class="keyword">...</span><span class="comment">             % Center of Crossroad</span>
+0402     <span class="string">'refposxRound'</span>,0,<span class="keyword">...</span><span class="comment">                      % Reference station position in simulator (x) - Round</span>
+0403     <span class="string">'refposyRound'</span>,0,<span class="keyword">...</span><span class="comment">                      % Reference station position in simulator (y) - Round</span>
+0404     <span class="string">'refposxCross'</span>,115,<span class="keyword">...</span><span class="comment">                      % Reference station position in simulator (x) - Cross</span>
+0405     <span class="string">'refposyCross'</span>,50,<span class="keyword">...</span><span class="comment">                      % Reference station position in simulator (y) - Cross</span>
+0406     <span class="string">'lt'</span>,40.11,<span class="keyword">...</span><span class="comment">                                      % Latitude  Local -&gt; ISR-UC</span>
+0407     <span class="string">'lg'</span>,-8.24 <span class="keyword">...</span><span class="comment">                                      % Longitude Loval -&gt; ISR-UC</span>
+0408     );
+0409 
+0410 <span class="comment">% Convert speeds from Km/h to m/s</span>
+0411 out.velmax1=out.velmax1/3.6;
+0412 out.velmax2=out.velmax2/3.6;
+0413 out.velmax3=out.velmax3/3.6;
+0414 
+0415 <span class="comment">% Local de origem em XYZ</span>
+0416 <span class="keyword">if</span>(out.gps_type==1)
+0417     out.xyz_origin=llh2xyz([out.lt*pi/180 out.lg*pi/180 0]);    <span class="comment">% Local de origem em XYZ</span>
+0418 <span class="keyword">end</span>
+0419 
+0420 <span class="comment">% Decide the step_time to simulation</span>
+0421 <span class="keyword">if</span>( ~(out.gps==0 &amp;&amp; out.ins==0 &amp;&amp; out.fus==0) )
+0422     out.step_time=1/max([out.frqgps out.frqins]);
+0423 <span class="keyword">end</span>
+0424 
+0425 <span class="comment">% Read necessary tables from xls files</span>
+0426 out.rp=xlsread(<span class="string">'ProbTable3.xls'</span>); out.rp(:,1)=[]; out.rp(1,:)=[];
+0427 out.rtable=xlsread(<span class="string">'RoutingTable.xls'</span>); out.rtable(:,1)=[]; out.rtable(1,:)=[];
+0428 out.lighttable=xlsread(<span class="string">'LightTable.xls'</span>);
+0429 
+0430 <span class="comment">%     % Entry Flux</span>
+0431 <span class="comment">%     % All Roads</span>
+0432 <span class="comment">%     out.rf=out.dlaunch*ones(28,1);</span>
+0433 
+0434 <span class="comment">% Determine half the side of the square wich will be analyzed locally</span>
+0435 out.lmax=max([out.elipse_M out.elipse_m out.circle_r sqrt(out.rect_half_length^2 + out.rect_half_width^2)]);
+0436 
+0437 <span class="comment">% Compute the points of area wich will be analyzed without rotation</span>
+0438 out.xg=[]; out.yg=[];
+0439 <span class="keyword">if</span>(out.zone_type==1)
+0440     <span class="comment">% Generate elipse points (generic)</span>
+0441     delta=0.3;
+0442     <span class="keyword">for</span> ang=0:delta:2*pi
+0443         out.xg=[out.xg out.elipse_M*cos(ang)];
+0444         out.yg=[out.yg out.elipse_m*sin(ang)];
+0445     <span class="keyword">end</span>
+0446     out.xg=[out.xg out.xg(1)];
+0447     out.yg=[out.yg out.yg(1)];
+0448     out.npoints=length(out.xg);
+0449 <span class="keyword">elseif</span>(out.zone_type==2)
+0450     <span class="comment">% Generate circle points</span>
+0451     delta=0.3;
+0452     <span class="keyword">for</span> ang=0:delta:2*pi
+0453         out.xg=[out.xg out.circle_r*cos(ang)];
+0454         out.yg=[out.yg out.circle_r*sin(ang)];
+0455     <span class="keyword">end</span>
+0456     out.xg=[out.xg out.xg(1)];
+0457     out.yg=[out.yg out.yg(1)];
+0458     out.npoints=length(out.xg);
+0459 <span class="keyword">elseif</span>(out.zone_type==3)
+0460     <span class="comment">% Generate rectangle points (generic)</span>
+0461     ll=out.rect_half_length; lw=out.rect_half_width;
+0462     out.xg(1,1)=-ll; out.xg(1,2)=ll;  out.xg(1,3)=ll; out.xg(1,4)=-ll; out.xg(1,5)=-ll;
+0463     out.yg(1,1)=-lw; out.yg(1,2)=-lw; out.yg(1,3)=lw; out.yg(1,4)=lw;  out.yg(1,5)=-lw;
+0464     out.npoints=length(out.xg);
+0465 <span class="keyword">end</span>
+0466 
+0467 <span class="comment">% Generate empty occupation map</span>
+0468 out.ocmap=uint8(zeros(out.dimy*out.occup_res,out.dimx*out.occup_res));
+0469 out.ocmap3=double(zeros(out.dimy*out.occup_res,out.dimx*out.occup_res));
+0470 out.occup_map_accu=zeros(out.dimy*out.occup_res,out.dimx*out.occup_res);
+0471 
+0472 <span class="comment">% Half the size analyzed locally for writing a car in the map</span>
+0473 <span class="keyword">if</span>(out.occup_size2==0)
+0474     aux1=out.TruDim(1)+out.layer_w; aux2=out.TruDim(2)+out.layer_l;
+0475     out.occup_size2=ceil(sqrt(aux1^2+aux2^2));
+0476 <span class="keyword">end</span>
+0477 
+0478 <span class="comment">% Table that will count how many cars are sent to a particular output</span>
+0479 out.rg_count_tab(1:10,8)=0;
+0480 out.rg_count_tab(1,1:8)=[15 16 17 18 19 20 27 28];    <span class="comment">% Exit from roundabout</span>
+0481 out.rg_count_tab2(1:10,8)=0;
+0482 out.rg_count_tab2(1,1:8)=[13 14 22 21 23 24 25 26];            <span class="comment">% Exit from crossroads</span>
+0483 
+0484 <span class="comment">% Wheel parameters</span>
+0485 out.wheel_radius=out.wheel_diam;
+0486 
+0487 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

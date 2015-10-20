@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compute_stats_isr_trafsim</title>
+  <meta name="keywords" content="compute_stats_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html statistics -->
+<h1>compute_stats_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [  ] = compute_stats_isr_trafsim(  ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION------------------------------------------------------------------------
+
+
+-DISCLAIMER-------------------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../ISR-TrafSim.v2.0/run_isr_trafsim.html" class="code" title="function [] = run_isr_trafsim()">run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION------------------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%-DISCLAIMER-------------------------------------------------------------------------</span>
+0028 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0029 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0030 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0031 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0032 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0035 <span class="comment">%   Urbano Nunes*</span>
+0036 <span class="comment">%   Luis Conde Bento**</span>
+0037 <span class="comment">%   Ricardo Parafita*</span>
+0038 <span class="comment">%   Sergio Santos*</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0041 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0042 <span class="comment">%--------------------------------------------------------------------------</span>
+0043 
+0044 <a name="_sub0" href="#_subfunctions" class="code">function [  ] = compute_stats_isr_trafsim(  )</a>
+0045 <span class="keyword">global</span> s
+0046 load(<span class="string">'savedata\predata.mat'</span>)
+0047 
+0048 list=dir(<span class="string">'savedata\car'</span>);
+0049 nc=size(list,1)-2;
+0050 carsWithoutV2I=0;
+0051 carsWithV2I=0;
+0052 nwc=0;
+0053 nnwc=0;
+0054 <span class="keyword">if</span>(nc&gt;0)
+0055     <span class="keyword">for</span> n=1:nc
+0056         load([<span class="string">'savedata\car\car_'</span> num2str(n) <span class="string">'.mat'</span>])
+0057         <span class="comment">% c.car(n).TRUEpos(end+1,:)=[c.car(n).pos.x c.car(n).pos.y c.car(n).pos.t c.car(n).dyn(1) c.car(n).dyn(2) c.car(n).cmdacc c.car(n).cmdste dist_isr_trafsim(c.car(n).posprv.x, c.car(n).posprv.y,c.car(n).pos.x,c.car(n).pos.y)];     % Store car trajectory</span>
+0058         d=aux.TRUEpos;
+0059         <span class="comment">% All cars</span>
+0060         dist_(n)=sum(d(:,8));                <span class="comment">% meters</span>
+0061         mean_vel(n)=mean(d(:,4));           <span class="comment">% m/s</span>
+0062         mean_vel_move=[];
+0063         time(n)=size(d,1)*0.01;             <span class="comment">% seconds</span>
+0064         time_per_meter=time(n)/dist_(n) ;    <span class="comment">% seconds/meter</span>
+0065         timestop(n)=0;
+0066         timemove(n)=0;
+0067         time_vel_less_10(n)=0;
+0068         time_vel_less_20(n)=0;
+0069         time_vel_less_30(n)=0;
+0070         
+0071         time_acc(n)=0;
+0072         time_brk(n)=0;
+0073         time_acc_percent(n)=0;
+0074         time_brk_percent(n)=0;
+0075         mean_vel_move=[];
+0076         <span class="keyword">for</span> i=1:size(d,1)
+0077             v=d(i,4);
+0078             <span class="keyword">if</span>(v==0)
+0079                 timestop(n)=timestop(n)+0.01;
+0080             <span class="keyword">end</span>
+0081             <span class="keyword">if</span>(v&gt;0)
+0082                 timemove(n)=timemove(n)+0.01;
+0083                 mean_vel_move(end+1)=v;
+0084             <span class="keyword">end</span>
+0085             <span class="keyword">if</span>(v&lt;10/3.6)
+0086                 time_vel_less_10(n)=time_vel_less_10(n)+0.01;
+0087             <span class="keyword">end</span>
+0088             <span class="keyword">if</span>(v&lt;20/3.6)
+0089                 time_vel_less_20(n)=time_vel_less_20(n)+0.01;
+0090             <span class="keyword">end</span>
+0091             <span class="keyword">if</span>(v&lt;30/3.6)
+0092                 time_vel_less_30(n)=time_vel_less_30(n)+0.01;
+0093             <span class="keyword">end</span>
+0094             <span class="keyword">if</span>(d(i,6)==1)
+0095                 time_acc(n)=time_acc(n)+0.01;
+0096             <span class="keyword">elseif</span>(d(i,6)==-1)
+0097                 time_brk(n)=time_brk(n)+0.01;
+0098             <span class="keyword">end</span>
+0099         <span class="keyword">end</span>
+0100         timestop_percent(n)=(timestop(n)/time(n))*100;
+0101         time_vel_less_10_percent(n)=(time_vel_less_10(n)/time(n))*100;
+0102         time_vel_less_20_percent(n)=(time_vel_less_20(n)/time(n))*100;
+0103         time_vel_less_30_percent(n)=(time_vel_less_30(n)/time(n))*100;
+0104         timemove_percent(n)=100-timestop_percent(n);
+0105         timestop_perdist(n)=timestop(n)/dist_(n);
+0106         time_acc_percent(n)=time_acc(n)/time(n);
+0107         time_brk_percent(n)=time_brk(n)/time(n);
+0108         mean_vel_moving(n)=mean(mean_vel_move);
+0109         
+0110         <span class="keyword">if</span>(aux.commu==1)
+0111             nwc=nwc+1;
+0112             carsWithV2I=carsWithV2I+1;
+0113             dist_wc(nwc)=sum(d(:,8));                <span class="comment">% meters</span>
+0114             mean_vel_wc(nwc)=mean(d(:,4));           <span class="comment">% m/s</span>
+0115             mean_vel_move_wc=[];
+0116             time_wc(nwc)=size(d,1)*0.01;             <span class="comment">% seconds</span>
+0117             time_per_meter_wc=time_wc(nwc)/dist_wc(nwc) ;    <span class="comment">% seconds/meter</span>
+0118             timestop_wc(nwc)=0;
+0119             timemove_wc(nwc)=0;
+0120             time_vel_less_10_wc(nwc)=0;
+0121             time_vel_less_20_wc(nwc)=0;
+0122             time_vel_less_30_wc(nwc)=0;
+0123             
+0124             time_acc_wc(nwc)=0;
+0125             time_brk_wc(nwc)=0;
+0126             time_acc_percent_wc(nwc)=0;
+0127             time_brk_percent_wc(nwc)=0;
+0128             mean_vel_move_wc=[];
+0129             <span class="keyword">for</span> i=1:size(d,1)
+0130                 v=d(i,4);
+0131                 <span class="keyword">if</span>(v==0)
+0132                     timestop_wc(nwc)=timestop_wc(nwc)+0.01;
+0133                 <span class="keyword">end</span>
+0134                 <span class="keyword">if</span>(v&gt;0)
+0135                     timemove_wc(nwc)=timemove_wc(nwc)+0.01;
+0136                     mean_vel_move_wc(end+1)=v;
+0137                 <span class="keyword">end</span>
+0138                 <span class="keyword">if</span>(v&lt;10/3.6)
+0139                     time_vel_less_10_wc(nwc)=time_vel_less_10_wc(nwc)+0.01;
+0140                 <span class="keyword">end</span>
+0141                 <span class="keyword">if</span>(v&lt;20/3.6)
+0142                     time_vel_less_20_wc(nwc)=time_vel_less_20_wc(nwc)+0.01;
+0143                 <span class="keyword">end</span>
+0144                 <span class="keyword">if</span>(v&lt;30/3.6)
+0145                     time_vel_less_30_wc(nwc)=time_vel_less_30_wc(nwc)+0.01;
+0146                 <span class="keyword">end</span>
+0147                 <span class="keyword">if</span>(d(i,6)==1)
+0148                     time_acc_wc(nwc)=time_acc_wc(nwc)+0.01;
+0149                 <span class="keyword">elseif</span>(d(i,6)==-1)
+0150                     time_brk_wc(nwc)=time_brk_wc(nwc)+0.01;
+0151                 <span class="keyword">end</span>
+0152             <span class="keyword">end</span>
+0153             timestop_percent_wc(nwc)=(timestop_wc(nwc)/time_wc(nwc))*100;
+0154             time_vel_less_10_percent_wc(nwc)=(time_vel_less_10_wc(nwc)/time_wc(nwc))*100;
+0155             time_vel_less_20_percent_wc(nwc)=(time_vel_less_20_wc(nwc)/time_wc(nwc))*100;
+0156             time_vel_less_30_percent_wc(nwc)=(time_vel_less_30_wc(nwc)/time_wc(nwc))*100;
+0157             timemove_percent_wc(nwc)=100-timestop_percent_wc(nwc);
+0158             timestop_perdist_wc(nwc)=timestop_wc(nwc)/dist_wc(nwc);
+0159             time_acc_percent_wc(nwc)=time_acc_wc(nwc)/time_wc(nwc);
+0160             time_brk_percent_wc(nwc)=time_brk_wc(nwc)/time_wc(nwc);
+0161             mean_vel_moving_wc(nwc)=mean(mean_vel_move_wc);
+0162         <span class="keyword">elseif</span>(aux.commu==0)
+0163             carsWithoutV2I=carsWithoutV2I+1;
+0164             nnwc = nnwc + 1;
+0165             dist_nwc(nnwc)=sum(d(:,8));                <span class="comment">% meters</span>
+0166             mean_vel_nwc(nnwc)=mean(d(:,4));           <span class="comment">% m/s</span>
+0167             mean_vel_move_nwc=[];
+0168             time_nwc(nnwc)=size(d,1)*0.01;             <span class="comment">% seconds</span>
+0169             time_per_meter_nwc=time_nwc(nnwc)/dist_nwc(nnwc) ;    <span class="comment">% seconds/meter</span>
+0170             timestop_nwc(nnwc)=0;
+0171             timemove_nwc(nnwc)=0;
+0172             time_vel_less_10_nwc(nnwc)=0;
+0173             time_vel_less_20_nwc(nnwc)=0;
+0174             time_vel_less_30_nwc(nnwc)=0;
+0175             
+0176             time_acc_nwc(nnwc)=0;
+0177             time_brk_nwc(nnwc)=0;
+0178             time_acc_percent_nwc(nnwc)=0;
+0179             time_brk_percent_nwc(nnwc)=0;
+0180             mean_vel_move_nwc=[];
+0181             <span class="keyword">for</span> i=1:size(d,1)
+0182                 v=d(i,4);
+0183                 <span class="keyword">if</span>(v==0)
+0184                     timestop_nwc(nnwc)=timestop_nwc(nnwc)+0.01;
+0185                 <span class="keyword">end</span>
+0186                 <span class="keyword">if</span>(v&gt;0)
+0187                     timemove_nwc(nnwc)=timemove_nwc(nnwc)+0.01;
+0188                     mean_vel_move_nwc(end+1)=v;
+0189                 <span class="keyword">end</span>
+0190                 <span class="keyword">if</span>(v&lt;10/3.6)
+0191                     time_vel_less_10_nwc(nnwc)=time_vel_less_10_nwc(nnwc)+0.01;
+0192                 <span class="keyword">end</span>
+0193                 <span class="keyword">if</span>(v&lt;20/3.6)
+0194                     time_vel_less_20_nwc(nnwc)=time_vel_less_20_nwc(nnwc)+0.01;
+0195                 <span class="keyword">end</span>
+0196                 <span class="keyword">if</span>(v&lt;30/3.6)
+0197                     time_vel_less_30_nwc(nnwc)=time_vel_less_30_nwc(nnwc)+0.01;
+0198                 <span class="keyword">end</span>
+0199                 <span class="keyword">if</span>(d(i,6)==1)
+0200                     time_acc_nwc(nnwc)=time_acc_nwc(nnwc)+0.01;
+0201                 <span class="keyword">elseif</span>(d(i,6)==-1)
+0202                     time_brk_nwc(nnwc)=time_brk_nwc(nnwc)+0.01;
+0203                 <span class="keyword">end</span>
+0204             <span class="keyword">end</span>
+0205             timestop_percent_nwc(nnwc)=(timestop_nwc(nnwc)/time_nwc(nnwc))*100;
+0206             time_vel_less_10_percent_nwc(nnwc)=(time_vel_less_10_nwc(nnwc)/time_nwc(nnwc))*100;
+0207             time_vel_less_20_percent_nwc(nnwc)=(time_vel_less_20_nwc(nnwc)/time_nwc(nnwc))*100;
+0208             time_vel_less_30_percent_nwc(nnwc)=(time_vel_less_30_nwc(nnwc)/time_nwc(nnwc))*100;
+0209             timemove_percent_nwc(nnwc)=100-timestop_percent_nwc(nnwc);
+0210             timestop_perdist_nwc(nnwc)=timestop_nwc(nnwc)/dist_nwc(nnwc);
+0211             time_acc_percent_nwc(nnwc)=time_acc_nwc(nnwc)/time_nwc(nnwc);
+0212             time_brk_percent_nwc(nnwc)=time_brk_nwc(nnwc)/time_nwc(nnwc);
+0213             mean_vel_moving_nwc(nnwc)=mean(mean_vel_move_nwc);
+0214             
+0215         <span class="keyword">end</span>
+0216         
+0217     <span class="keyword">end</span>
+0218     
+0219     disp(<span class="string">'&gt;&gt;&gt; DISP STATS'</span>)
+0220     disp([<span class="string">'Cars created = '</span> num2str(s.curNcars) <span class="string">' cars'</span>])
+0221     disp([<span class="string">'Cars with V2I = '</span> num2str(carsWithV2I) <span class="string">' cars'</span>])
+0222     disp([<span class="string">'Cars without V2I = '</span> num2str(carsWithoutV2I) <span class="string">' cars'</span>])
+0223     disp([<span class="string">'Cars in simulator = '</span> num2str(size(c.listactive,2)) <span class="string">' cars'</span>])
+0224     disp([<span class="string">'Cars waiting to enter = '</span> num2str(sum(s.rl(2,:))) <span class="string">' cars'</span>])
+0225     disp([<span class="string">'Cars exit from simulator = '</span> num2str(s.cars_exit) <span class="string">' cars'</span>])
+0226     disp(<span class="string">' '</span>)
+0227     disp(<span class="string">'&gt;&gt;&gt; DISP CAR STATS - All'</span>)
+0228     disp([<span class="string">'Distance [m]= '</span> num2str(mean(dist_)) ]);
+0229     disp([<span class="string">'Time in simulator [s]= '</span> num2str(mean(time)) ])
+0230     disp([<span class="string">'Time in simulator per dist [s/m]= '</span> num2str(mean(time_per_meter)) ])
+0231     disp([<span class="string">'Time move [s]= '</span> num2str(mean(timemove)) <span class="string">' / '</span> num2str(mean(timemove_percent)) <span class="string">' %'</span>])
+0232     disp([<span class="string">'Time stoped [s]= '</span> num2str(mean(timestop)) <span class="string">' / '</span> num2str(mean(timestop_percent)) <span class="string">' %'</span>])
+0233     disp([<span class="string">'Time stoped per car [s/car]= '</span> num2str(mean(timestop)/nc) ])
+0234     disp([<span class="string">'Time stoped per dist [s/m]= '</span> num2str(mean(timestop_perdist)) ])
+0235     disp([<span class="string">'Mean velocity [m/s]/[Km/h]= '</span> num2str(mean(mean_vel)) <span class="string">'/'</span> num2str(mean(mean_vel)*3.6) ])
+0236     disp([<span class="string">'Mean velocity while moving [m/s]/[Km/h]= '</span> num2str(mean(mean_vel_moving)) <span class="string">' / '</span> num2str(mean(mean_vel_moving)*3.6) ])
+0237     disp([<span class="string">'Time that vel &lt; 10Km/h [s]= '</span> num2str(mean(time_vel_less_10))  <span class="string">' / '</span> num2str(mean(time_vel_less_10_percent)) <span class="string">' %'</span>])
+0238     disp([<span class="string">'Time that vel &lt; 20Km/h [s]= '</span> num2str(mean(time_vel_less_20))  <span class="string">' / '</span> num2str(mean(time_vel_less_20_percent)) <span class="string">' %'</span>])
+0239     disp([<span class="string">'Time that vel &lt; 30Km/h [s]= '</span> num2str(mean(time_vel_less_30))  <span class="string">' / '</span> num2str(mean(time_vel_less_30_percent)) <span class="string">' %'</span>])
+0240     disp([<span class="string">'Time accelarating = '</span> num2str(mean(time_acc)) <span class="string">' [s] / '</span> num2str(mean(time_acc_percent)*100) <span class="string">' %'</span> ])
+0241     disp([<span class="string">'Time breaking = '</span> num2str(mean(time_brk)) <span class="string">' [s] / '</span> num2str(mean(time_brk_percent)*100) <span class="string">' %'</span> ])
+0242     disp(<span class="string">' '</span>)
+0243     disp(<span class="string">'&gt;&gt;&gt; DISP CAR STATS (V2I)'</span>)
+0244     disp([<span class="string">'Distance [m]= '</span> num2str(mean(dist_wc)) ]);
+0245     disp([<span class="string">'Time in simulator [s]= '</span> num2str(mean(time_wc)) ])
+0246     disp([<span class="string">'Time in simulator per dist [s/m]= '</span> num2str(mean(time_per_meter_wc)) ])
+0247     disp([<span class="string">'Time move [s]= '</span> num2str(mean(timemove_wc)) <span class="string">' / '</span> num2str(mean(timemove_percent_wc)) <span class="string">' %'</span>])
+0248     disp([<span class="string">'Time stoped [s]= '</span> num2str(mean(timestop_wc)) <span class="string">' / '</span> num2str(mean(timestop_percent_wc)) <span class="string">' %'</span>])
+0249     disp([<span class="string">'Time stoped per car [s/car]= '</span> num2str(mean(timestop_wc)/carsWithV2I) ])
+0250     disp([<span class="string">'Time stoped per dist [s/m]= '</span> num2str(mean(timestop_perdist_wc)) ])
+0251     disp([<span class="string">'Mean velocity [m/s]/[Km/h]= '</span> num2str(mean(mean_vel_wc)) <span class="string">'/'</span> num2str(mean(mean_vel_wc)*3.6) ])
+0252     disp([<span class="string">'Mean velocity while moving [m/s]/[Km/h]= '</span> num2str(mean(mean_vel_moving_wc)) <span class="string">' / '</span> num2str(mean(mean_vel_moving_wc)*3.6) ])
+0253     disp([<span class="string">'Time that vel &lt; 10Km/h [s]= '</span> num2str(mean(time_vel_less_10_wc))  <span class="string">' / '</span> num2str(mean(time_vel_less_10_percent_wc)) <span class="string">' %'</span>])
+0254     disp([<span class="string">'Time that vel &lt; 20Km/h [s]= '</span> num2str(mean(time_vel_less_20_wc))  <span class="string">' / '</span> num2str(mean(time_vel_less_20_percent_wc)) <span class="string">' %'</span>])
+0255     disp([<span class="string">'Time that vel &lt; 30Km/h [s]= '</span> num2str(mean(time_vel_less_30_wc))  <span class="string">' / '</span> num2str(mean(time_vel_less_30_percent_wc)) <span class="string">' %'</span>])
+0256     disp([<span class="string">'Time accelarating = '</span> num2str(mean(time_acc_wc)) <span class="string">' [s] / '</span> num2str(mean(time_acc_percent_wc)*100) <span class="string">' %'</span> ])
+0257     disp([<span class="string">'Time breaking = '</span> num2str(mean(time_brk_wc)) <span class="string">' [s] / '</span> num2str(mean(time_brk_percent_wc)*100) <span class="string">' %'</span> ])
+0258     disp(<span class="string">' '</span>)
+0259     <span class="keyword">if</span>(s.cars_rate_no_V2I(1)~=0)
+0260         disp(<span class="string">'&gt;&gt;&gt; DISP CAR STATS (NOT V2I)'</span>)
+0261         disp([<span class="string">'Distance [m]= '</span> num2str(mean(dist_nwc)) ]);
+0262         disp([<span class="string">'Time in simulator [s]= '</span> num2str(mean(time_nwc)) ])
+0263         disp([<span class="string">'Time in simulator per dist [s/m]= '</span> num2str(mean(time_per_meter_nwc)) ])
+0264         disp([<span class="string">'Time move [s]= '</span> num2str(mean(timemove_nwc)) <span class="string">' / '</span> num2str(mean(timemove_percent_nwc)) <span class="string">' %'</span>])
+0265         disp([<span class="string">'Time stoped [s]= '</span> num2str(mean(timestop_nwc)) <span class="string">' / '</span> num2str(mean(timestop_percent_nwc)) <span class="string">' %'</span>])
+0266         disp([<span class="string">'Time stoped per car [s/car]= '</span> num2str(mean(timestop_nwc)/carsWithoutV2I) ])
+0267         disp([<span class="string">'Time stoped per dist [s/m]= '</span> num2str(mean(timestop_perdist_nwc)) ])
+0268         disp([<span class="string">'Mean velocity [m/s]/[Km/h]= '</span> num2str(mean(mean_vel_nwc)) <span class="string">'/'</span> num2str(mean(mean_vel_nwc)*3.6) ])
+0269         disp([<span class="string">'Mean velocity while moving [m/s]/[Km/h]= '</span> num2str(mean(mean_vel_moving_nwc)) <span class="string">' / '</span> num2str(mean(mean_vel_moving_nwc)*3.6) ])
+0270         disp([<span class="string">'Time that vel &lt; 10Km/h [s]= '</span> num2str(mean(time_vel_less_10_nwc))  <span class="string">' / '</span> num2str(mean(time_vel_less_10_percent_nwc)) <span class="string">' %'</span>])
+0271         disp([<span class="string">'Time that vel &lt; 20Km/h [s]= '</span> num2str(mean(time_vel_less_20_nwc))  <span class="string">' / '</span> num2str(mean(time_vel_less_20_percent_nwc)) <span class="string">' %'</span>])
+0272         disp([<span class="string">'Time that vel &lt; 30Km/h [s]= '</span> num2str(mean(time_vel_less_30_nwc))  <span class="string">' / '</span> num2str(mean(time_vel_less_30_percent_nwc)) <span class="string">' %'</span>])
+0273         disp([<span class="string">'Time accelarating = '</span> num2str(mean(time_acc_nwc)) <span class="string">' [s] / '</span> num2str(mean(time_acc_percent_nwc)*100) <span class="string">' %'</span> ])
+0274         disp([<span class="string">'Time breaking = '</span> num2str(mean(time_brk_nwc)) <span class="string">' [s] / '</span> num2str(mean(time_brk_percent_nwc)*100) <span class="string">' %'</span> ])
+0275     <span class="keyword">end</span>
+0276 <span class="keyword">else</span>
+0277     disp(<span class="string">'No cars have exit'</span>);
+0278 <span class="keyword">end</span>
+0279 
+0280 <span class="comment">%         disp(['Average time cars are stopped = ' num2str(mean(s.cars_time_stop)) ' (s)'])</span>
+0281 <span class="comment">%         disp(['Percentage of time cars are stopped = ' num2str(mean(s.cars_time_stop_perc)) ' (%)'])</span>
+0282 <span class="comment">%         disp(['Average time cars are in motion = ' num2str(mean(s.cars_time_run)) ' (s)'])</span>
+0283 <span class="comment">%         disp(['Percentage of time cars are in motion = ' num2str(mean(s.cars_time_run_perc)) ' (%)'])</span>
+0284 <span class="comment">%         disp(['Average time of cars in simulator by distance traveled = ' num2str(mean(s.cars_time_insim)) ' (s/m)'])</span>
+0285 <span class="comment">%         disp(['Average velocity during all route = ' num2str(mean(s.cars_mean_vel)*3.6) ' (Km/h)'])</span>
+0286 <span class="comment">%         disp(['Average velocity only when cars are in motion = ' num2str(mean(s.cars_mean_run_vel)*3.6) ' (Km/h)'])</span>
+0287 <span class="comment">%         disp(['Cars created = ' num2str(s.curNcars) ' cars'])</span>
+0288 <span class="comment">%         disp(['Cars in simulator = ' num2str(size(c.listactive,2)) ' cars'])</span>
+0289 <span class="comment">%         disp(['Cars waiting to enter = ' num2str(sum(s.rl(2,:))) ' cars'])</span>
+0290 <span class="comment">%         disp(['Cars exit from simulator = ' num2str(s.cars_exit) ' cars'])</span>
+0291 <span class="comment">%         disp(['Number of overtakes = ' num2str(s.overtake_n) ' cars'])</span>
+0292 
+0293</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

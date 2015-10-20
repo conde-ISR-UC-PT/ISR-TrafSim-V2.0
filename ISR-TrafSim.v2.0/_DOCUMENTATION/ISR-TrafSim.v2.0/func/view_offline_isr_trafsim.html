@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of view_offline_isr_trafsim</title>
+  <meta name="keywords" content="view_offline_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>view_offline_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [] = view_offline_isr_trafsim() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Play a video based on save data
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Play a video based on save data</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [] = view_offline_isr_trafsim()</a>
+0046 <span class="keyword">global</span> s  d1 d2
+0047 
+0048 <span class="comment">% Open file</span>
+0049 writerObj = VideoWriter(<span class="string">'isr_tfs'</span>,<span class="string">'MPEG-4'</span>);
+0050 open(writerObj);
+0051 
+0052 s.hfigsim = figure(99);
+0053 set(s.hfigsim,<span class="string">'Position'</span>,[500 500 300 100],<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,<span class="string">'Dialog box'</span>,<span class="string">'Resize'</span>,<span class="string">'off'</span>);
+0054 uicontrol(<span class="string">'Position'</span>,[20 20 260 60],<span class="string">'String'</span>,<span class="string">'Press to view the results of simulation'</span>,<span class="keyword">...</span>
+0055     <span class="string">'Callback'</span>,<span class="string">'uiresume(gcbf)'</span>);
+0056 uiwait(gcf);
+0057 close(s.hfigsim);
+0058 
+0059 disp(<span class="string">' '</span>)
+0060 disp(<span class="string">'Simulation mode offline'</span>)
+0061 str=sprintf(<span class="string">'Recording Interval %1.2f (s)'</span>,s.rec);
+0062 disp(str)
+0063 
+0064 s.mode=1;   s.time=0;   ind=1; flag=0; aux=1;
+0065 s.hsema=[]; s.lights=[];
+0066 [lin,~]=size(d1); h=[];
+0067 
+0068 <span class="comment">% Initialization of the graphical environment</span>
+0069 isr_tfs_graphical_environment()
+0070 set(s.hfigsim,<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>,<span class="string">'Name'</span>,<span class="string">'Offline simulation'</span>,<span class="string">'Position'</span>,[100 100 s.dimx*6 s.dimy*6],<span class="string">'Resize'</span>,<span class="string">'off'</span>);
+0071 
+0072 <span class="comment">% Plot roads</span>
+0073 isr_tfs_printset(); pause(1);
+0074 
+0075 
+0076 <span class="keyword">for</span> time=0:(1/s.frec):s.duration
+0077     
+0078     <span class="comment">% Print traffic lights</span>
+0079     s.lights=[];
+0080     s.lights(:,:)=d2(:,:,aux);
+0081     aux=aux+1;
+0082     isr_tfs_trafficlights();
+0083     
+0084     <span class="comment">% Refresh time</span>
+0085     s.time=time;
+0086     
+0087     <span class="comment">% Print current time in command window</span>
+0088     <span class="keyword">if</span>(mod(time,1)==0)
+0089         str=sprintf(<span class="string">'Time= %d (s)'</span>,s.time);
+0090         disp(str)
+0091     <span class="keyword">end</span>
+0092     
+0093     <span class="comment">% Plot time in simulator window</span>
+0094     <span class="keyword">if</span>(s.printtime==1 &amp;&amp; s.mode==1)
+0095         <span class="comment">%isr_tfs_print('time',0)</span>
+0096     <span class="keyword">end</span>
+0097     
+0098     tic
+0099     <span class="comment">% Print all cars</span>
+0100     <span class="keyword">if</span>(flag==0)
+0101         <span class="keyword">while</span>(<a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(d1(ind,1),0.001)==<a href="round2.html" class="code" title="function z = round2(x,y)    %#eml">round2</a>(time,0.001))
+0102             d_=[d1(ind,2),d1(ind,3),d1(ind,4),d1(ind,5),d1(ind,6)];
+0103             ii=7;
+0104             <span class="keyword">if</span>(s.gps==2)
+0105                 d_=[d_ d1(ind,ii) d1(ind,ii+1)];
+0106                 ii=ii+2;
+0107             <span class="keyword">end</span>
+0108             <span class="keyword">if</span>(s.ins==2)
+0109                 d_=[d_ d(ind,ii) d1(ind,ii+1) d1(ind,ii+2)];
+0110                 ii=ii+3;
+0111             <span class="keyword">end</span>
+0112             <span class="keyword">if</span>(s.fus==2)
+0113                 d_=[d_ d1(ind,ii) d1(ind,ii+1) d1(ind,ii+2)];
+0114                 ii=ii+3;
+0115             <span class="keyword">end</span>
+0116             curh=isr_tfs_printoffline(d_);
+0117             h=[h curh];
+0118             ind=ind+1;
+0119             <span class="keyword">if</span>(ind==lin)
+0120                 flag=1;
+0121                 <span class="keyword">break</span>
+0122             <span class="keyword">end</span>
+0123         <span class="keyword">end</span>
+0124     <span class="keyword">end</span>
+0125     drawnow
+0126     frame=getframe;
+0127     writeVideo(writerObj,frame);
+0128     
+0129     a=toc;
+0130     <span class="keyword">if</span>((1/s.frec)-a&gt;0)
+0131         pause((1/s.frec)-a)
+0132     <span class="keyword">else</span>
+0133         disp(<span class="string">'delay'</span>)
+0134     <span class="keyword">end</span>
+0135     delete(h); h=[];
+0136     
+0137 <span class="keyword">end</span>
+0138 disp(<span class="string">'End of offline mode'</span>)
+0139 close(s.hfigsim)
+0140 close(writerObj);
+0141 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of overtake_isr_trafsim</title>
+  <meta name="keywords" content="overtake_isr_trafsim">
+  <meta name="description" content="--------------------------------------------------------------------------">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html ISR-TrafSim.v2.0 --><!-- menu.html func -->
+<h1>overtake_isr_trafsim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>--------------------------------------------------------------------------</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [  ] = overtake_isr_trafsim() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">--------------------------------------------------------------------------
+                           ISR-TrafSim v2.0
+                        Copyright (C) 2010-2013
+
+--------------------------------------------------------------------------
+ This Matlab file is part of the ISR-TrafSim: a Matlab
+ library for traffic simulation and pose estimation in Urban environments,
+ namely roundabouts and crossroads.
+
+ http://www.isr.uc.pt/~conde/isr-trafsim/
+
+-CITATION---------------------------------------------------------------------------
+ If you use this software please cite one of the following papers:
+ 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management
+ at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,
+ 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.
+ 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle
+ localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+ 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections
+ supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent
+ Transportation Systems, USA, 2012.
+
+-DESCRIPTION--------------------------------------------------------------
+
+ Simulate the lane change when two cars are stopped in a semaphore
+
+-DISCLAIMER---------------------------------------------------------------
+ This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ You can use this source code without licensing fees only for NON-COMMERCIAL research
+ and EDUCATIONAL purposes only.
+ You cannot repost this file without prior written permission from the authors.
+
+-AUTHORS------------------------------------------------------------------
+   Urbano Nunes*
+   Luis Conde Bento**
+   Ricardo Parafita*
+   Sergio Santos*
+
+  *Institute of Systems and Robotics   - University of Coimbra
+ **School of Technology and Management - Polytechnic Institute of Leiria
+--------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%--------------------------------------------------------------------------</span>
+0002 <span class="comment">%                           ISR-TrafSim v2.0</span>
+0003 <span class="comment">%                        Copyright (C) 2010-2013</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%--------------------------------------------------------------------------</span>
+0006 <span class="comment">% This Matlab file is part of the ISR-TrafSim: a Matlab</span>
+0007 <span class="comment">% library for traffic simulation and pose estimation in Urban environments,</span>
+0008 <span class="comment">% namely roundabouts and crossroads.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% http://www.isr.uc.pt/~conde/isr-trafsim/</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%-CITATION---------------------------------------------------------------------------</span>
+0013 <span class="comment">% If you use this software please cite one of the following papers:</span>
+0014 <span class="comment">% 1) L.C.Bento, R.Parafita, S.Santos and U.Nunes, An Intelligent Traffic Management</span>
+0015 <span class="comment">% at Intersections legacy mode for vehicles not equipped with V2V and V2I Communications,</span>
+0016 <span class="comment">% 16th IEEE Int.Conf. Intelligent Transportation Systems, Netherlands, 2013.</span>
+0017 <span class="comment">% 2) L.C.Bento, R.Parafita and U.Nunes, Inter-vehicle sensor fusion for accurate vehicle</span>
+0018 <span class="comment">% localization supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0019 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0020 <span class="comment">% 3) L.C.Bento, R.Parafita and U.Nunes, Intelligent traffic management at intersections</span>
+0021 <span class="comment">% supported by V2V and V2I communications, 15th IEEE Int.Conf. Intelligent</span>
+0022 <span class="comment">% Transportation Systems, USA, 2012.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%-DESCRIPTION--------------------------------------------------------------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Simulate the lane change when two cars are stopped in a semaphore</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%-DISCLAIMER---------------------------------------------------------------</span>
+0029 <span class="comment">% This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY;</span>
+0030 <span class="comment">% without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+0031 <span class="comment">% You can use this source code without licensing fees only for NON-COMMERCIAL research</span>
+0032 <span class="comment">% and EDUCATIONAL purposes only.</span>
+0033 <span class="comment">% You cannot repost this file without prior written permission from the authors.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%-AUTHORS------------------------------------------------------------------</span>
+0036 <span class="comment">%   Urbano Nunes*</span>
+0037 <span class="comment">%   Luis Conde Bento**</span>
+0038 <span class="comment">%   Ricardo Parafita*</span>
+0039 <span class="comment">%   Sergio Santos*</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%  *Institute of Systems and Robotics   - University of Coimbra</span>
+0042 <span class="comment">% **School of Technology and Management - Polytechnic Institute of Leiria</span>
+0043 <span class="comment">%--------------------------------------------------------------------------</span>
+0044 
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [  ] = overtake_isr_trafsim()</a>
+0046 <span class="keyword">global</span> c s
+0047 
+0048 <span class="keyword">for</span> n=1:size(c.listactive,2)    <span class="comment">% Compute to all cars in simulator</span>
+0049     
+0050     <span class="comment">% Verify if exist conditions to execute the lane change manouver</span>
+0051     change=0;                   <span class="comment">% Don't exist condicions to make manouver</span>
+0052     <span class="keyword">if</span>(c.car(n).dyn(1)&lt;5/3.6)       <span class="comment">% If car is sttoped (&lt; 5 km/h)</span>
+0053         
+0054         <span class="comment">% Extract car stats</span>
+0055         road=c.car(n).road;
+0056         dest=c.car(n).roaddes;
+0057         
+0058         <span class="keyword">if</span>(road&lt;30)
+0059             impar=mod(road,2);
+0060             <span class="keyword">if</span>(impar), road_side=road+1; <span class="keyword">else</span> road_side=road-1; <span class="keyword">end</span>
+0061             impar=mod(dest,2);
+0062             <span class="keyword">if</span>(impar), road_dest_side=dest+1; <span class="keyword">else</span> road_dest_side=dest-1; <span class="keyword">end</span>
+0063             
+0064             xpos=c.car(n).pos.x;
+0065             ypos=c.car(n).pos.y;
+0066             setp_xy=[s.r(road,1:s.ri(road,5),1);s.r(road,1:s.ri(road,5),2)];    <span class="comment">% Setpoints [3:road-1]</span>
+0067             roadsetp=size(setp_xy,2);
+0068             
+0069             <span class="comment">% Calculate distance to all road setpoints</span>
+0070             dist_xy=zeros(1,roadsetp);
+0071             <span class="keyword">for</span> i=1:roadsetp
+0072                 dist_xy(1,i)=dist_isr_trafsim(setp_xy(1,i),setp_xy(2,i),xpos,ypos);
+0073             <span class="keyword">end</span>
+0074             [~,setp]=min(dist_xy);
+0075             
+0076             cond1=road&lt;30;                                      <span class="comment">% If car is not in roundabout</span>
+0077             cond2=(setp&gt;3 &amp;&amp; setp&lt;roadsetp-5);                  <span class="comment">% Setpoint selectd must be &gt;1 and &lt;roadsetp</span>
+0078             cond3=s.ri(road,8)==1;                              <span class="comment">% If is a entrance road</span>
+0079             cond4=(s.rp(road_side,road_dest_side)&gt;0 || s.rp(road_side,dest)&gt;0);             <span class="comment">% If exist a avaliable path</span>
+0080             cond5=isempty(c.car(n).vel_prof);                   <span class="comment">% Driver have the control</span>
+0081             
+0082             
+0083             <span class="keyword">if</span>(cond1 &amp;&amp; cond2 &amp;&amp; cond3 &amp;&amp; cond4 &amp;&amp; cond5)
+0084                 cond6=check_car_free([0 2.5],n);                          <span class="comment">% Check space in front/back of car</span>
+0085                 cond7=check_road_free_int(road_side,setp,[15 10],n);    <span class="comment">% If exist 10 meters free in front and back of car in road_side</span>
+0086                 <span class="keyword">if</span>(cond6 &amp;&amp; cond7)
+0087                     change=1;     <span class="comment">% Can change lane</span>
+0088                 <span class="keyword">end</span>
+0089             <span class="keyword">end</span>
+0090         <span class="keyword">end</span>
+0091     <span class="keyword">end</span>
+0092     
+0093     <span class="comment">% Execute the change lane manouver</span>
+0094     <span class="keyword">if</span>(change)        <span class="comment">% If exist conditions to change lane</span>
+0095         <span class="comment">% Extract current trajectory</span>
+0096         actualTraj=c.car(n).traj(:,1:c.car(n).setp);
+0097         
+0098         <span class="comment">% Extract new trajectory</span>
+0099         <span class="keyword">if</span>(s.rp(road_side,road_dest_side)&gt;0)
+0100             [newTraj path ~]=isr_tfs_gen_traj(road_side,road_dest_side);
+0101         <span class="keyword">elseif</span>(s.rp(road_side,dest)&gt;0)
+0102             [newTraj path ~]=isr_tfs_gen_traj(road_side,dest);
+0103         <span class="keyword">end</span>
+0104         
+0105         <span class="comment">% Get Join point of new trajectory</span>
+0106         pointY=actualTraj(2,end);
+0107         pointxI=actualTraj(1,end)+50*cos(actualTraj(3,end)-pi/2);
+0108         pointxF=actualTraj(1,end)+50*cos(actualTraj(3,end)+pi/2);
+0109         [~, col_] =size(newTraj);
+0110         <span class="keyword">for</span> i=1:col_-1
+0111             out=isr_tfs_direc_inter3(pointxI,pointY,pointxF,pointY,newTraj(1,i),newTraj(2,i),newTraj(1,i+1),newTraj(2,i+1));
+0112             <span class="keyword">if</span>(out(1)==1)
+0113                 <span class="keyword">break</span>;
+0114             <span class="keyword">end</span>
+0115         <span class="keyword">end</span>
+0116         
+0117         d=zeros(1,size(newTraj,2));
+0118         d_=zeros(1,size(c.car(n).traj,2));
+0119         <span class="keyword">for</span> i=1:size(newTraj,2)
+0120             d(i)=dist_isr_trafsim(c.car(n).pos.x,c.car(n).pos.y,newTraj(1,i),newTraj(2,i));
+0121         <span class="keyword">end</span>
+0122         <span class="keyword">for</span> i=1:size(c.car(n).traj,2)
+0123             d_(i)=dist_isr_trafsim(c.car(n).pos.x,c.car(n).pos.y,c.car(n).traj(1,i),c.car(n).traj(2,i));
+0124         <span class="keyword">end</span>
+0125         [~,setp2]=min(d);
+0126         [~,setp1]=min(d_);
+0127             
+0128         <span class="comment">% Generate new join trajectory</span>
+0129         [c.car(n).traj,c.car(n).path,c.car(n).trajn]=traj_join(c.car(n).traj,setp1,newTraj,setp2,path);
+0130         c.car(n).road=c.car(n).traj(3,1);
+0131         c.car(n).crosscels=view_cross_cels(n);  <span class="comment">% Refresh cross cels</span>
+0132         
+0133         dist=zeros(1,size(c.car(n).traj,2));
+0134         <span class="keyword">for</span> i=1:size(c.car(n).traj,2)
+0135             dist(1,i)=dist_isr_trafsim(c.car(n).pos.x,c.car(n).pos.y,c.car(n).traj(1,i),c.car(n).traj(2,i));
+0136         <span class="keyword">end</span>
+0137         [~,col]=min(dist);
+0138         c.car(n).setp=col+3;
+0139         
+0140         <span class="comment">% Find the best point from trajectory</span>
+0141         <span class="comment">% Show final trajectory</span>
+0142         <span class="keyword">if</span>(s.printchangelane &amp;&amp; s.mode==1)
+0143             haux=plot(c.car(n).traj(1,:),c.car(n).traj(2,:),<span class="string">'r'</span>);
+0144             pause(0.3)
+0145             delete(haux);
+0146             pause(0.2)
+0147             haux=plot(c.car(n).traj(1,:),c.car(n).traj(2,:),<span class="string">'r'</span>);
+0148             pause(0.3)
+0149             delete(haux);
+0150             pause(0.2)
+0151             haux=plot(c.car(n).traj(1,:),c.car(n).traj(2,:),<span class="string">'g'</span>);
+0152             pause(2)
+0153             delete(haux);
+0154             pause(0.2)
+0155         <span class="keyword">end</span>
+0156         s.overtake_n=s.overtake_n+1;
+0157         
+0158         
+0159         
+0160     <span class="keyword">end</span>
+0161 <span class="keyword">end</span>
+0162 
+0163 <span class="keyword">end</span>
+0164</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

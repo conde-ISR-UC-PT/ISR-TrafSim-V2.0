@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_backoff_start</title>
+  <meta name="keywords" content="script_backoff_start">
+  <meta name="description" content="script_backoff_start">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_backoff_start
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_backoff_start</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">script_backoff_start</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="carrier_sense.html" class="code" title="function busy = carrier_sense(rv)">carrier_sense</a>	check if the channel is busy</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%script_backoff_start</span>
+0002 t = event.instant;
+0003 i = event.node;
+0004 j = event.pkt.rv;
+0005 <span class="keyword">if</span> bdebug, disp([<span class="string">'backoff_start @ node '</span> num2str(i)]); <span class="keyword">end</span>
+0006 <span class="keyword">if</span> node(i, 4) == 0 &amp; <a href="carrier_sense.html" class="code" title="function busy = carrier_sense(rv)">carrier_sense</a>(i) == 0
+0007     <span class="comment">% the node is still idle and the channel is free, start backoff</span>
+0008     <span class="comment">% question: what if the channel was busy during this DIFS period?</span>
+0009     backoff_attempt(i) = 0;
+0010     temp = min(backoff_attempt(i)+CW_min,CW_max);
+0011     backoff_counter(i) = floor((2^temp-1)*rand);
+0012     newevent = event;
+0013     newevent.instant = t + slot_time;
+0014     newevent.type = <span class="string">'backoff'</span>;
+0015     newevent.node = i;
+0016     NewEvents = [NewEvents; newevent]; clear newevent;
+0017 <span class="keyword">else</span>
+0018     <span class="comment">% channel becomes busy during DIFS, wait until the channel is free</span>
+0019     newevent = event;
+0020     newevent.instant = t + cca_time;
+0021     newevent.type = <span class="string">'wait_for_channel'</span>;
+0022     newevent.node = i;
+0023     NewEvents = [NewEvents; newevent]; clear newevent;
+0024 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

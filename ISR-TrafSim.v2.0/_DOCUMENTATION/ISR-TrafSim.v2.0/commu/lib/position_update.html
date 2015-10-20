@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of position_update</title>
+  <meta name="keywords" content="position_update">
+  <meta name="description" content="Update position when nodes are moving">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>position_update
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Update position when nodes are moving</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function position_update() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Update position when nodes are moving</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function position_update()</a>
+0002 <span class="comment">% Update position when nodes are moving</span>
+0003 
+0004 <span class="keyword">global</span> node Nnodes;
+0005 <span class="keyword">global</span> mobility_model poscommu maxspeedcommu maxpause;
+0006 <span class="keyword">global</span> current_time FIRST_TIME;
+0007 <span class="keyword">global</span> maxx maxy;
+0008 <span class="keyword">global</span> intervalcommu;
+0009 
+0010 <span class="comment">% poscommu:</span>
+0011 <span class="comment">% 1, 2: starting x and y</span>
+0012 <span class="comment">% 3: starting time</span>
+0013 <span class="comment">% 4: moving speed or pasue time</span>
+0014 <span class="comment">% 5, 6: ending x and y</span>
+0015 <span class="comment">%if FIRST_TIME ==0</span>
+0016 <span class="comment">%    FIRST_TIME=1;</span>
+0017 <span class="comment">%    for i=1:Nnodes</span>
+0018 <span class="comment">%        poscommu(i,3) = current_time;</span>
+0019 <span class="comment">%    end</span>
+0020 <span class="comment">%    return;</span>
+0021 <span class="comment">%end</span>
+0022 
+0023 <span class="keyword">if</span> strcmp(mobility_model, <span class="string">'random_waypoint'</span>) == 0
+0024     <span class="keyword">return</span>;
+0025 <span class="keyword">end</span>
+0026 
+0027 <span class="keyword">for</span> i=1:Nnodes
+0028     <span class="keyword">if</span> poscommu(i, 3) &gt; current_time
+0029         disp([<span class="string">'position: the starting time '</span> num2str(poscommu(i, 3)) <span class="string">' for node '</span> num2str(i) <span class="string">' is larger than current time '</span> num2str(current_time)]);
+0030         <span class="keyword">continue</span>;
+0031     <span class="keyword">end</span>
+0032     <span class="keyword">if</span> poscommu(i, 1)==poscommu(i, 5) &amp; poscommu(i, 2)==poscommu(i, 6) &amp; 0
+0033         <span class="comment">% I am pause</span>
+0034         <span class="keyword">while</span> 1
+0035             <span class="comment">% if i==1, disp(['position_update: at time ' num2str(current_time) ' node 1 is pause at (x, y)=' num2str(poscommu(1, 1)) ', ' num2str(poscommu(1, 2))]); end</span>
+0036             <span class="keyword">if</span> (poscommu(i, 3)+poscommu(i, 4)) &gt;= current_time
+0037                 node(i, 1:2) = poscommu(i, 1:2);
+0038                 <span class="keyword">break</span>;
+0039             <span class="keyword">end</span>
+0040             <span class="comment">% moving</span>
+0041             poscommu(i, 3) = poscommu(i, 3) + poscommu(i, 4);
+0042             poscommu(i, 5) = rand*maxx;
+0043             poscommu(i, 6) = rand*maxy;
+0044             poscommu(i, 4) = rand*maxspeedcommu;
+0045             tempt = sqrt((poscommu(i, 1)-poscommu(i, 5))^2+(poscommu(i, 2)-poscommu(i, 6))^2)/poscommu(i, 4);
+0046             <span class="keyword">if</span> (poscommu(i, 3)+tempt) &gt;= current_time
+0047                 u=(current_time-poscommu(i, 3))/tempt;
+0048                 node(i, 1:2) = poscommu(i, 1:2)*(1-u) + poscommu(i, 5:6)*u;
+0049                 <span class="keyword">break</span>;
+0050             <span class="keyword">end</span>
+0051             <span class="comment">% pause</span>
+0052             poscommu(i, 1:2) = poscommu(i, 5:6);
+0053             poscommu(i, 3) = poscommu(i, 3) + tempt;
+0054             poscommu(i, 4) = rand*maxpause;
+0055         <span class="keyword">end</span>
+0056     <span class="keyword">elseif</span> 0
+0057         <span class="comment">% I am moving</span>
+0058         <span class="keyword">while</span> 1
+0059             <span class="comment">% if i==1, disp(['position_update: at time ' num2str(current_time) ' node 1 is moving from (x, y)=' num2str(poscommu(1, 1)) ', ' num2str(poscommu(1, 2)) ' at speed=' num2str(poscommu(1, 4))]); end</span>
+0060             tempt = sqrt((poscommu(i, 1)-poscommu(i, 5))^2+(poscommu(i, 2)-poscommu(i, 6))^2)/poscommu(i, 4);
+0061             <span class="keyword">if</span> (poscommu(i, 3)+tempt) &gt;= current_time
+0062                 u=(current_time-poscommu(i, 3))/tempt;
+0063                 node(i, 1:2) = poscommu(i, 1:2)*(1-u) + poscommu(i, 5:6)*u;
+0064                 <span class="keyword">break</span>;
+0065             <span class="keyword">end</span>
+0066             poscommu(i, 1:2) = poscommu(i, 5:6);
+0067             poscommu(i, 3) = poscommu(i, 3) + tempt;
+0068             poscommu(i, 4) = rand*maxpause;
+0069             <span class="keyword">if</span> (poscommu(i, 3)+poscommu(i, 4)) &gt;= current_time
+0070                 node(i, 1:2) = poscommu(i, 1:2);
+0071                 <span class="keyword">break</span>;
+0072             <span class="keyword">end</span>
+0073             poscommu(i, 3) = poscommu(i, 3) + poscommu(i, 4);
+0074             poscommu(i, 5) = rand*maxx;
+0075             poscommu(i, 6) = rand*maxy;
+0076             poscommu(i, 4) = rand*maxspeedcommu;
+0077         <span class="keyword">end</span>
+0078     <span class="keyword">else</span>
+0079         <span class="comment">% I am moving</span>
+0080         speed = sqrt((poscommu(i, 1)-poscommu(i, 5))^2+(poscommu(i, 2)-poscommu(i, 6))^2)/0.6;
+0081         theta = atan2((poscommu(i, 6)-poscommu(i, 2)),(poscommu(i, 5)-poscommu(i, 1)));
+0082         deltatime = (current_time - poscommu(i, 3));
+0083         xinc = speed * cos(theta) * deltatime;
+0084         yinc = speed * sin(theta) * deltatime;
+0085         poscommu(i,3) = current_time;
+0086         node(i,1) = node(i,1) + xinc;
+0087         node(i,2) = node(i,2) + yinc;
+0088     <span class="keyword">end</span>
+0089 <span class="keyword">end</span>
+0090 R = rem(current_time,0.0002);
+0091 <span class="keyword">if</span> 1 <span class="comment">%R == 0</span>
+0092     disp(<span class="string">'*****************PLOT#############################'</span>)
+0093     <span class="comment">%plot(node(:, 1),node(:,2),'b.');</span>
+0094     <span class="comment">%pause(0.00000000000001)</span>
+0095 <span class="keyword">end</span>
+0096 
+0097 <span class="comment">% disp(['position_update: at time ' num2str(current_time) ' node 1 is located at (x, y)=' num2str(node(1, 1)) ', ' num2str(node(1, 2))]);</span>
+0098 
+0099 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

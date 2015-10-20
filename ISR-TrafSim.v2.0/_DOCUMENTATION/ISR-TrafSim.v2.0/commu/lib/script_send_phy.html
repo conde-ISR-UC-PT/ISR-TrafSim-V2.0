@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_send_phy</title>
+  <meta name="keywords" content="script_send_phy">
+  <meta name="description" content="script_send_phy">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_send_phy
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_send_phy</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> script_send_phy</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="overlap.html" class="code" title="function [o] = overlap(a, b, c, Dcommu)">overlap</a>	check if [a, b] and [c, Dcommu] overlap</li><li><a href="tx_time.html" class="code" title="function txtime = tx_time(pkt)">tx_time</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% script_send_phy</span>
+0002 t = event.instant;
+0003 i = event.node;
+0004 j = event.pkt.rv;
+0005 <span class="keyword">if</span> adebug, disp([<span class="string">'send_phy at time '</span> num2str(t) <span class="string">' node '</span> num2str(i) <span class="string">' will send a packet to node '</span> num2str(j)]); <span class="keyword">end</span>
+0006 txtime = <a href="tx_time.html" class="code" title="function txtime = tx_time(pkt)">tx_time</a>(event.pkt);
+0007 <span class="keyword">if</span> node(i, 4) == 0 &amp; (navcommu(i).start &gt; (t+txtime) | navcommu(i).end &lt; t) <span class="comment">% idle and no navcommu</span>
+0008     node(i, 3) = event.pkt.power;
+0009     node(i, 4) = 1; <span class="comment">% switch to transmit mode, assume turnaround time is zero</span>
+0010     <span class="comment">% set up the receiver</span>
+0011     <span class="keyword">if</span> j == 0   <span class="comment">% broadcast from node i</span>
+0012         <span class="keyword">for</span> k=1:Nnodes
+0013             <span class="comment">% due to broadcast nature in wireless channel, every idle node may capture/sense this transmission</span>
+0014             <span class="keyword">if</span> node(k, 4)~=0 | k==i, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0015             <span class="keyword">if</span> <a href="overlap.html" class="code" title="function [o] = overlap(a, b, c, Dcommu)">overlap</a>(t, t+txtime, navcommu(k).start, navcommu(k).end), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0016             node(k, 4) = 2; <span class="comment">% receiver switches to receiving mode</span>
+0017             newevent = event;
+0018             newevent.instant = t + txtime;
+0019             newevent.type = <span class="string">'recv_phy'</span>;
+0020             newevent.node = k;
+0021             NewEvents = [NewEvents; newevent]; clear newevent;
+0022         <span class="keyword">end</span>
+0023         <span class="comment">% when there is no node to receive this broadcast, still send it.</span>
+0024         <span class="comment">% because I do not know if any node will respond, but actually node node will respond.</span>
+0025         <span class="comment">%                 if length(NewEvents) &lt;= 0</span>
+0026         <span class="comment">%                     if ddebug, disp(['send_phy: node ' num2str(i) ' broadcasts to no nodes']); end</span>
+0027         <span class="comment">%                     newevent = event;</span>
+0028         <span class="comment">%                     newevent.instant = t;</span>
+0029         <span class="comment">%                     newevent.type = 'send_phy_finish';</span>
+0030         <span class="comment">%                     newevent.node = i;</span>
+0031         <span class="comment">%                     NewEvents = [NewEvents; newevent]; clear newevent;</span>
+0032         <span class="comment">%                     return;</span>
+0033         <span class="comment">%                 end</span>
+0034     <span class="keyword">else</span>    <span class="comment">% unicast from i to j</span>
+0035         <span class="keyword">if</span> node(j, 4) ~= 0 | <a href="overlap.html" class="code" title="function [o] = overlap(a, b, c, Dcommu)">overlap</a>(t, t+txtime, navcommu(j).start, navcommu(j).end)
+0036             <span class="keyword">if</span> ddebug, disp([<span class="string">'send_phy: receiving node '</span> num2str(j) <span class="string">' is not ready to receive from node '</span> num2str(i)]); <span class="keyword">end</span>
+0037             <span class="comment">% At physical layer, I cannot synchronize with the receiver, so I know I do not need to actually transmit?</span>
+0038             <span class="comment">% We sill transmit this packet, but no actual reception.</span>
+0039             <span class="comment">%                     newevent = event;</span>
+0040             <span class="comment">%                     newevent.instant = t;</span>
+0041             <span class="comment">%                     newevent.type = 'send_phy_finish';</span>
+0042             <span class="comment">%                     newevent.node = i;</span>
+0043             <span class="comment">%                     NewEvents = [NewEvents; newevent]; clear newevent;</span>
+0044             <span class="comment">%                     return;</span>
+0045         <span class="keyword">else</span>
+0046             node(j, 4) = 2; <span class="comment">% receiver is switched to receiving mode</span>
+0047             newevent = event;
+0048             newevent.instant = t + txtime;
+0049             newevent.type = <span class="string">'recv_phy'</span>;
+0050             newevent.node = j;
+0051             NewEvents = [NewEvents; newevent]; clear newevent;
+0052         <span class="keyword">end</span>
+0053         <span class="keyword">for</span> k=1:Nnodes
+0054             <span class="comment">% due to broadcast nature in wireless channel, every idle node may capture/sense this transmission</span>
+0055             <span class="keyword">if</span> node(k, 4)~=0 | k==i | k==j, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0056             <span class="keyword">if</span> <a href="overlap.html" class="code" title="function [o] = overlap(a, b, c, Dcommu)">overlap</a>(t, t+txtime, navcommu(k).start, navcommu(k).end), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0057             node(k, 4) = 2; <span class="comment">% receiver switches to receiving mode</span>
+0058             newevent = event;
+0059             newevent.instant = t + txtime;
+0060             newevent.type = <span class="string">'recv_phy'</span>;
+0061             newevent.node = k;
+0062             NewEvents = [NewEvents; newevent]; clear newevent;
+0063         <span class="keyword">end</span>
+0064     <span class="keyword">end</span>
+0065     <span class="comment">% setup the transmitter</span>
+0066     newevent = event;
+0067     newevent.instant = t + txtime + eps;
+0068     newevent.type = <span class="string">'send_phy_finish'</span>;
+0069     newevent.node = i;
+0070     NewEvents = [NewEvents; newevent]; clear newevent;
+0071     <span class="keyword">if</span> strcmp(event.pkt.type, <span class="string">'rts'</span>)
+0072         <span class="comment">% set timeout timer for RTS</span>
+0073         newevent = event;
+0074         newevent.instant = t + (txtime + SIFS + cts_tx_time) * 2;   <span class="comment">% question: how to choose this timeout limit?</span>
+0075         newevent.type = <span class="string">'timeout_rts'</span>;
+0076         newevent.node = i;
+0077         NewEvents = [NewEvents; newevent]; clear newevent;
+0078         <span class="keyword">if</span> retransmit(i) &lt;= 0 &amp; pending_id(i) &gt; 0
+0079             <span class="comment">%%%%%%%%%%% Modification -&gt; Clear the timoutRTS in the 'Event_list'</span>
+0080             <span class="keyword">global</span> Event_list
+0081             tot=size(Event_list,2); cont=1;
+0082             <span class="keyword">while</span>(cont&lt;=tot)
+0083                 <span class="keyword">if</span>(Event_list(cont).pkt.id==pending_id(i) &amp;&amp; Event_list(cont).pkt.tx==i)
+0084                     Event_list(cont)=[];
+0085                     tot=tot-1;
+0086                 <span class="keyword">end</span>
+0087                 cont=cont+1;
+0088             <span class="keyword">end</span>
+0089             <span class="comment">%%%%%%%%%%% End of modification</span>
+0090             <span class="comment">%dbstop at 80 in script_send_phy.m</span>
+0091             <span class="comment">%disp(['### -&gt; Pending error at ' num2str(s.time) ' (s)'])</span>
+0092             <span class="comment">%pause</span>
+0093             <span class="comment">%error(['send_phy: node ' num2str(i) ' there is already a pending packet, cannot send a new RTS packet']);end</span>
+0094         <span class="keyword">end</span>
+0095         pending_id(i) = event.pkt.id;
+0096     <span class="keyword">end</span>
+0097     <span class="keyword">if</span> strcmp(event.pkt.type, <span class="string">'data'</span>) &amp; j ~= 0
+0098         <span class="comment">% set timeout timer for DATA</span>
+0099         newevent = event;
+0100         newevent.instant = t + (txtime + SIFS + ack_tx_time) * 2;   <span class="comment">% double check</span>
+0101         newevent.type = <span class="string">'timeout_data'</span>;
+0102         newevent.node = i;
+0103         NewEvents = [NewEvents; newevent]; clear newevent;
+0104         <span class="keyword">if</span> retransmit(i) &lt;= 0 &amp; pending_id(i) &gt; 0
+0105             <span class="comment">%error(['send_phy: node ' num2str(i) ' there is already a pending packet, cannot send a new DATA packet']);</span>
+0106         <span class="keyword">end</span>
+0107         pending_id(i) = event.pkt.id;
+0108     <span class="keyword">end</span>
+0109 <span class="keyword">else</span>    <span class="comment">% radio hardware is not idle or navcommu block</span>
+0110     <span class="keyword">if</span> adebug, disp([<span class="string">'send_phy at time '</span> num2str(t) <span class="string">' node '</span> num2str(i) <span class="string">' is not ready to send a packet to node '</span> num2str(j)]); <span class="keyword">end</span>
+0111     <span class="keyword">if</span> adebug, disp([<span class="string">'--- node(i, 4)='</span> num2str(node(i, 4)) <span class="string">'navcommu.start='</span> num2str(navcommu(i).start) <span class="string">'navcommu.end='</span> num2str(navcommu(i).end)]); <span class="keyword">end</span>
+0112     <span class="comment">% Since the node status is already checked at MAC layer, it must be due to navcommu virtual carrier sense</span>
+0113     <span class="comment">% I am a hiddent node: physical carrier sense is okay, but blocked by virtual carrier sense</span>
+0114     <span class="comment">% I should go back to MAC and try later.</span>
+0115     newevent = event;
+0116     newevent.instant = t + cca_time;
+0117     newevent.type = <span class="string">'wait_for_channel'</span>;
+0118     newevent.node = i;
+0119     NewEvents = [NewEvents; newevent]; clear newevent;
+0120     <span class="comment">% Drop the packet, and try next MAC packet if any</span>
+0121     <span class="comment">%             if ~isempty(mac_queue(i).list)</span>
+0122     <span class="comment">%                 % more packets are waiting to be sent</span>
+0123     <span class="comment">%                 mac_status(i) = 1;</span>
+0124     <span class="comment">%                 newevent = mac_queue(i).list(1);</span>
+0125     <span class="comment">%                 mac_queue(i).list(1) = [];</span>
+0126     <span class="comment">%                 newevent.instant = t + cca_time;   % question: should cca_time or other be used here?</span>
+0127     <span class="comment">%                 newevent.type = 'wait_for_channel';</span>
+0128     <span class="comment">%                 newevent.node = i;</span>
+0129     <span class="comment">%                 NewEvents = [NewEvents; newevent]; clear newevent;</span>
+0130     <span class="comment">%             else</span>
+0131     <span class="comment">%                 mac_status(i) = 0;</span>
+0132     <span class="comment">%             end</span>
+0133 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

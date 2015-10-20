@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of action</title>
+  <meta name="keywords" content="action">
+  <meta name="description" content="debug:">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>action
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>debug:</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [NewEvents] = action(event, log_file) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> debug:
+ TTL is determined at network layer only
+ one way transmission received, reverse transmission fails, why?
+ mainly because randomness in the 'shadowing' model: solved...same distance generates same random number
+ friis model works fine
+ tworay model is mostly the same as friis because crossover distance = 100 m
+ freq should be 2.4G instead of 2.4M, white_noise_variance is changed correspondingly
+ Duplicated packets due to early time out and retransmission: this is ok, just provide a larger timeout
+ queue waiting problem: net_queue is actually always empty, all NET packets stack at mac_queue
+ mac_queue is accompanied by mac_status
+ Question 1: how to decide the priority of broadcast, unicast transmission and receptioin?</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="script_backoff.html" class="code" title="">script_backoff</a>	script_backoff;</li><li><a href="script_backoff_start.html" class="code" title="">script_backoff_start</a>	script_backoff_start</li><li><a href="script_recv_mac.html" class="code" title="">script_recv_mac</a>	script_recv_mac;</li><li><a href="script_recv_net.html" class="code" title="">script_recv_net</a>	script_recv_net</li><li><a href="script_recv_phy.html" class="code" title="">script_recv_phy</a>	script_recv_phy;</li><li><a href="script_send_mac.html" class="code" title="">script_send_mac</a>	script_send_mac;</li><li><a href="script_send_net.html" class="code" title="">script_send_net</a>	script_send_net;</li><li><a href="script_send_net2.html" class="code" title="">script_send_net2</a>	script_send_net2;</li><li><a href="script_send_phy.html" class="code" title="">script_send_phy</a>	script_send_phy</li><li><a href="script_send_phy_finish.html" class="code" title="">script_send_phy_finish</a>	script_send_phy_finish</li><li><a href="script_timeout_data.html" class="code" title="">script_timeout_data</a>	script_timeout_data</li><li><a href="script_timeout_rreq.html" class="code" title="">script_timeout_rreq</a>	script_timeout_rreq</li><li><a href="script_timeout_rts.html" class="code" title="">script_timeout_rts</a>	script_timeout_rts</li><li><a href="script_wait_for_channel.html" class="code" title="">script_wait_for_channel</a>	script_wait_for_channel</li><li><a href="../../../ISR-TrafSim.v2.0/commu/script_recv_app.html" class="code" title="">script_recv_app</a>	--------------------------------------------------------------------------</li><li><a href="../../../ISR-TrafSim.v2.0/commu/script_send_app.html" class="code" title="">script_send_app</a>	--------------------------------------------------------------------------</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../ISR-TrafSim.v2.0/commu/ota_commu_run_isr_trafsim.html" class="code" title="function ota_commu_run_isr_trafsim(max_time, log_file)">ota_commu_run_isr_trafsim</a>	--------------------------------------------------------------------------</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [NewEvents] = action(event, log_file)</a>
+0002 
+0003 <span class="comment">% debug:</span>
+0004 <span class="comment">% TTL is determined at network layer only</span>
+0005 <span class="comment">% one way transmission received, reverse transmission fails, why?</span>
+0006 <span class="comment">% mainly because randomness in the 'shadowing' model: solved...same distance generates same random number</span>
+0007 <span class="comment">% friis model works fine</span>
+0008 <span class="comment">% tworay model is mostly the same as friis because crossover distance = 100 m</span>
+0009 <span class="comment">% freq should be 2.4G instead of 2.4M, white_noise_variance is changed correspondingly</span>
+0010 <span class="comment">% Duplicated packets due to early time out and retransmission: this is ok, just provide a larger timeout</span>
+0011 <span class="comment">% queue waiting problem: net_queue is actually always empty, all NET packets stack at mac_queue</span>
+0012 <span class="comment">% mac_queue is accompanied by mac_status</span>
+0013 <span class="comment">% Question 1: how to decide the priority of broadcast, unicast transmission and receptioin?</span>
+0014 
+0015 <span class="comment">% to add virtual carrier sense: done</span>
+0016 <span class="comment">% to add RTS-CTS: done</span>
+0017 <span class="comment">% to add ad hoc routing: done</span>
+0018 <span class="comment">% to add application layer actions:</span>
+0019 <span class="comment">% to add figures or animations to show network and traffic change: not critical</span>
+0020 
+0021 <span class="keyword">global</span> Gt Gr freq Lcommu ht hr pathLossExp std_db D0commu rmodel s;
+0022 <span class="keyword">global</span> cs_threshold white_noise_variance rv_threshold rv_threshold_delta;
+0023 <span class="keyword">global</span> slot_time CW_min CW_max turnaround_time max_retries SIFS DIFS cca_time basic_rate default_power;
+0024 <span class="keyword">global</span> max_size_mac_body size_mac_header size_rts size_cts size_ack size_plcp;
+0025 <span class="keyword">global</span> Nnodes node Event_list;
+0026 <span class="keyword">global</span> packet_id retransmit pending_id mac_queue backoff_attmpt backoff_counter backoff_attempt;
+0027 <span class="keyword">global</span> navcommu;
+0028 <span class="keyword">global</span> ack_tx_time cts_tx_time rts_tx_time;
+0029 <span class="keyword">global</span> default_rate default_ttl;
+0030 <span class="keyword">global</span> size_rreq size_rrep;
+0031 <span class="keyword">global</span> rreq_timeout net_queue net_pending net_max_retries;
+0032 <span class="keyword">global</span> rrep_table;  <span class="comment">% id, route, metric</span>
+0033 <span class="keyword">global</span> bcast_table;
+0034 <span class="keyword">global</span> mac_status;
+0035 <span class="keyword">global</span> adebug bdebug cdebug ddebug edebug fdebug;
+0036 <span class="keyword">global</span> rreq_out rreq_in rreq_forward;
+0037 <span class="keyword">global</span> rreq_out_crosslayer rreq_in_crosslayer rreq_forward_crosslayer;
+0038 <span class="keyword">global</span> rrep_out rrep_in rrep_forward;
+0039 <span class="keyword">global</span> rrep_out_crosslayer rrep_in_crosslayer rrep_forward_crosslayer rrep_destination_crosslayer;
+0040 <span class="keyword">global</span> size_Event_list
+0041 
+0042 NewEvents = [];
+0043 testtime=0.005;
+0044 str_aux3=<span class="string">'    '</span>; str_aux4=<span class="string">'    '</span>;
+0045 show=s.otashow;
+0046 
+0047 <span class="keyword">switch</span> event.type
+0048     <span class="keyword">case</span> <span class="string">'send_phy'</span>
+0049         <a href="script_send_phy.html" class="code" title="">script_send_phy</a>;
+0050         <span class="keyword">if</span>(show==1)
+0051             <span class="keyword">if</span> (event.pkt.rv~=0)
+0052                 h1=plot([node(event.node,1) node(event.pkt.rv,1)], [node(event.node,2) node(event.pkt.rv,2)]);
+0053                 str_aux1=<span class="string">' - P2P       '</span>;
+0054             <span class="keyword">else</span>
+0055                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0056             <span class="keyword">end</span>
+0057             str_aux2 = <span class="string">'send PHY '</span>;
+0058             str=[str_aux2 str_aux1];
+0059             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .9 .5]);
+0060             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0061                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0062             <span class="keyword">else</span>
+0063                 str_aux3=<span class="string">'NaN '</span>;
+0064             <span class="keyword">end</span>
+0065             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0066                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0067             <span class="keyword">else</span>
+0068                 str_aux4=<span class="string">'NaN '</span>;
+0069             <span class="keyword">end</span>
+0070             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.app.id3, <span class="string">'%02d'</span>) <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>) <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0071             pause(testtime*50);
+0072         <span class="keyword">end</span>
+0073         
+0074     <span class="keyword">case</span> <span class="string">'send_phy_finish'</span>
+0075         <a href="script_send_phy_finish.html" class="code" title="">script_send_phy_finish</a>;
+0076         <span class="keyword">if</span>(show==1)
+0077             <span class="keyword">if</span> (event.pkt.rv~=0)
+0078                 h1=plot([node(event.node,1) node(event.pkt.rv,1)], [node(event.node,2) node(event.pkt.rv,2)]);
+0079                 str_aux1=<span class="string">' - P2P       '</span>;
+0080             <span class="keyword">else</span>
+0081                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0082             <span class="keyword">end</span>
+0083             str_aux2 = <span class="string">'send PhyF'</span>;
+0084             str=[str_aux2 str_aux1];
+0085             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .9 .5]);
+0086             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0087                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0088             <span class="keyword">else</span>
+0089                 str_aux3=<span class="string">'NaN '</span>;
+0090             <span class="keyword">end</span>
+0091             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0092                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0093             <span class="keyword">else</span>
+0094                 str_aux4=<span class="string">'NaN '</span>;
+0095             <span class="keyword">end</span>
+0096             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.app.id3, <span class="string">'%02d'</span>) <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4  <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0097             pause(testtime*50);
+0098         <span class="keyword">end</span>
+0099     <span class="keyword">case</span> <span class="string">'recv_phy'</span>
+0100         <a href="script_recv_phy.html" class="code" title="">script_recv_phy</a>;
+0101         <span class="keyword">if</span>(show==1)
+0102             <span class="keyword">if</span> (event.pkt.tx~=0)
+0103                 h1=plot([node(event.node,1) node(event.pkt.tx,1)], [node(event.node,2) node(event.pkt.tx,2)]);
+0104                 str_aux1=<span class="string">' - P2P       '</span>;
+0105             <span class="keyword">else</span>
+0106                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0107             <span class="keyword">end</span>
+0108             str_aux2 = <span class="string">'recv PHY '</span>;
+0109             str=[str_aux2 str_aux1];
+0110             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.0 1.0 .0]);
+0111             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0112                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0113             <span class="keyword">else</span>
+0114                 str_aux3=<span class="string">'NaN '</span>;
+0115             <span class="keyword">end</span>
+0116             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0117                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0118             <span class="keyword">else</span>
+0119                 str_aux4=<span class="string">'NaN '</span>;
+0120             <span class="keyword">end</span>
+0121             <span class="keyword">if</span> edebug, disp([str num2str(event.pkt.tx, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.node, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0122             pause(testtime*50);
+0123         <span class="keyword">end</span>
+0124     <span class="keyword">case</span> <span class="string">'send_mac'</span>
+0125         <span class="comment">%dbstop at 125 in action.m</span>
+0126         <a href="script_send_mac.html" class="code" title="">script_send_mac</a>;
+0127         <span class="keyword">if</span>(show==1)
+0128             <span class="keyword">if</span> (event.pkt.rv~=0)
+0129                 h1=plot([node(event.node,1) node(event.pkt.rv,1)], [node(event.node,2) node(event.pkt.rv,2)]);
+0130                 str_aux1=<span class="string">' - P2P       '</span>;
+0131             <span class="keyword">else</span>
+0132                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0133             <span class="keyword">end</span>
+0134             str_aux2 = <span class="string">'send MAC '</span>;
+0135             str=[str_aux2 str_aux1];
+0136             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.9 .5 .5]);
+0137             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0138                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0139             <span class="keyword">else</span>
+0140                 str_aux3=<span class="string">'NaN '</span>;
+0141             <span class="keyword">end</span>
+0142             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0143                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0144             <span class="keyword">else</span>
+0145                 str_aux4=<span class="string">'NaN '</span>;
+0146             <span class="keyword">end</span>
+0147             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.app.id3, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0148             pause(testtime*50);
+0149         <span class="keyword">end</span>
+0150     <span class="keyword">case</span> <span class="string">'wait_for_channel'</span>
+0151         <a href="script_wait_for_channel.html" class="code" title="">script_wait_for_channel</a>;
+0152         <span class="keyword">if</span>(show==1)
+0153             str_aux2 = <span class="string">'WAIT for channel'</span>;
+0154             str=[str_aux2 ];
+0155             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .5]);
+0156             pause(testtime);
+0157         <span class="keyword">end</span>
+0158     <span class="keyword">case</span> <span class="string">'backoff_start'</span>  <span class="comment">% after DIFS, start backoff</span>
+0159         <a href="script_backoff_start.html" class="code" title="">script_backoff_start</a>;
+0160         <span class="keyword">if</span>(show==1)
+0161             str_aux2 = <span class="string">'BACKOFF start'</span>;
+0162             str=[str_aux2 ];
+0163             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .5]);
+0164             pause(testtime);
+0165         <span class="keyword">end</span>
+0166     <span class="keyword">case</span> <span class="string">'backoff'</span>
+0167         <a href="script_backoff.html" class="code" title="">script_backoff</a>;
+0168         <span class="keyword">if</span>(show==1)
+0169             str_aux2 = <span class="string">'BACKOFF'</span>;
+0170             str=[str_aux2 ];
+0171             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .5]);
+0172             pause(testtime);
+0173         <span class="keyword">end</span>
+0174     <span class="keyword">case</span> <span class="string">'timeout_rts'</span>
+0175         <a href="script_timeout_rts.html" class="code" title="">script_timeout_rts</a>;
+0176         <span class="keyword">if</span>(show==1)
+0177             <span class="keyword">if</span> (event.pkt.rv~=0)
+0178                 h1=plot([node(event.node,1) node(event.pkt.rv,1)], [node(event.node,2) node(event.pkt.rv,2)]);
+0179                 str_aux1=<span class="string">' - P2P       '</span>;
+0180             <span class="keyword">else</span>
+0181                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0182             <span class="keyword">end</span>
+0183             str_aux2 = <span class="string">'Tout RTS '</span>;
+0184             str=[str_aux2 str_aux1];
+0185             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .0]);
+0186             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0187                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0188             <span class="keyword">else</span>
+0189                 str_aux3=<span class="string">'NaN '</span>;
+0190             <span class="keyword">end</span>
+0191             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0192                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0193             <span class="keyword">else</span>
+0194                 str_aux4=<span class="string">'NaN '</span>;
+0195             <span class="keyword">end</span>
+0196             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.app.id3, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0197             pause(testtime*100);
+0198         <span class="keyword">end</span>
+0199     <span class="keyword">case</span> <span class="string">'timeout_data'</span>
+0200         <a href="script_timeout_data.html" class="code" title="">script_timeout_data</a>;
+0201         <span class="keyword">if</span>(show==1)
+0202             <span class="keyword">if</span> (event.pkt.rv~=0)
+0203                 h1=plot([node(event.node,1) node(event.pkt.rv,1)], [node(event.node,2) node(event.pkt.rv,2)]);
+0204                 str_aux1=<span class="string">' - P2P       '</span>;
+0205             <span class="keyword">else</span>
+0206                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0207             <span class="keyword">end</span>
+0208             str_aux2 = <span class="string">'Tout DATA'</span>;
+0209             str=[str_aux2 str_aux1];
+0210             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .0]);
+0211             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0212                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0213             <span class="keyword">else</span>
+0214                 str_aux3=<span class="string">'NaN '</span>;
+0215             <span class="keyword">end</span>
+0216             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0217                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0218             <span class="keyword">else</span>
+0219                 str_aux4=<span class="string">'NaN '</span>;
+0220             <span class="keyword">end</span>
+0221             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.node, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0222             pause(testtime*100);
+0223         <span class="keyword">end</span>
+0224     <span class="keyword">case</span> <span class="string">'recv_mac'</span>
+0225         <a href="script_recv_mac.html" class="code" title="">script_recv_mac</a>;
+0226         <span class="keyword">if</span>(show==1)
+0227             <span class="keyword">if</span> (event.pkt.tx~=0)
+0228                 h1=plot([node(event.node,1) node(event.pkt.tx,1)], [node(event.node,2) node(event.pkt.tx,2)]);
+0229                 str_aux1=<span class="string">' - P2P       '</span>;
+0230             <span class="keyword">else</span>
+0231                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0232             <span class="keyword">end</span>
+0233             str_aux2 = <span class="string">'Recv MAC '</span>;
+0234             str=[str_aux2 str_aux1];
+0235             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[1.0 .0 .0]);
+0236             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0237                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0238             <span class="keyword">else</span>
+0239                 str_aux3=<span class="string">'NaN '</span>;
+0240             <span class="keyword">end</span>
+0241             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0242                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0243             <span class="keyword">else</span>
+0244                 str_aux4=<span class="string">'NaN '</span>;
+0245             <span class="keyword">end</span>
+0246             <span class="keyword">if</span> edebug, disp([str num2str(event.pkt.tx, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.node, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0247             pause(testtime*50);
+0248         <span class="keyword">end</span>
+0249     <span class="keyword">case</span> <span class="string">'send_net'</span>
+0250         <a href="script_send_net.html" class="code" title="">script_send_net</a>;
+0251         <span class="comment">%         if (event.net.dst~=0)</span>
+0252         <span class="comment">%             h1=plot([node(event.node,1) node(event.net.dst,1)], [node(event.node,2) node(event.net.dst,2)]);</span>
+0253         <span class="comment">%             str_aux1=' - P2P       ';</span>
+0254         <span class="comment">%         else</span>
+0255         <span class="comment">%             str_aux1= ' - BROADCAST ';</span>
+0256         <span class="comment">%         end</span>
+0257         <span class="comment">%         str_aux2 = 'send NET ';</span>
+0258         <span class="comment">%         str=[str_aux2 str_aux1];</span>
+0259         <span class="comment">%         h2=text(node(event.node,1),node(event.node,2)+2,str, 'BackgroundColor',[.5 .5 .9]);</span>
+0260         <span class="comment">%         %             if edebug, disp([str num2str(event.node, '%02d') ' -&gt; ' num2str(event.net.dst, '%02d') ' SEL: ' num2str(size_Event_list(1),'%03d')  ' T: ' num2str(event.instant,'%3.5f')]); end</span>
+0261         <span class="comment">%         pause(0.5);</span>
+0262         
+0263     <span class="keyword">case</span> <span class="string">'send_net2'</span>
+0264         <a href="script_send_net2.html" class="code" title="">script_send_net2</a>;
+0265         <span class="keyword">if</span>(show==1)
+0266             <span class="keyword">if</span> (event.net.dst~=0)
+0267                 h1=plot([node(event.node,1) node(event.net.dst,1)], [node(event.node,2) node(event.net.dst,2)]);
+0268                 str_aux1=<span class="string">' - P2P       '</span>;
+0269             <span class="keyword">else</span>
+0270                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0271             <span class="keyword">end</span>
+0272             str_aux2 = <span class="string">'send NET2'</span>;
+0273             str=[str_aux2 str_aux1];
+0274             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .9]);
+0275             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0276                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0277             <span class="keyword">else</span>
+0278                 str_aux3=<span class="string">'NaN '</span>;
+0279             <span class="keyword">end</span>
+0280             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0281                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0282             <span class="keyword">else</span>
+0283                 str_aux4=<span class="string">'NaN '</span>;
+0284             <span class="keyword">end</span>
+0285             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.net.dst, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> <span class="string">'NaN'</span>  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0286             pause(testtime*50);
+0287         <span class="keyword">end</span>
+0288     <span class="keyword">case</span> <span class="string">'timeout_rreq'</span>
+0289         <a href="script_timeout_rreq.html" class="code" title="">script_timeout_rreq</a>;
+0290         <span class="keyword">if</span>(show==1)
+0291             <span class="keyword">if</span> (event.net.dst~=0)
+0292                 h1=plot([node(event.node,1) node(event.net.dst,1)], [node(event.node,2) node(event.net.dst,2)]);
+0293                 str_aux1=<span class="string">' - P2P       '</span>;
+0294             <span class="keyword">else</span>
+0295                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0296             <span class="keyword">end</span>
+0297             str_aux2 = <span class="string">'Tout RREQ'</span>;
+0298             str=[str_aux2 str_aux1];
+0299             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.5 .5 .0]);
+0300             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0301                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0302             <span class="keyword">else</span>
+0303                 str_aux3=<span class="string">'NaN '</span>;
+0304             <span class="keyword">end</span>
+0305             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0306                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0307             <span class="keyword">else</span>
+0308                 str_aux4=<span class="string">'NaN '</span>;
+0309             <span class="keyword">end</span>
+0310             <span class="keyword">if</span> edebug, disp([str num2str(event.node, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.net.dst, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0311             pause(testtime*100);
+0312         <span class="keyword">end</span>
+0313     <span class="keyword">case</span> <span class="string">'recv_net'</span>
+0314         <a href="script_recv_net.html" class="code" title="">script_recv_net</a>;
+0315         <span class="keyword">if</span>(show==1)
+0316             <span class="keyword">if</span> (event.net.src~=0)
+0317                 h1=plot([node(event.node,1) node(event.net.src,1)], [node(event.node,2) node(event.net.src,2)]);
+0318                 str_aux1=<span class="string">' - P2P       '</span>;
+0319             <span class="keyword">else</span>
+0320                 str_aux1= <span class="string">' - BROADCAST '</span>;
+0321             <span class="keyword">end</span>
+0322             str_aux2 = <span class="string">'recv NET '</span>;
+0323             str=[str_aux2 str_aux1];
+0324             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.0 .0 1.0]);
+0325             <span class="keyword">if</span> isfield(event.pkt,<span class="string">'type'</span>)
+0326                 str_aux3(1:size(event.pkt.type,2))=event.pkt.type;
+0327             <span class="keyword">else</span>
+0328                 str_aux3=<span class="string">'NaN '</span>;
+0329             <span class="keyword">end</span>
+0330             <span class="keyword">if</span> isfield(event.net,<span class="string">'type'</span>)
+0331                 str_aux4(1:size(event.net.type,2))=event.net.type;
+0332             <span class="keyword">else</span>
+0333                 str_aux4=<span class="string">'NaN '</span>;
+0334             <span class="keyword">end</span>
+0335             <span class="keyword">if</span> edebug, disp([str num2str(event.net.src, <span class="string">'%02d'</span>) <span class="string">' -&gt; '</span> num2str(event.node, <span class="string">'%02d'</span>)  <span class="string">' PKT: '</span> str_aux3 <span class="string">' NET: '</span> str_aux4 <span class="string">' SEL: '</span> num2str(size_Event_list(1),<span class="string">'%03d'</span>)  <span class="string">' T: '</span> num2str(event.instant,<span class="string">'%3.5f'</span>)]); <span class="keyword">end</span>
+0336             pause(testtime*50);
+0337         <span class="keyword">end</span>
+0338     <span class="keyword">case</span> <span class="string">'send_app'</span>
+0339         <a href="../../../ISR-TrafSim.v2.0/commu/script_send_app.html" class="code" title="">script_send_app</a>;
+0340         <span class="keyword">if</span>(show==1)
+0341             str_aux2 = <span class="string">'send APP'</span>;
+0342             str=[str_aux2 ];
+0343             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.7 .0 .7]);
+0344             <span class="comment">%             if edebug, disp([str num2str(event.node, '%02d') ' -&gt; ' num2str(event.node, '%02d') ' SEL: ' num2str(size_Event_list(1),'%03d')  ' T: ' num2str(event.instant,'%3.5f')]); end</span>
+0345             pause(testtime*150);
+0346         <span class="keyword">end</span>
+0347     <span class="keyword">case</span> <span class="string">'recv_app'</span>
+0348         <a href="../../../ISR-TrafSim.v2.0/commu/script_recv_app.html" class="code" title="">script_recv_app</a>;
+0349         <span class="keyword">if</span>(show==1)
+0350             str_aux2 = <span class="string">'recv APP'</span>;
+0351             str=[str_aux2 ];
+0352             h2=text(node(event.node,1),node(event.node,2)+2,str, <span class="string">'BackgroundColor'</span>,[.7 .0 .7]);
+0353             <span class="comment">%             if edebug, disp([str num2str(event.node, '%02d') ' -&gt; ' num2str(event.node, '%02d') ' SEL: ' num2str(size_Event_list(1),'%03d')  ' T: ' num2str(event.instant,'%3.5f')]); end</span>
+0354             pause(testtime*150);
+0355         <span class="keyword">end</span>
+0356     <span class="keyword">otherwise</span>
+0357         disp([<span class="string">'action: Undefined event type: '</span> event.type]);
+0358 <span class="keyword">end</span>;
+0359 <span class="keyword">if</span> exist(<span class="string">'h1'</span>)
+0360     delete(h1);
+0361     clear h1
+0362 <span class="keyword">end</span>
+0363 <span class="keyword">if</span> exist(<span class="string">'h2'</span>)
+0364     delete(h2);
+0365     clear h2
+0366 <span class="keyword">end</span>
+0367 
+0368 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_recv_phy</title>
+  <meta name="keywords" content="script_recv_phy">
+  <meta name="description" content="script_recv_phy;">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html ISR-TrafSim.v2.0 --><!-- ../menu.html commu --><!-- menu.html lib -->
+<h1>script_recv_phy
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_recv_phy;</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> script_recv_phy;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="recv_phy.html" class="code" title="function [Pr0, SNR] = recv_phy(tx, rv, rmodel)">recv_phy</a>	send packet at PHY layer</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="action.html" class="code" title="function [NewEvents] = action(event, log_file)">action</a>	debug:</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% script_recv_phy;</span>
+0002 t = event.instant;
+0003 i = event.pkt.tx;
+0004 j = event.node;
+0005 <span class="keyword">if</span> bdebug, disp([<span class="string">'recv_phy @ node '</span> num2str(j)]); <span class="keyword">end</span>
+0006 <span class="keyword">if</span> node(j, 4) ~= 2
+0007     <span class="comment">%disp(['recv_phy: node ' num2str(j) ' is not in receive mode'])</span>
+0008     error([<span class="string">'recv_phy: node '</span> num2str(j) <span class="string">' is not in receive mode'</span>]);
+0009 <span class="keyword">end</span>
+0010 node(j, 4) = 0; <span class="comment">% receiver switches back to idle mode</span>
+0011 <span class="keyword">if</span> t &gt; navcommu(j).start &amp; t &lt; navcommu(j).end
+0012     <span class="comment">% this has already been checked when sending</span>
+0013     <span class="comment">% but navcommu may be changed during transmission, so double check</span>
+0014     <span class="keyword">if</span> ddebug, disp([<span class="string">'recv_phy: packet virtual collision at node '</span> num2str(j)]); <span class="keyword">end</span>
+0015     <span class="comment">% just drop the packet</span>
+0016 <span class="keyword">else</span>
+0017     [pr, snr] = <a href="recv_phy.html" class="code" title="function [Pr0, SNR] = recv_phy(tx, rv, rmodel)">recv_phy</a>(i, j, rmodel);
+0018     
+0019 <span class="comment">%     disp(['recv_phy: node ' num2str(i) ' to node ' num2str(j) ' with snr= ' num2str(snr) ' and distance=' num2str(topo_dist(i, j))]);</span>
+0020     t1 = rv_threshold_delta;
+0021     <span class="keyword">if</span> snr &gt;= (rv_threshold+t1)
+0022         probability_receive = 1;
+0023     <span class="keyword">elseif</span> snr &lt; (rv_threshold-t1)
+0024         probability_receive = 0;
+0025     <span class="keyword">elseif</span> rand &lt;= (snr-(rv_threshold-t1))/(t1+t1)
+0026         probability_receive = 1;
+0027     <span class="keyword">else</span>
+0028         probability_receive = 0;
+0029     <span class="keyword">end</span>
+0030     <span class="keyword">if</span> probability_receive
+0031         <span class="keyword">if</span> event.pkt.rv == 0 | event.pkt.rv == j   <span class="comment">% broadcast or unicast to this receiver</span>
+0032             <span class="comment">% TTL is taken care of at network layer</span>
+0033             <span class="comment">% event.pkt.ttl = event.pkt.ttl - 1;</span>
+0034             <span class="comment">% if event.pkt.ttl &lt; 0</span>
+0035             <span class="comment">%     if adebug, disp(['recv_phy: TTL from node ' num2str(i) ' to node ' num2str(j) ' is negative, drop the packet']); end</span>
+0036             <span class="comment">%     return;</span>
+0037             <span class="comment">% end</span>
+0038             <span class="comment">% there is already a MAC layer packet waiting for transmission, but this incoming packet should be</span>
+0039             <span class="comment">% received first, no futher receiving is possible (see send_phy)</span>
+0040             <span class="comment">% if mac_status(j)</span>
+0041             <span class="comment">%     if adebug, disp(['recv_phy: node ' num2str(j) ' is waiting to transmit, so cannot receive']); end</span>
+0042             newevent = event;
+0043             newevent.instant = t;
+0044             newevent.type = <span class="string">'recv_mac'</span>;
+0045             newevent.node = j;
+0046             NewEvents = [NewEvents; newevent]; clear newevent;
+0047         <span class="keyword">elseif</span> event.pkt.navcommu &gt; 0    <span class="comment">% this packet is not for me, but use its navcommu</span>
+0048             <span class="keyword">if</span> navcommu(j).start &lt; t
+0049                 navcommu(j).start = t;
+0050             <span class="keyword">end</span>
+0051             <span class="keyword">if</span> navcommu(j).end &lt; (t+event.pkt.navcommu)
+0052                 <span class="comment">% question: debug</span>
+0053                 navcommu(j).end = t + event.pkt.navcommu;
+0054             <span class="keyword">end</span>
+0055         <span class="keyword">end</span>
+0056     <span class="keyword">else</span>
+0057         <span class="keyword">if</span> bdebug, disp([<span class="string">'recv_phy: packet from node '</span> num2str(i) <span class="string">' cannot be successfully received at node'</span> num2str(j)]); <span class="keyword">end</span>
+0058     <span class="keyword">end</span>
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 20-Oct-2015 14:44:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
